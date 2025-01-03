@@ -5,18 +5,65 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Spinner?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter"
-            stylesheets="@style.css">
+            >
+        <top>
+            <HBox alignment="CENTER">
+                <Label text="Set variables of simulation"/>
+            </HBox>
+            <HBox>
+                <VBox>
+                    <Label text = "Set widht of the map"/>
+                    <Spinner fx:id = "widthSpinner" min="5" max="20" editable="True" initialValue="10"/>
+                    <Label text = "Set height of the map"/>
+                    <Spinner fx:id = "heightSpinner" min="5" max="20" editable="True" initialValue="10"/>
+                    <Label text = "Set variant of the map"/>
+                    <Spinner fx:id = "mapVariantSpinner"/>
+                    <Label text = "Set starting number of plants"/>
+                    <Spinner fx:id = "grassNumberSpinner" min="10" max = "500" editable ="True" initialValue="50"/>
+                    <Label text = "Set number of energy added with eating single plant"/>
+                    <Spinner fx:id = "energyAdditionSpinner" min="1" max="25" editable="True" initialValue="5"/>
+                    <Label text = "Set number of plants which grew every day"/>
+                    <Spinner fx:id = "plantRegenerationSpinner" min="1" max="25" editable="True" initialValue="10"/>
+                    <Label text = "Regenerating type is automaticlly set to 'zalesione rowniki'"/>
+                </VBox>
+                <VBox>
+                </VBox>
+                <VBox>
+                </VBox>
+                <VBox>
+                    <Label text = "Set number of Animals"/>
+                    <Spinner fx:id = "numberOfAnimalsSpinner" min ="1" max = "50" editable ="True" initialValue="25"/>
+                    <Label text = "Set number of starting energy for Animals"/>
+                    <Spinner fx:id = "startingAnimalEnergySpinner" min ="10" max = "500" editable ="True" initialValue="50"/>
+                    <Label text = "Set number of energy needed for reporduction"/>
+                    <Spinner fx:id = "energuNeededForReproductionSpinner" min ="1" max = "50" editable ="True" initialValue="25"/>
+                    <Label text = "Set the energy that animals lose by reproduction"/>
+                    <Spinner fx:id = "energyLosingWithReproductionSpinner" min ="1" max = "50" editable ="True" initialValue="25"/>
+                    <Label text = "Set minimal number of mutations with reporduction"/>
+                    <Spinner fx:id = "minGenMutationsSpinner" min ="1" max = "10" editable ="True" initialValue="3"/>
+                    <Label text = "Set maximal number of mutations with reporduction"/>
+                    <Spinner fx:id = "maxGenMutationsSpinner" min ="1" max = "10" editable ="True" initialValue="7"/>
+                    <Label text = "Set variant of the mutation"/>
+                    <Spinner fx:id = "mutationTypeSpinner"/>
+                    <Label text = "Set length of the genom"/>
+                    <Spinner fx:id = "genomLengthSpinner" min="5" max="10" editable="True" initialValue="8"/>
+                    <Label text = "Animals behaviour variant is set to 'pelna predestynacja'"/>
+                </VBox>
+            </HBox>
+        </top>
         <center>
+
             <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
         </center>
         <bottom>
             <VBox spacing="12" alignment="CENTER">
                 <TextField fx:id="textField" promptText="Enter moves"/>
-                <Label fx:id="moveLabel" text = "Move description will be displayed here" textAlignment="CENTER"/>
                 <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
                 <Button text="Start" onAction="#onSimulationStartClicked"/>
             </VBox>

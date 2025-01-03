@@ -6,13 +6,11 @@ import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
-
+import javafx.scene.control.Slider;
 import java.util.List;
 
 
@@ -39,13 +37,41 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label infoLabel;
     @FXML
-    private Label moveLabel;
-    @FXML
     private TextField textField;
     @FXML
     private Button start;
     @FXML
     private GridPane mapGrid;
+    @FXML
+    private Spinner<Integer> widthSpinner;
+    @FXML
+    private Spinner<Integer> heightSpinner;
+    @FXML
+    private Spinner<String> mapVariantSpinner;
+    @FXML
+    private Spinner<Integer> grassNumberSpinner;
+    @FXML
+    private Spinner<Integer> energyAdditionSpinner;
+    @FXML
+    // uzależnić od liczby zwierzakow i mapy
+    private Spinner<Integer> plantRegenerationSpinner;
+    @FXML
+    private Spinner<Integer> numberOfAnimalsSpinner;
+    @FXML
+    private Spinner<Integer> startingAnimalEnergySpinner;
+    @FXML
+    private Spinner<Integer> energuNeededForReproductionSpinner;
+    @FXML
+    private Spinner<Integer> energyLosingWithReproductionSpinner;
+    @FXML
+    private Spinner<Integer> minGenMutationsSpinner;
+    @FXML
+    private Spinner<Integer> maxGenMutationsSpinner;
+    @FXML
+    private Spinner<Integer> genomLengthSpinner;
+    @FXML
+    private Spinner<String> mutationTypeSpinner;
+
 
     private void drawMap() {
         updateBounds();
@@ -131,5 +157,39 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
+    }
+
+    @FXML
+    public void initialize(){
+        SpinnerValueFactory<String> valueFactory =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(javafx.collections.FXCollections.observableArrayList("Kula Ziemska","Dziki Sowoniedziedz"));
+        mapVariantSpinner.setValueFactory(valueFactory);
+
+        SpinnerValueFactory<String> valueFactory2 =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(javafx.collections.FXCollections.observableArrayList("Pelna losowosc","Podmianka"));
+        mutationTypeSpinner.setValueFactory(valueFactory2);
+// należy zmienic tego spinner tez na value factory bo inaczej nie da
+        // dynamczinie zmieniac maksymalnej wartosci liczby traw
+        //heightSpinner.setValue(10);
+        //widthSpinner.setValue(10);
+
+    }
+
+    @FXML
+    public void onSubmit() {
+        String selectedOption = mapVariantSpinner.getValue();
+        //System.out.println("Wybrano" + selectedOption);
+        //tutaj funckja ma to zbierać (chyba) nwm czemu nie wypisuje
+    }
+
+    private void updateArea(){
+        int height = heightSpinner.getValue();
+        int width = widthSpinner.getValue();
+        int maxArea = height * width;
+        // do dokonczenia po zmienia spinnera na valuefactory
+        //if ( grassNumberSpinner.getValue() > maxArea){
+         //   grassNumberSpinner.setValueFactory(maxArea);
+        //}
+
     }
 }
