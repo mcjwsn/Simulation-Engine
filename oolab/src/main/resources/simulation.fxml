@@ -19,9 +19,9 @@
             <HBox>
                 <VBox>
                     <Label text = "Set widht of the map"/>
-                    <Spinner fx:id = "widthSpinner" min="5" max="20" editable="True" initialValue="10"/>
+                    <Spinner fx:id = "widthSpinner" min="8" max="25" editable="True" initialValue="10"/>
                     <Label text = "Set height of the map"/>
-                    <Spinner fx:id = "heightSpinner" min="5" max="20" editable="True" initialValue="10"/>
+                    <Spinner fx:id = "heightSpinner" min="8" max="25" editable="True" initialValue="10"/>
                     <Label text = "Set variant of the map"/>
                     <Spinner fx:id = "mapVariantSpinner"/>
                     <Label text = "Set starting number of plants"/>
