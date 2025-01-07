@@ -6,17 +6,6 @@ import java.util.List;
 
 
 public class World {
-//    public static void run(MoveDirection[] args){
-//        for(MoveDirection arg : args) {
-//            String output = switch (arg) {
-//                case FORWARD -> "Zwierzak idzie do przodu";
-//                case BACKWARD -> "Zwierzak idzie do tylu";
-//                case RIGHT -> "Zwierzak idzie w prawo";
-//                case LEFT -> "Zwierzak idzie w lewo";
-//            };
-//            System.out.println(output);
-//        }
-//    }
     public static void main(String[] args) {
         try {
             ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();
@@ -33,22 +22,10 @@ public class World {
             Simulation simulation2 = new Simulation(directions, positions, map2);
             Simulation simulation3 = new Simulation(directions, positions2, map3);
             SimulationEngine engine = new SimulationEngine(List.of(simulation1, simulation2,simulation3));
-            //Thread engineThread = new Thread(engine);
-            //engineThread.start();
-            //engine.runAsync();
-            /*List<Simulation> simulations = new ArrayList<>();
-            for (int i = 0; i < 1000; i++) {
-                AbstractWorldMap map = i % 2 == 0 ? new GrassField(10) : new RectangularMap(5, 5);
-                map.addObserver(new ConsoleMapDisplay());
-                Simulation simulation = new Simulation(directions, positions, map);
-                simulations.add(simulation);
-            }
-            SimulationEngine newEngine = new SimulationEngine(simulations);
-            newEngine.runAsync();*/
+
             engine.runAsyncInThreadPool();
             engine.awaitSimulationEnd();
         } catch (IllegalArgumentException e) {
-           // System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
         System.out.println("System zakonczyl dzialanie");

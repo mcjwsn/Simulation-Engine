@@ -3,16 +3,38 @@ package agh.ics.oop.model;
 public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
+    private int energy;
+    private Genes AnimalGenes;
+
+//    public Animal() {
+//        this.orientation = MapDirection.NORTH;
+//        this.position = new Vector2d(2,2);
+//        this.energy = 10;
+//        // Zmienić w zależności od wyboru
+//    }
+//    public Animal(MapDirection orientation, Vector2d position){
+//        this.orientation = orientation;
+//        this.position = position;
+//        this.energy = 10;
+//    }
+
+    public Animal(MapDirection orientation, Vector2d position, Genes AnimalGenes) {
+        this.AnimalGenes = AnimalGenes;
+        this.orientation = orientation;
+        this.position = position;
+        this.energy = 10;
+    }
+
+    public Animal(MapDirection orientation, Vector2d position) {
+        this(orientation, position, new Genes(10));
+    }
 
 
     public Animal() {
-        this.orientation = MapDirection.NORTH;
-        this.position = new Vector2d(2,2);
+        this(MapDirection.NORTH, new Vector2d(2, 2), new Genes(10)); // Call the second constructor
     }
-    public Animal(MapDirection orientation, Vector2d position){
-        this.orientation = orientation;
-        this.position = position;
-    }
+
+
 
     @Override
     public String toString() {
