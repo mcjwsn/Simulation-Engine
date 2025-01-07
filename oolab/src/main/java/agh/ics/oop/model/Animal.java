@@ -34,19 +34,19 @@ public class Animal implements WorldElement {
 
 
 
-    public void move (MoveDirection direction, MoveValidator map){
-        switch (direction){
-            case RIGHT -> this.orientation = this.orientation.next();
-            case LEFT -> this.orientation = this.orientation.previous();
-            case FORWARD -> {
-                Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-                if (map.canMoveTo(newPosition)){
-                    this.position =newPosition;
-                };}
-            case BACKWARD -> {Vector2d newPosition = this.position.subtract(this.orientation.toUnitVector());
-                if(map.canMoveTo(newPosition)){
-                    this.position = newPosition;
-                };}
-            }
+    public void move(MoveDirection direction, MoveValidator map) {
+        // Calculate the number of steps based on the MoveDirection
+        int steps = direction.ordinal();
+
+        // Update orientation based on how many steps we need to rotate
+        for (int i = 0; i < steps; i++) {
+            this.orientation = this.orientation.next();
+        }
+
+        // Move 1 step in the final direction after rotating the orientation
+        Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
+        if (map.canMoveTo(newPosition)) {
+            this.position = newPosition;
+        }
     }
 }
