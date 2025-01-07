@@ -6,17 +6,17 @@ import java.util.List;
 
 
 public class World {
-    public static void run(MoveDirection[] args){
-        for(MoveDirection arg : args) {
-            String output = switch (arg) {
-                case FORWARD -> "Zwierzak idzie do przodu";
-                case BACKWARD -> "Zwierzak idzie do tylu";
-                case RIGHT -> "Zwierzak idzie w prawo";
-                case LEFT -> "Zwierzak idzie w lewo";
-            };
-            System.out.println(output);
-        }
-    }
+//    public static void run(MoveDirection[] args){
+//        for(MoveDirection arg : args) {
+//            String output = switch (arg) {
+//                case FORWARD -> "Zwierzak idzie do przodu";
+//                case BACKWARD -> "Zwierzak idzie do tylu";
+//                case RIGHT -> "Zwierzak idzie w prawo";
+//                case LEFT -> "Zwierzak idzie w lewo";
+//            };
+//            System.out.println(output);
+//        }
+//    }
     public static void main(String[] args) {
         try {
             ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();

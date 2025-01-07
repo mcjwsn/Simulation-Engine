@@ -1,4 +1,5 @@
 package agh.ics.oop;
+
 import agh.ics.oop.model.MoveDirection;
 
 import java.util.ArrayList;
@@ -10,12 +11,16 @@ public class OptionsParser {
         List<MoveDirection> list = new ArrayList<>();
         for (String arg : args) {
             switch (arg) {
-                case "f" -> list.add(MoveDirection.FORWARD);
-                case "b" -> list.add(MoveDirection.BACKWARD);
-                case "l" -> list.add(MoveDirection.LEFT);
-                case "r" -> list.add(MoveDirection.RIGHT);
+                case "0" -> list.add(MoveDirection.ZERO);
+                case "1" -> list.add(MoveDirection.ONE);
+                case "2" -> list.add(MoveDirection.TWO);
+                case "3" -> list.add(MoveDirection.THREE);
+                case "4" -> list.add(MoveDirection.FOUR);
+                case "5" -> list.add(MoveDirection.FIVE);
+                case "6" -> list.add(MoveDirection.SIX);
+                case "7" -> list.add(MoveDirection.SEVEN);
                 default -> throw new IllegalArgumentException(arg +
-                        " is not legal move specification");
+                        " is not a legal move specification");
             }
         }
         return list;
