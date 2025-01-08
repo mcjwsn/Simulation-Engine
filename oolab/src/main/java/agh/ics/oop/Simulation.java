@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation implements Runnable {
-    private final  List<Animal> animals;
+    private final List<Animal> animals;
     private final List<MoveDirection> directions;
     private final WorldMap map;
     private MapChangeListener listener;
+    private int currentAnimalIndex = 0;
 
     public Simulation(List<MoveDirection> directions,List<Vector2d> positions, WorldMap map) {
         this.animals = new ArrayList<>();
@@ -21,31 +22,39 @@ public class Simulation implements Runnable {
                 map.place(animal);
                 this.animals.add(animal);
             } catch (IncorrectPositionException e) {
-                //System.out.println("Warning: " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
         this.directions = directions;
         this.map = map;
     }
     public void run(){
-            for(int i = 0; i < directions.size(); i++){
-                map.move(animals.get(i % animals.size()), directions.get(i));
-                Platform.runLater(() -> {
-                    if (listener != null) {
-                        listener.mapChanged(map, "Animal moved to new position");
-                    }});
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        while(true){
+            Animal currentAnimal = animals.get(currentAnimalIndex);
 
+            MoveDirection gene = currentAnimal.getGenotype().getCurrentGene();
+            currentAnimal.getGenotype().incrementIndex();
+
+            map.move(currentAnimal, gene);
+
+            Platform.runLater(() -> {
+                if (listener != null) {
+                    listener.mapChanged(map, "Animal moved to new position");
+                }});
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            currentAnimalIndex++;
+            currentAnimalIndex %= animals.size();
         }
 
     }
     public List<Animal> getAnimals() {
-        return List.copyOf(animals); // collections.unmodifiableList
+        return List.copyOf(animals);
     }
 }
 
