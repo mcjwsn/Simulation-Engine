@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static agh.ics.oop.OptionsParser.parse;
 
 
 public class SimulationManager {
@@ -98,12 +97,12 @@ public class SimulationManager {
         }
     }
 
-    public void spawnPlant(){
-        if (map.getFreePositionsForPlants().isEmpty()) return;
+    public void spawnPlant() {
+        List<Vector2d> freePositions = map.getFreePositionsForPlants();
+        if (freePositions.isEmpty()) return;
 
-        Vector2d plantPosition = map.getFreePositionsForPlants().get(random.nextInt(map.getFreePositionsForPlants().size()));
-        spawnPlant();
-        // dodac odwolanie do rownikow
+        Vector2d plantPosition = freePositions.get(random.nextInt(freePositions.size()));
+        map.placeGrass(plantPosition, new Grass(plantPosition));
     }
 
     private void growGrass() {

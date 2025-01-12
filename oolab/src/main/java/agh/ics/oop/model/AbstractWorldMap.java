@@ -26,6 +26,10 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public AbstractWorldMap() {
         this.id = UUID.randomUUID().toString();
+        this.animals = new ConcurrentHashMap<>();
+        this.grass = new HashMap<>();
+        this.observers = new CopyOnWriteArrayList<>();
+        this.freePositionsForPlants = new ArrayList<>();
     }
 
     public AbstractWorldMap(SimulationProperties simulationProperties){
@@ -61,7 +65,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 animals.get(animalPosition).sort(
                         Comparator.comparing(Animal::getEnergy, Comparator.reverseOrder())
                                 .thenComparing(Animal::getAge, Comparator.reverseOrder())
-                                .thenComparing(Animal::getChildrenMade, Comparator.reverseOrder())
                                 .thenComparing(Animal::getPlantsEaten, Comparator.reverseOrder())
                 );
             }
@@ -148,8 +151,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     public synchronized void removeAnimal(Animal animal) {
         animals.get(animal.getPosition()).remove(animal);
     }
-    public synchronized void placeGrass(Vector2d plantPosition, Grass grasS) {
-        grass.put(plantPosition, grasS);
+    public synchronized void placeGrass(Vector2d plantPosition, Grass grassObject) {
+        grass.put(plantPosition, grassObject);
         freePositionsForPlants.remove(plantPosition);
     }
     public void setSimulation(Simulation simulation) {

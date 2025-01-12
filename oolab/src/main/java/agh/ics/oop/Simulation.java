@@ -26,25 +26,25 @@ public class Simulation implements Runnable {
         this.simulationProperties = simulationProperties;
         simulationManager = new SimulationManager(map, simulationProperties, this);
 
-//        RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getStartAnimalNumber());
-//        for(Vector2d animalPosition : randomPositionGeneratorAnimals) {
-//            Animal animal = new Animal( animalPosition, simulationProperties);
-//            animals.add(animal);
-//            int[] genome = animal.getGenome();
-//            genesCount.merge(genome, 1, Integer::sum);
-//            map.place(animal.getPosition(), animal);
-//        }
-//
-//        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
-//        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
-//            map.placeGrass(plantPosition, new Grass(plantPosition));
-//        }
+        RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getStartAnimalNumber());
+        for(Vector2d animalPosition : randomPositionGeneratorAnimals) {
+            Animal animal = new Animal( animalPosition, simulationProperties);
+            animals.add(animal);
+            int[] genome = animal.getGenome();
+            genesCount.merge(genome, 1, Integer::sum);
+            map.place(animal.getPosition(), animal);
+        }
+
+        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
+        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
+            map.placeGrass(plantPosition, new Grass(plantPosition));
+        }
     }
 
     @Override
     public void run() {
         try {
-            Thread.sleep(2000); // inicjalizacja
+            Thread.sleep(2500); // inicjalizacja
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
