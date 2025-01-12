@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Simulation implements Runnable {
     private final List<Animal> animals;
-    private final List<MoveDirection> directions;
+    private List<MoveDirection> directions;
     private final WorldMap map;
     private MapChangeListener listener;
     private int currentAnimalIndex = 0;
