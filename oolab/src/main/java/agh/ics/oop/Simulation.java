@@ -18,7 +18,7 @@ public class Simulation implements Runnable {
         this.animals = new ArrayList<>();
         for (Vector2d position : positions) {
             try {
-                Animal animal = new Animal(MapDirection.NORTH, position);
+                Animal animal = new Animal(position,MapDirection.NORTH);
                 map.place(animal);
                 this.animals.add(animal);
             } catch (IncorrectPositionException e) {

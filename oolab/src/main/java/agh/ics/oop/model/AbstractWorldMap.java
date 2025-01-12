@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.UUID;
 
+import static agh.ics.oop.OptionsParser.parse;
+
 public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
@@ -32,7 +34,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d oldPosition = animal.getPosition();
-        animal.move(direction, this);
+        animal.move(this,direction);
         Vector2d newPosition = animal.getPosition();
 
         List<Animal> oldPositionAnimals = animals.get(oldPosition);
@@ -78,10 +80,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
         for (Animal currentAnimal : allAnimals) {
-            MoveDirection gene = currentAnimal.getGenotype().getCurrentGene();
-            currentAnimal.getGenotype().incrementIndex();
-
-            this.move(currentAnimal, gene);
+            String gene = String.valueOf(currentAnimal.getGenome()[currentAnimal.getGeneIndex()]);
+            String[] result = new String[]{gene}; // nwm jak to zrobic lepiej
+            List<MoveDirection> x = parse(result);
+            this.move(currentAnimal, x.getFirst());
         }
     }
 

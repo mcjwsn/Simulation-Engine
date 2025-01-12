@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Genes {
     private final List<MoveDirection> genes;
@@ -22,12 +23,16 @@ public class Genes {
         return genes.get(currentGeneIndex);
     }
 
-    public void incrementIndex() {
+    public void incrementIndex(Animal animal) {
         currentGeneIndex++;
         currentGeneIndex%=genes.size();
     }
-
-    public int getGenesCount() {
-        return genes.size();
+    public static int[] getStartingGenes(int genNumb) {
+        Random random = new Random();
+        int[] genes = new int[genNumb];
+        for (int i = 0; i < genNumb; i++){
+            genes[i] = random.nextInt(0, 7);
+        }
+        return genes;
     }
 }
