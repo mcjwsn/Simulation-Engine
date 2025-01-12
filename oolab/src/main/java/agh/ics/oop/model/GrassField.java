@@ -66,8 +66,8 @@ public class GrassField extends AbstractWorldMap{
         return elements;
     }
 
-    @Override
-    public fixPosition(Vector2d position, MapDirection orientation) { // do poprawy
+
+    public void fixPosition(Vector2d position, MapDirection orientation) { // do poprawy
         int x = (position.getX()+width)%width;
         int y = position.getY();
         MapDirection orient = orientation;
