@@ -43,7 +43,7 @@ public class Simulation implements Runnable {
                     listener.mapChanged(map, "Animal moved to new position");
                 }});
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

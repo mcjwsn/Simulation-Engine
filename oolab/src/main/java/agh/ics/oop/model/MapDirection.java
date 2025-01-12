@@ -6,7 +6,6 @@ public enum MapDirection {
     @Override
     public String toString() {
         return switch (this) {
-
             case NORTH -> "^";
             case SOUTH -> "v";
             case WEST -> "<";
@@ -31,7 +30,6 @@ public enum MapDirection {
         };
     }
 
-
     public MapDirection previous() {
         return switch (this) {
             case NORTH -> NORTHWEST;
@@ -45,7 +43,6 @@ public enum MapDirection {
         };
     }
 
-
     public Vector2d toUnitVector() {
         return switch (this) {
             case NORTH -> new Vector2d(0, 1);
@@ -58,6 +55,4 @@ public enum MapDirection {
             case NORTHWEST -> new Vector2d(-1, 1);
         };
     }
-
 }
-
