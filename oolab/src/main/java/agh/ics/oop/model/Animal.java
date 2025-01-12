@@ -41,13 +41,21 @@ public class Animal implements WorldElement {
         this.simulationProperties = simulationProperties;
         this.childrenNumber = 0;
         this.birthdate = simulationProperties.getDaysElapsed();
+    }
 
-        if(simulationProperties.getDaysElapsed() > 0){
-            this.energy = 2*simulationProperties.getEnergyLevelToPassToChild();
-        }
-        else{
-            this.energy = simulationProperties.getStartEnergy();
-        }
+    public Animal(Vector2d position, SimulationProperties simulationProperties, int[] gotGenome) {
+        // konstruktor dla dzieci
+        this.geneIndex = 0;
+        this.genome = gotGenome;
+        this.orientation = MapDirection.values()[random.nextInt(8)]; // losowa orientaja na poczatku
+        this.position = position;
+        this.energy = 2*simulationProperties.getEnergyLevelToPassToChild();;
+        this.movinType = simulationProperties.getMovingType();
+        this.age = 0;
+        this.grassEaten = 0;
+        this.simulationProperties = simulationProperties;
+        this.childrenNumber = 0;
+        this.birthdate = simulationProperties.getDaysElapsed();
     }
 
     public List<Animal> getChildren() {
@@ -136,6 +144,9 @@ public class Animal implements WorldElement {
         int wrappedY = (position.getY() + mapHeight+1) % (mapHeight+1);
         return new Vector2d(wrappedX, wrappedY);
     }
+
+
+
 
 
     public void removeEnergy(int energy) { this.energy -= energy; }

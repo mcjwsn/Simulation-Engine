@@ -14,7 +14,7 @@ public class World {
             ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();
 
             //AbstractWorldMap map3 = new GrassField(22);
-            SimulationProperties simulationProperties1 = new SimulationProperties(5,5,0,12,5,1,10,3,10, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,5,6,5,1,0,1);
+            SimulationProperties simulationProperties1 = new SimulationProperties(5,5,0,12,5,1,10,3,10, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,6,6,5,1,2,2);
             AbstractWorldMap map1 = new GrassField(simulationProperties1);
             //SimulationProperties simulationProperties3 = new SimulationProperties();
 

@@ -81,7 +81,9 @@ public class Genes {
         if (minMutation == 0 && maxMutation == 0) {return genes;}
 
         if (mutationStyle == MutationType.FULLRANDOM) {
-            int numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;
+            int numberOfMutations = 0;
+            if (minMutation == maxMutation){numberOfMutations = minMutation;}
+            else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;} // randnextint doesnt work for value 0
             for (int counter = 0; counter < numberOfMutations; counter++) {
                 int i = indexes.remove(random.nextInt(indexes.size()));
                 genes[i] = random.nextInt(8);
@@ -89,9 +91,11 @@ public class Genes {
         }
         // dwa sie zamieniaja miejscami
         if (mutationStyle == MutationType.LITLLECHANGE) {
-            int numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;
+            int numberOfMutations = 0;
+            if (minMutation == maxMutation){numberOfMutations = minMutation;}
+            else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;}
 
-            for (int counter = 0; counter < Math.floor(numberOfMutations/2.0); counter++) {
+            for (int counter = 0; counter < numberOfMutations; counter+=2) {
                 int i = indexes.remove(random.nextInt(indexes.size()));
                 int j = indexes.remove(random.nextInt(indexes.size()));
                 int a = genes[i];

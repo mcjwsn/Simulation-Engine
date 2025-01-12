@@ -2,11 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
+import java.util.*;
 
 
 public class SimulationManager {
@@ -83,7 +79,14 @@ public class SimulationManager {
                         a2.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce()) {
 
                     System.out.println("Both parents have enough energy - creating child");
-                    Animal child = new Animal(position, simulationProperties);
+                    int[] getGenome = Genes.mixGenesFromParents(a1,a2,simulationProperties);
+                    Animal child = new Animal(position, simulationProperties,getGenome);
+                    System.out.println("First partent genome");
+                    System.out.println(Arrays.toString(a1.getGenome()));
+                    System.out.println("Second parent genowe");
+                    System.out.println(Arrays.toString(a2.getGenome()));
+                    System.out.println("child genome");
+                    System.out.print(Arrays.toString(child.getGenome()));
                     synchronized (this) {
                         System.out.println("Before reproduction:");
                         System.out.println("Total animals at position before birth: " +
