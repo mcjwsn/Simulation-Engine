@@ -13,7 +13,7 @@ import java.util.List;
  * @author apohllo, idzik
  */
 public interface WorldMap extends MoveValidator {
-
+    void moveAllAnimals();
     /*
      * Place an animal on the map.
      *

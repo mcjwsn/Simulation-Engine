@@ -60,7 +60,7 @@ public class SimulationPresenter implements MapChangeListener {
         try{
         List<MoveDirection> directions = OptionsParser.parse(textField.getText().split(" "));
         AbstractWorldMap map1 = new GrassField(15);
-        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(8,5), new Vector2d(4,4), new Vector2d(7,6));
+        List<Vector2d> positions = List.of(new Vector2d(1,1), new Vector2d(3,1));
         map1.addObserver(this);
         setWorldMap(map1);
         Simulation simulation1 = new Simulation(directions, positions, map1);

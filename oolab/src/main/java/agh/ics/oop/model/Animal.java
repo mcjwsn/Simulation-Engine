@@ -56,8 +56,6 @@ public class Animal implements WorldElement {
         }
 
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-        if (map.canMoveTo(newPosition)) {
-            this.position = newPosition;
-        }
+        this.position = newPosition;
     }
 }

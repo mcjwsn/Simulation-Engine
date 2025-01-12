@@ -11,7 +11,7 @@ public class World {
             ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();
             List<MoveDirection> directions = OptionsParser.parse(args);
             List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-            List<Vector2d> positions2 = List.of(new Vector2d(1,1), new Vector2d(2,3), new Vector2d(5,5));
+            List<Vector2d> positions2 = List.of(new Vector2d(2,1), new Vector2d(2,3), new Vector2d(5,5));
             AbstractWorldMap map1 = new GrassField(10);
             AbstractWorldMap map2 = new RectangularMap(5, 5);
             AbstractWorldMap map3 = new GrassField(22);

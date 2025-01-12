@@ -30,20 +30,20 @@ public class Simulation implements Runnable {
         this.map = map;
     }
     public void run(){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         while(true){
-            Animal currentAnimal = animals.get(currentAnimalIndex);
-
-            MoveDirection gene = currentAnimal.getGenotype().getCurrentGene();
-            currentAnimal.getGenotype().incrementIndex();
-
-            map.move(currentAnimal, gene);
+            map.moveAllAnimals();
 
             Platform.runLater(() -> {
                 if (listener != null) {
                     listener.mapChanged(map, "Animal moved to new position");
                 }});
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
