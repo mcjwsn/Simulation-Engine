@@ -76,9 +76,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction) {
+    public void move(Animal animal) {
+        MapDirection direction = animal.getOrientation();
         Vector2d oldPosition = animal.getPosition();
-        animal.move(this,direction);
+        animal.move(this);
         Vector2d newPosition = animal.getPosition();
 
         List<Animal> oldPositionAnimals = animals.get(oldPosition);
@@ -195,6 +196,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         return width*height - position.size();
     }
 
+    public HashMap<Vector2d, Grass> getPlants() { return grass; }
+
+    public List<Vector2d> getFreePositionsForPlants() { return freePositionsForPlants; }
 
 
 

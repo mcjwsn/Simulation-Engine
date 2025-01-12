@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import agh.ics.oop.presenter.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class Simulation implements Runnable {
     private final WorldMap map;
     private MapChangeListener listener;
     private int currentAnimalIndex = 0;
+    private final Map<int[], Integer> genesNumber = new HashMap<>();
 
     public Simulation(List<MoveDirection> directions,List<Vector2d> positions, WorldMap map) {
         this.animals = new ArrayList<>();
@@ -60,6 +62,14 @@ public class Simulation implements Runnable {
     }
     public List<Animal> getAnimals() {
         return List.copyOf(animals);
+    }
+
+    public Map<int[], Integer> getGenomeNumber() { return genesNumber; }
+
+    public synchronized void addAnimal(Animal animal){
+        animals.add(animal);
+        int[] genome = animal.getGenome();
+        genesNumber.merge(genome, 1, Integer::sum);
     }
 }
 

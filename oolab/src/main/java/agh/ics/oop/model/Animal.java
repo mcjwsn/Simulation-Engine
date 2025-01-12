@@ -24,6 +24,7 @@ public class Animal implements WorldElement {
     private int childrenNumber;
     private SimulationProperties simulationProperties;
     int age;
+    private int deathDate;
 
     private final List<Animal> children = new ArrayList<Animal>();
     private static final Random random = new Random();
@@ -56,7 +57,6 @@ public class Animal implements WorldElement {
     public Animal(MapDirection orientation, Vector2d position) { // do pozniejszej poprawki
         //this(orientation, position, new Genes(10), 100);
     }
-
 
     @Override
     public String toString() {
@@ -102,6 +102,14 @@ public class Animal implements WorldElement {
         this.grassEaten+=1;
     }
 
+    public void addAge(){
+        this.age+=1;
+    }
+
+    public void setDeathDate(int deathDate){
+        this.deathDate = deathDate;
+    }
+
     public void move(MoveValidator map,MoveDirection direction) {
         int steps = direction.ordinal();
         for (int i = 0; i < steps; i++) {
@@ -111,6 +119,7 @@ public class Animal implements WorldElement {
         this.position = this.position.add(this.orientation.toUnitVector());
     }
 
+    public void removeEnergy(int energy) { this.energy -= energy; }
 
     // dodac funckje do liczenia dzieci/przodkow
 }
