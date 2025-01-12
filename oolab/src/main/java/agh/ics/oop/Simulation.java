@@ -1,60 +1,77 @@
 package agh.ics.oop;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.modes.MovinType;
+import agh.ics.oop.model.modes.MutationType;
 import agh.ics.oop.model.util.*;
 import javafx.application.Platform;
 import agh.ics.oop.presenter.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Simulation implements Runnable {
-    private final List<Animal> animals;
-    private final List<MoveDirection> directions;
-    private final WorldMap map;
-    private MapChangeListener listener;
-    private int currentAnimalIndex = 0;
+    private final AbstractWorldMap map;
+    private final List<Animal> animals = new ArrayList<>();
+    private boolean isRunning = true; // do pozniejszego stopowania
+    private SimulationProperties simulationProperties;
+    private final SimulationManager simulationManager ;
+    private final Map<int[], Integer> genesCount = new HashMap<>();
+    public List<Animal> getAnimals() {
+        return animals;
+    }
 
-    public Simulation(List<MoveDirection> directions,List<Vector2d> positions, WorldMap map) {
-        this.animals = new ArrayList<>();
-        for (Vector2d position : positions) {
+    public Simulation(AbstractWorldMap map, SimulationProperties simulationProperties) {
+        map.setSimulation(this);
+        this.map = map;
+        this.simulationProperties = simulationProperties;
+        simulationManager = new SimulationManager(map, simulationProperties, this);
+
+        RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getStartAnimalNumber());
+        for(Vector2d animalPosition : randomPositionGeneratorAnimals) {
+            Animal animal = new Animal( animalPosition, simulationProperties);
+            animals.add(animal);
+            int[] genome = animal.getGenome();
+            genesCount.merge(genome, 1, Integer::sum);
+            map.place(animal.getPosition(), animal);
+        }
+        simulationManager.generateGrass(simulationProperties.getGrassNumber());
+        //RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
+        //for(Vector2d plantPosition : randomPositionGeneratorPlants) {
+           // map.placeGrass(plantPosition, new Grass(plantPosition));
+       //}
+    }
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(2500); // inicjalizacja
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        while (!animals.isEmpty()) {
+            if (isRunning) {
+                synchronized (this) {
+                    simulationManager.Update();
+                }
+            }
             try {
-                Animal animal = new Animal(MapDirection.NORTH, position);
-                map.place(animal);
-                this.animals.add(animal);
-            } catch (IncorrectPositionException e) {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
-        this.directions = directions;
-        this.map = map;
     }
-    public void run(){
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        while(true){
-            map.moveAllAnimals();
 
-            Platform.runLater(() -> {
-                if (listener != null) {
-                    listener.mapChanged(map, "Animal moved to new position");
-                }});
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            currentAnimalIndex++;
-            currentAnimalIndex %= animals.size();
-        }
-
+    public synchronized void addAnimal(Animal animal){
+        animals.add(animal);
+        int[] genome = animal.getGenome();
+        genesCount.merge(genome, 1, Integer::sum);
     }
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
+
+    public Map<int[], Integer> getGenomeNumber() { return genesCount; }
+
+    public Integer getAliveAnimalsNumber() {
+        return animals.size();
     }
 }
-

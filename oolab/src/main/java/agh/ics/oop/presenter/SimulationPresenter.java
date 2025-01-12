@@ -3,6 +3,9 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.modes.MovinType;
+import agh.ics.oop.model.modes.MutationType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -59,11 +62,12 @@ public class SimulationPresenter implements MapChangeListener {
     public void onSimulationStartClicked(){
         try{
         List<MoveDirection> directions = OptionsParser.parse(textField.getText().split(" "));
-        AbstractWorldMap map1 = new GrassField(15);
         List<Vector2d> positions = List.of(new Vector2d(1,1), new Vector2d(3,1));
+        SimulationProperties simulationProperties1 = new SimulationProperties(5,5,0,3,10,2,10,5,25, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,5,10,5,1,0,1);
+        AbstractWorldMap map1 = new GrassField(simulationProperties1);
         map1.addObserver(this);
-        setWorldMap(map1);
-        Simulation simulation1 = new Simulation(directions, positions, map1);
+        setWorldMap((WorldMap) map1);
+        Simulation simulation1 = new Simulation(map1,simulationProperties1);
         SimulationEngine engine = new SimulationEngine(List.of(simulation1));
         //engine.runAsync();
         //infoLabel.setText("Simulation started with moves: " + moveLabel);
