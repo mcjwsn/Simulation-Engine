@@ -79,10 +79,20 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public synchronized void move(Animal animal)  {
-        animals.get(animal.getPosition()).remove(animal);
+        Vector2d oldPosition = animal.getPosition();
+        animals.get(oldPosition).remove(animal);
         animal.move(this);
-        place(animal.getPosition(), animal);
+        Vector2d newPosition = animal.getPosition();
+        place(newPosition, animal);
+        List<Animal> oldPositionAnimals = animals.get(oldPosition);
+        if (oldPositionAnimals != null) {
+            oldPositionAnimals.remove(animal);
+            if (oldPositionAnimals.isEmpty()) {
+                animals.remove(oldPosition);
+            }
+        }
     }
+
 
     @Override
     public boolean isOccupied(Vector2d position) {

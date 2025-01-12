@@ -64,24 +64,58 @@ public class SimulationManager {
     }
 
     public void reproduceAnimals() {
+       // System.out.println("\n=== Starting reproduction phase ===");
+       // System.out.println("Total positions with animals: " + map.getAnimals().keySet().size());
+        System.out.println(map.getAnimals().keySet());
+
         for (Vector2d position : map.getAnimals().keySet()) {
             List<Animal> animalList = map.getAnimals().get(position);
+            //System.out.println("\nChecking position " + position + " with " + animalList.size() + " animals");
             if (animalList.size() > 1) {
                 Animal a1 = animalList.get(0);
                 Animal a2 = animalList.get(1);
-                if (a1.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce() && a2.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce()) {
+                System.out.println("Potential parents found:");
+                System.out.println("Parent 1 energy: " + a1.getEnergy());
+                System.out.println("Parent 2 energy: " + a2.getEnergy());
+                System.out.println("Energy needed to reproduce: " + simulationProperties.getEnergyLevelNeededToReproduce());
+                System.out.println(position);
+                if (a1.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce() &&
+                        a2.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce()) {
+
+                    System.out.println("Both parents have enough energy - creating child");
                     Animal child = new Animal(position, simulationProperties);
                     synchronized (this) {
+                        System.out.println("Before reproduction:");
+                        System.out.println("Total animals at position before birth: " +
+                                map.getAnimals().get(position).size());
+                        System.out.println("Parent 1 energy: " + a1.getEnergy());
+                        System.out.println("Parent 2 energy: " + a2.getEnergy());
+
                         map.getAnimals().get(position).add(child);
                         simulation.addAnimal(child);
+
                         a1.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a1.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
                         a2.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a2.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
+
+                        System.out.println("After reproduction:");
+                        System.out.println("Parent 1 energy: " + a1.getEnergy());
+                        System.out.println("Parent 2 energy: " + a2.getEnergy());
+                        System.out.println("Child energy: " + child.getEnergy());
+                        System.out.println("Total animals at position after birth: " +
+                                map.getAnimals().get(position).size());
+                        System.out.println("\n");
                     }
+                } else {
+                    System.out.println("Not enough energy for reproduction");
                 }
+            } else {
+               // System.out.println("Not enough animals for reproduction at this position");
             }
         }
+        System.out.println("\n=== Reproduction phase completed ===");
+        System.out.println("Total animals after reproduction: " + simulation.getAnimals().size());
     }
 
     public void eat() {
