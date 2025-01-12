@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.modes.ElementType;
+
 public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
@@ -53,5 +55,9 @@ public class Animal implements WorldElement {
             this.orientation = this.orientation.next();
         }
         this.position = this.position.add(this.orientation.toUnitVector());
+    }
+
+    public ElementType getType(){
+        return ElementType.ANIMAL;
     }
 }

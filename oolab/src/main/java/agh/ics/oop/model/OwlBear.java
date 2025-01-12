@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.modes.ElementType;
+
 public class OwlBear implements WorldElement {
     private Vector2d position;
 
@@ -12,4 +14,7 @@ public class OwlBear implements WorldElement {
         return this.position.equals(position);
     }
 
+    public ElementType getType(){
+        return ElementType.OWLBEAR;
+    }
 }

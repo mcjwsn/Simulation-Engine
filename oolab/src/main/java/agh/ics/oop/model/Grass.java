@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.modes.ElementType;
+
 public class Grass implements WorldElement{
     private Vector2d position;
 
@@ -15,5 +17,9 @@ public class Grass implements WorldElement{
     @Override
     public String toString() {
         return "*";
+    }
+
+    public ElementType getType() {
+        return ElementType.GRASS;
     }
 }
