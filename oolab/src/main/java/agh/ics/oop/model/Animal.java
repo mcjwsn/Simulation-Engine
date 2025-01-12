@@ -110,32 +110,32 @@ public class Animal implements WorldElement {
         this.deathDate = deathDate;
     }
 
-    public void move(MoveValidator map) {
-        if(movinType == MovinType.DEFAULT) {
-            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-        }
-        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-        this.orientation = newOrientation;
-        this.position = newPosition;
-    }
-//    public void move(AbstractWorldMap map) {
-//        if (movinType == MovinType.DEFAULT) {
+//    public void move(MoveValidator map) {
+//        if(movinType == MovinType.DEFAULT) {
 //            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
 //        }
-//
 //        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
 //        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
 //        this.orientation = newOrientation;
-//        Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-//        this.position = wrappedPosition;
+//        this.position = newPosition;
 //    }
-//
-//    private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {
-//        int wrappedX = (position.getX() + mapWidth) % mapWidth;
-//        int wrappedY = (position.getY() + mapHeight) % mapHeight;
-//        return new Vector2d(wrappedX, wrappedY);
-//    }
+    public void move(AbstractWorldMap map) {
+        if (movinType == MovinType.DEFAULT) {
+            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
+        }
+
+        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
+        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
+        this.orientation = newOrientation;
+        Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
+        this.position = wrappedPosition;
+    }
+
+    private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {
+        int wrappedX = (position.getX() + mapWidth+1) % (1+mapWidth);
+        int wrappedY = (position.getY() + mapHeight+1) % (mapHeight+1);
+        return new Vector2d(wrappedX, wrappedY);
+    }
 
 
     public void removeEnergy(int energy) { this.energy -= energy; }
