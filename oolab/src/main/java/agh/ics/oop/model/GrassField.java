@@ -65,4 +65,24 @@ public class GrassField extends AbstractWorldMap{
         elements.addAll(mapOfGrass.values());
         return elements;
     }
+
+    @Override
+    public fixPosition(Vector2d position, MapDirection orientation) { // do poprawy
+        int x = (position.getX()+width)%width;
+        int y = position.getY();
+        MapDirection orient = orientation;
+        if (y < 0) {
+            y = 1;
+            if (orientation == MapDirection.SOUTH) orient = MapDirection.NORTH;
+            else if (orientation == MapDirection.SOUTHEAST) orient = MapDirection.NORTHEAST;
+            else if (orientation == MapDirection.SOUTHWEST) orient = MapDirection.NORTHWEST;
+        }
+        if (y >= height) {
+            y = height-2;
+            if (orientation == MapDirection.NORTH) orient = MapDirection.SOUTH;
+            else if (orientation == MapDirection.NORTHEAST) orient = MapDirection.SOUTHEAST;
+            else if (orientation == MapDirection.NORTHWEST) orient = MapDirection.SOUTHWEST;
+        }
+
+    }
 }
