@@ -55,4 +55,12 @@ public enum MapDirection {
             case NORTHWEST -> new Vector2d(-1, 1);
         };
     }
-}
+
+    public MapDirection rotate(int angle) {
+        MapDirection result = this;
+        for (int i = 0; i < angle; i++) {
+            result = result.next();
+        }
+        return result;
+    }
+    }

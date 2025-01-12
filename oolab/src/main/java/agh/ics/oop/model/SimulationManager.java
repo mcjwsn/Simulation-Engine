@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static agh.ics.oop.OptionsParser.parse;
+
 
 public class SimulationManager {
     private final AbstractWorldMap map;

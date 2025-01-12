@@ -110,14 +110,16 @@ public class Animal implements WorldElement {
         this.deathDate = deathDate;
     }
 
-    public void move(MoveValidator map,MoveDirection direction) {
-        int steps = direction.ordinal();
-        for (int i = 0; i < steps; i++) {
-            this.orientation = this.orientation.next();
+    public void move(MoveValidator map) {
+        if(movinType == MovinType.DEFAULT) {
+            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
         }
-        this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-        this.position = this.position.add(this.orientation.toUnitVector());
+        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
+        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
+        this.orientation = newOrientation;
+        this.position = newPosition;
     }
+
 
     public void removeEnergy(int energy) { this.energy -= energy; }
 

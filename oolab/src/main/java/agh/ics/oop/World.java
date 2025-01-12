@@ -15,8 +15,8 @@ public class World {
             AbstractWorldMap map3 = new GrassField(22);
             map1.addObserver(consoleMapDisplay);
             map3.addObserver(consoleMapDisplay);
-            Simulation simulation1 = new Simulation(directions, positions, map1);
-            Simulation simulation3 = new Simulation(directions, positions2, map3);
+            Simulation simulation1 = new Simulation(directions, positions, (WorldMap) map1);
+            Simulation simulation3 = new Simulation(directions, positions2, (WorldMap) map3);
             SimulationEngine engine = new SimulationEngine(List.of(simulation1, simulation3));
 
             engine.runAsyncInThreadPool();

@@ -75,23 +75,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-    @Override
-    public void move(Animal animal) {
-        MapDirection direction = animal.getOrientation();
-        Vector2d oldPosition = animal.getPosition();
+    public synchronized void move(Animal animal)  {
+        animals.get(animal.getPosition()).remove(animal);
         animal.move(this);
-        Vector2d newPosition = animal.getPosition();
-
-        List<Animal> oldPositionAnimals = animals.get(oldPosition);
-        if (oldPositionAnimals != null) {
-            oldPositionAnimals.remove(animal);
-            if (oldPositionAnimals.isEmpty()) {
-                animals.remove(oldPosition);
-            }
-        }
-
-        animals.computeIfAbsent(newPosition, pos -> new CopyOnWriteArrayList<>()).add(animal);
-        notifyObservers("Animal moved from " + oldPosition + " to " + newPosition);
+        place(animal.getPosition(), animal);
     }
 
     @Override
@@ -116,20 +103,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             allElements.addAll(animalList);
         }
         return allElements;
-    }
-
-    public void moveAllAnimals() {
-        List<Animal> allAnimals = new ArrayList<>();
-        for (List<Animal> animalList : animals.values()) {
-            allAnimals.addAll(animalList);
-        }
-
-        for (Animal currentAnimal : allAnimals) {
-            String gene = String.valueOf(currentAnimal.getGenome()[currentAnimal.getGeneIndex()]);
-            String[] result = new String[]{gene}; // nwm jak to zrobic lepiej
-            List<MoveDirection> x = parse(result);
-            this.move(currentAnimal, x.getFirst());
-        }
     }
 
     @Override

@@ -62,8 +62,8 @@ public class SimulationPresenter implements MapChangeListener {
         AbstractWorldMap map1 = new GrassField(15);
         List<Vector2d> positions = List.of(new Vector2d(1,1), new Vector2d(3,1));
         map1.addObserver(this);
-        setWorldMap(map1);
-        Simulation simulation1 = new Simulation(directions, positions, map1);
+        setWorldMap((WorldMap) map1);
+        Simulation simulation1 = new Simulation(directions, positions, (WorldMap) map1);
         SimulationEngine engine = new SimulationEngine(List.of(simulation1));
         //engine.runAsync();
         //infoLabel.setText("Simulation started with moves: " + moveLabel);
