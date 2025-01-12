@@ -8,7 +8,7 @@ public class SimulationProperties {
     private int width;
     private int height;
     private int animalNumber;
-    private int grassNumber;
+    private int grassNumber; // poczatkowa liczba traw
     private int dailySpawningGrass;
     private int startEnergy;
     private int maxEnergy;

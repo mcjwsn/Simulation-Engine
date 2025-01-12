@@ -7,69 +7,73 @@ import agh.ics.oop.model.util.*;
 import javafx.application.Platform;
 import agh.ics.oop.presenter.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Simulation implements Runnable {
-    private final List<Animal> animals;
-    private List<MoveDirection> directions;
-    private final WorldMap map;
-    private MapChangeListener listener;
-    private int currentAnimalIndex = 0;
-    private final Map<int[], Integer> genesNumber = new HashMap<>();
-
-    public Simulation(List<MoveDirection> directions,List<Vector2d> positions, WorldMap map) {
-        this.animals = new ArrayList<>();
-        SimulationProperties simulationProperties = new SimulationProperties(5, 5, 1, 3, 5, 1, 10, 1, 15, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE, 5, 4, 2, 1, 0, 2);
-        for (Vector2d position : positions) {
-            try {
-                Animal animal = new Animal(position, simulationProperties);
-                map.place(position,animal);
-                this.animals.add(animal);
-            } catch (IncorrectPositionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        this.directions = directions;
-        this.map = map;
+    private final AbstractWorldMap map;
+    private final List<Animal> animals = new ArrayList<>();
+    private boolean isRunning = true; // do pozniejszego stopowania
+    private SimulationProperties simulationProperties;
+    private int accumulatedLifeSpan = 0;
+    private final SimulationManager simulationManager ;
+    private final Map<int[], Integer> genesCount = new HashMap<>();
+    public List<Animal> getAnimals() {
+        return animals;
     }
-    public void run(){
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        while(true){
-            map.moveAllAnimals();
 
-            Platform.runLater(() -> {
-                if (listener != null) {
-                    listener.mapChanged(map, "Animal moved to new position");
-                }});
+    public Simulation(AbstractWorldMap map, SimulationProperties simulationProperties) {
+        map.setSimulation(this);
+        this.map = map;
+        this.simulationProperties = simulationProperties;
+        simulationManager = new SimulationManager(map, simulationProperties, this);
+
+//        RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getStartAnimalNumber());
+//        for(Vector2d animalPosition : randomPositionGeneratorAnimals) {
+//            Animal animal = new Animal( animalPosition, simulationProperties);
+//            animals.add(animal);
+//            int[] genome = animal.getGenome();
+//            genesCount.merge(genome, 1, Integer::sum);
+//            map.place(animal.getPosition(), animal);
+//        }
+//
+//        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
+//        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
+//            map.placeGrass(plantPosition, new Grass(plantPosition));
+//        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(2000); // inicjalizacja
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        while (!animals.isEmpty()) {
+            if (isRunning) {
+                synchronized (this) {
+                    simulationManager.Update();
+                }
+            }
+
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-
-            currentAnimalIndex++;
-            currentAnimalIndex %= animals.size();
         }
-
     }
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
-    }
-
-    public Map<int[], Integer> getGenomeNumber() { return genesNumber; }
 
     public synchronized void addAnimal(Animal animal){
         animals.add(animal);
         int[] genome = animal.getGenome();
-        genesNumber.merge(genome, 1, Integer::sum);
+        genesCount.merge(genome, 1, Integer::sum);
     }
-}
 
+    public Map<int[], Integer> getGenomeCount() { return genesCount; }
+
+    public Integer getAliveAnimalsNumber() {
+        return animals.size();
+    }
+    }
