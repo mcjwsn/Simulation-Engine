@@ -14,7 +14,6 @@ public class Simulation implements Runnable {
     private final List<Animal> animals = new ArrayList<>();
     private boolean isRunning = true; // do pozniejszego stopowania
     private SimulationProperties simulationProperties;
-    private int accumulatedLifeSpan = 0;
     private final SimulationManager simulationManager ;
     private final Map<int[], Integer> genesCount = new HashMap<>();
     public List<Animal> getAnimals() {
@@ -56,7 +55,6 @@ public class Simulation implements Runnable {
                     simulationManager.Update();
                 }
             }
-
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -71,9 +69,9 @@ public class Simulation implements Runnable {
         genesCount.merge(genome, 1, Integer::sum);
     }
 
-    public Map<int[], Integer> getGenomeCount() { return genesCount; }
+    public Map<int[], Integer> getGenomeNumber() { return genesCount; }
 
     public Integer getAliveAnimalsNumber() {
         return animals.size();
     }
-    }
+}
