@@ -34,13 +34,17 @@ public class SimulationManager {
         map.mapChanged("Dzien sie zakonczyl");
     }
 
-    private void deleteDeadAnimals(){
+    private void deleteDeadAnimals() {
         Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
+        System.out.println("Checking " + animalsToRemove.size() + " animals for death");
+
         for(Animal animal : animalsToRemove) {
             if (animal.getEnergy() <= 0) {
+                System.out.println("Animal at " + animal.getPosition() + " died with energy: " + animal.getEnergy());
                 animal.setDeathDate(simulationProperties.getDaysElapsed());
-                simulation.getGenomeNumber().put(animal.getGenome(), (Integer) simulation.getGenomeNumber().get(animal.getGenome()) - 1);
                 map.removeAnimal(animal);
+                simulation.getAnimals().remove(animal);
+                System.out.println("Remaining animals: " + simulation.getAnimals().size());
             }
         }
     }
@@ -82,16 +86,18 @@ public class SimulationManager {
 
     public void eat() {
         Set<Vector2d> keys = new HashSet<>(map.getPlants().keySet());
-        for ( Vector2d position : keys ){
-            if ( map.getAnimals().containsKey(position) ) {
+        for (Vector2d position : keys) {
+            if (map.getAnimals().containsKey(position)) {
                 List<Animal> animalList = map.getAnimals().get(position);
                 if (!animalList.isEmpty()) {
                     Animal animal = animalList.get(0);
+                    System.out.println("Animal at " + position + " eating grass. Current energy: " + animal.getEnergy());
                     synchronized (this) {
                         animal.eat(simulationProperties.getGrassEnergy());
                         map.getPlants().remove(position);
                         map.getFreePositionsForPlants().add(position);
                     }
+                    System.out.println("After eating energy: " + animal.getEnergy());
                 }
             }
         }
