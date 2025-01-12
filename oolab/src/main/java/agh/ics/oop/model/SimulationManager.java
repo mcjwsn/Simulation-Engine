@@ -2,11 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
+import java.util.*;
 
 
 public class SimulationManager {
@@ -14,12 +10,20 @@ public class SimulationManager {
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
 
+    private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
+    private static final Set<Vector2d> preferredPositions = new HashSet<>();
+    private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
+
+    private static int DAILY_GRASS_NUMBER = 0;
+
     protected static final Random random = new Random();
 
     public SimulationManager (AbstractWorldMap map_, SimulationProperties simulationProperties_, Simulation simulation_) {
         map = map_;
         simulationProperties= simulationProperties_;
         simulation = simulation_;
+        DAILY_GRASS_NUMBER = simulationProperties.getDailySpawningGrass();
+        initializePositions(map);
     }
 
     // operacja podczas nowego dnia
@@ -118,6 +122,19 @@ public class SimulationManager {
         System.out.println("Total animals after reproduction: " + simulation.getAnimals().size());
     }
 
+    protected void restoreEatenPlantPosition(Grass eatenGrass) {
+        Vector2d availablePosition = eatenGrass.getPosition();
+        int height = map.getHeight();
+
+        int startEquatorRow = (height - 1) / 2;
+        int endEquatorRow = height / 2;
+
+        if (availablePosition.getY() >= startEquatorRow + 1 && availablePosition.getY() <= endEquatorRow + 1) {
+            preferredPositions.add(availablePosition);
+        } else {
+            lessPreferredPositions.add(availablePosition);
+        }
+    }
     public void eat() {
         Set<Vector2d> keys = new HashSet<>(map.getPlants().keySet());
         for (Vector2d position : keys) {
@@ -128,8 +145,12 @@ public class SimulationManager {
                     System.out.println("Animal at " + position + " eating grass. Current energy: " + animal.getEnergy());
                     synchronized (this) {
                         animal.eat(simulationProperties.getGrassEnergy());
+
+                        Grass eatenGrass = map.getPlants().get(position);
                         map.getPlants().remove(position);
                         map.getFreePositionsForPlants().add(position);
+
+                        restoreEatenPlantPosition(eatenGrass);
                     }
                     System.out.println("After eating energy: " + animal.getEnergy());
                 }
@@ -137,19 +158,58 @@ public class SimulationManager {
         }
     }
 
-    public void spawnPlant() {
-        List<Vector2d> freePositions = map.getFreePositionsForPlants();
-        if (freePositions.isEmpty()) return;
 
-        Vector2d plantPosition = freePositions.get(random.nextInt(freePositions.size()));
-        map.placeGrass(plantPosition, new Grass(plantPosition));
+
+    public static void initializePositions(AbstractWorldMap map) {
+        int width = map.getWidth();
+        int height = map.getHeight();
+        Set<Vector2d> preferred = new HashSet<>();
+        Set<Vector2d> lessPreferred = new HashSet<>();
+
+        int startEquatorRow = (height - 1) / 2;
+        int endEquatorRow = height / 2;
+
+        for (int y = 0; y <= height; y++) {
+            for (int x = 0; x <= width; x++) {
+                Vector2d position = new Vector2d(x, y);
+                if (y >= startEquatorRow + 1 && y <= endEquatorRow + 1) {
+                    preferred.add(position);
+                } else {
+                    lessPreferred.add(position);
+                }
+            }
+        }
+
+        preferredPositions.clear();
+        preferredPositions.addAll(preferred);
+        lessPreferredPositions.clear();
+        lessPreferredPositions.addAll(lessPreferred);
     }
 
-    private void growGrass() {
-        int plantsToAdd = simulationProperties.getDailySpawningGrass();
-        for (int i = 0; i<plantsToAdd; i++) {
-            spawnPlant();
+    public void generateGrass(int numberOfPlants) {
+        for (int i = 0; i < numberOfPlants; i++) {
+            double probability = random.nextDouble();
+            Vector2d plantPosition;
+
+            if ((probability < PREFERRED_POSITION_PROBABILITY && !preferredPositions.isEmpty()) || lessPreferredPositions.isEmpty()) {
+                List<Vector2d> preferredList = new ArrayList<>(preferredPositions);
+                plantPosition = preferredList.get(random.nextInt(preferredList.size()));
+                preferredPositions.remove(plantPosition);
+                map.placeGrass(plantPosition, new Grass(plantPosition));
+            } else if (!lessPreferredPositions.isEmpty()) {
+                List<Vector2d> lessPreferredList = new ArrayList<>(lessPreferredPositions);
+                plantPosition = lessPreferredList.get(random.nextInt(lessPreferredList.size()));
+                lessPreferredPositions.remove(plantPosition);
+                map.placeGrass(plantPosition, new Grass(plantPosition));
+                }
+
         }
     }
+
+    public void growGrass() {
+        generateGrass(DAILY_GRASS_NUMBER);
+    }
+
+
 
 }

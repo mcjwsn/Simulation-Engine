@@ -186,7 +186,6 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public List<Vector2d> getFreePositionsForPlants() { return freePositionsForPlants; }
 
-
     public int getWidth() {
         return width;
     }

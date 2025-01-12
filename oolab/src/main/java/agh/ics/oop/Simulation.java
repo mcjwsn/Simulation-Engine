@@ -35,10 +35,11 @@ public class Simulation implements Runnable {
             map.place(animal.getPosition(), animal);
         }
 
-        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
-        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
-            map.placeGrass(plantPosition, new Grass(plantPosition));
-        }
+        simulationManager.generateGrass(simulationProperties.getStartAnimalNumber());
+//        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
+//        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
+//            map.placeGrass(plantPosition, new Grass(plantPosition));
+//        }
     }
 
     @Override
