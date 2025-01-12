@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.util.*;
 import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
@@ -14,6 +15,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer visualizer = new MapVisualizer(this);
     protected final List<MapChangeListener> observers = new CopyOnWriteArrayList<>();
     protected final String id;
+
 
     public AbstractWorldMap() {
         this.id = UUID.randomUUID().toString();
@@ -114,6 +116,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     public String getId() {
         return id;
     }
+
+    public abstract MapType getMapType();
 
 
 

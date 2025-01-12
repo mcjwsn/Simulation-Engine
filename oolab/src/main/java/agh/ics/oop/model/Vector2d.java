@@ -56,6 +56,7 @@ public class Vector2d { // mozna zmienic na rekord i bedzie git, bez getterow
     //}
 
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
