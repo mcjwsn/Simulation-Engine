@@ -4,7 +4,7 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
-    private Genes genotype;
+    private final Genes genotype;
 
     public Animal(MapDirection orientation, Vector2d position, Genes genotype, int energy) {
         this.genotype = genotype;
@@ -17,12 +17,9 @@ public class Animal implements WorldElement {
         this(orientation, position, new Genes(10), 100);
     }
 
-
     public Animal() {
         this(MapDirection.NORTH, new Vector2d(2, 2), new Genes(10), 100); // Call the second constructor
     }
-
-
 
     @Override
     public String toString() {
@@ -46,16 +43,15 @@ public class Animal implements WorldElement {
         return this.position.equals(position);
     }
 
-
+    public int getEnergy(){
+        return energy;
+    }
 
     public void move(MoveDirection direction, MoveValidator map) {
         int steps = direction.ordinal();
-
         for (int i = 0; i < steps; i++) {
             this.orientation = this.orientation.next();
         }
-
-        Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-        this.position = newPosition;
+        this.position = this.position.add(this.orientation.toUnitVector());
     }
 }

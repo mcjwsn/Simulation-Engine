@@ -85,7 +85,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-
     @Override
     public abstract Boundary getCurrentBounds();
 
@@ -113,4 +112,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public String getId() {
         return id;
     }
+
+
+
 }
