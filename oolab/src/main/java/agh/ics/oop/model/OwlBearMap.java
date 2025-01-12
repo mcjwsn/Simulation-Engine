@@ -7,19 +7,43 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class OwlBearMap extends AbstractWorldMap{
-    private final Map<Vector2d, Grass> mapOfGrass = new HashMap<>();
+    private final Map<Vector2d, Grass> mapOfGrass = grass;
 
-    public OwlBearMap(int mapWidth, int mapHeight,int grassNumber) {
-        // polozenie przestrzeni sowoniedzwiedza na mapie
-        int locationIndex = findCoordinates(mapWidth, mapHeight);
-        int submapLength = integerPart(Math.sqrt(mapWidth * mapHeight * 0.2));
-        generateGrass(grassNumber);
+    public OwlBearMap(SimulationProperties simulationProperties) {
+        super(simulationProperties);
+    }
+
+    public WorldElement objectAt(Vector2d position) {
+        WorldElement object = super.objectAt(position);
+        if(object != null) return object;
+        return mapOfGrass.get(position);
+    }
+
+
+    public boolean isOccupied(Vector2d position){
+        if(!super.isOccupied(position)){
+            return mapOfGrass.containsKey(position);
+        }
+        return true;
+    }
+
+    @Override
+    public Boundary getCurrentBounds() {
+        Vector2d bottom = new Vector2d(0,0);
+        Vector2d top = new Vector2d(height, width);
+        return new Boundary(bottom, top);
+    }
+
+    public List<WorldElement> getElements() {
+        List<WorldElement> elements = super.getElements();
+        elements.addAll(mapOfGrass.values());
+        return elements;
     }
 
     public static int integerPart(double number) {
         return (int) number ;
     }
-    // do poprawy bo pewnie nie dziala
+
     public int findCoordinates(int mapWidth, int mapHeight) {
         int value = integerPart(Math.sqrt(mapWidth * mapHeight * 0.2)) + 1;
         // maksymalny indeks
@@ -33,17 +57,6 @@ public class OwlBearMap extends AbstractWorldMap{
         for (Vector2d grassPosition : randomPositionGenerator) {
             mapOfGrass.put(grassPosition, new Grass(grassPosition));
         }
-    }
-    @Override
-    public Boundary getCurrentBounds() {
-        Vector2d bottom = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        Vector2d top = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        List<WorldElement> elements = getElements();
-        for (WorldElement element: elements) {
-            bottom = bottom.lowerLeft(element.getPosition());
-            top = top.upperRight(element.getPosition());
-        }
-        return new Boundary(bottom, top);
     }
 
     @Override

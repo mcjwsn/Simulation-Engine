@@ -14,8 +14,8 @@ public class World {
             ConsoleMapDisplay consoleMapDisplay = new ConsoleMapDisplay();
 
             //AbstractWorldMap map3 = new GrassField(22);
-            SimulationProperties simulationProperties1 = new SimulationProperties(5,5,0,5,5,1,10,3,10, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,5,6,5,1,0,1);
-            AbstractWorldMap map1 = new GrassField(simulationProperties1);
+            SimulationProperties simulationProperties1 = new SimulationProperties(8,8,0,5,10,5,10,3,10, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,5,6,5,1,0,1);
+            AbstractWorldMap map1 = new OwlBearMap(simulationProperties1);
             //SimulationProperties simulationProperties3 = new SimulationProperties();
 
             map1.addObserver(consoleMapDisplay);
