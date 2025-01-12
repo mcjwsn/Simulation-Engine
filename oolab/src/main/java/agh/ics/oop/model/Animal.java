@@ -3,16 +3,26 @@ package agh.ics.oop.model;
 public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
+    private int energy;
+    private Genes genotype;
+
+    public Animal(MapDirection orientation, Vector2d position, Genes genotype, int energy) {
+        this.genotype = genotype;
+        this.orientation = orientation;
+        this.position = position;
+        this.energy = energy;
+    }
+
+    public Animal(MapDirection orientation, Vector2d position) {
+        this(orientation, position, new Genes(10), 100);
+    }
 
 
     public Animal() {
-        this.orientation = MapDirection.NORTH;
-        this.position = new Vector2d(2,2);
+        this(MapDirection.NORTH, new Vector2d(2, 2), new Genes(10), 100); // Call the second constructor
     }
-    public Animal(MapDirection orientation, Vector2d position){
-        this.orientation = orientation;
-        this.position = position;
-    }
+
+
 
     @Override
     public String toString() {
@@ -22,6 +32,10 @@ public class Animal implements WorldElement {
     @Override
     public Vector2d getPosition() {
         return position;
+    }
+
+    public Genes getGenotype() {
+        return genotype;
     }
 
     public MapDirection getOrientation() {
@@ -35,18 +49,13 @@ public class Animal implements WorldElement {
 
 
     public void move(MoveDirection direction, MoveValidator map) {
-        // Calculate the number of steps based on the MoveDirection
         int steps = direction.ordinal();
 
-        // Update orientation based on how many steps we need to rotate
         for (int i = 0; i < steps; i++) {
             this.orientation = this.orientation.next();
         }
 
-        // Move 1 step in the final direction after rotating the orientation
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-        if (map.canMoveTo(newPosition)) {
-            this.position = newPosition;
-        }
+        this.position = newPosition;
     }
 }
