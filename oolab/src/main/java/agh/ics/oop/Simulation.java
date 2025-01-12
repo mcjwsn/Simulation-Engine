@@ -34,11 +34,11 @@ public class Simulation implements Runnable {
             genesCount.merge(genome, 1, Integer::sum);
             map.place(animal.getPosition(), animal);
         }
-
-        RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
-        for(Vector2d plantPosition : randomPositionGeneratorPlants) {
-            map.placeGrass(plantPosition, new Grass(plantPosition));
-        }
+        simulationManager.generateGrass(simulationProperties.getGrassNumber());
+        //RandomPositionGenerator randomPositionGeneratorPlants = new RandomPositionGenerator(simulationProperties.getMapWidth(), simulationProperties.getMapHeight(), simulationProperties.getGrassNumber());
+        //for(Vector2d plantPosition : randomPositionGeneratorPlants) {
+           // map.placeGrass(plantPosition, new Grass(plantPosition));
+       //}
     }
 
     @Override
