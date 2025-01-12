@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.util.*;
 import agh.ics.oop.model.util.RandomPointsGenerator;
 import java.util.*;
@@ -8,6 +9,10 @@ public class GrassField extends AbstractWorldMap{
     private final Map<Vector2d, Grass> mapOfGrass = new HashMap<>();
     public GrassField(int grassNumber) {
         generateGrass(grassNumber);
+    }
+
+    public GrassField(SimulationProperties simulationProperties) {
+        super(simulationProperties);
     }
 
     private void generateGrass(int grassNumber){
@@ -47,6 +52,11 @@ public class GrassField extends AbstractWorldMap{
             top = top.upperRight(element.getPosition());
         }
         return new Boundary(bottom, top);
+    }
+
+    @Override
+    public MapType getMapType() {
+        return MapType.GLOBE;
     }
 
     @Override

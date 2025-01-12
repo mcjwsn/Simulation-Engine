@@ -1,4 +1,5 @@
 package agh.ics.oop.model;
+import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.RandomPointsGenerator;
 
@@ -43,6 +44,11 @@ public class OwlBearMap extends AbstractWorldMap{
             top = top.upperRight(element.getPosition());
         }
         return new Boundary(bottom, top);
+    }
+
+    @Override
+    public MapType getMapType() {
+        return MapType.OWLBEAR;
     }
 }
 // dodac reszte metod
