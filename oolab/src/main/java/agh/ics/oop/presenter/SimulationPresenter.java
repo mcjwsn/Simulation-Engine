@@ -114,14 +114,18 @@ public class SimulationPresenter implements MapChangeListener {
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
         int maxMutation = maxGenMutationsSpinner.getValue();
+        initialize();
 
         SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
                 dailySpawningGrass, startEnergy, grassEnergy, maxEnergy,
                 movingType,mutationType, mapType,  genesCount,
                 energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
                 minMutation, maxMutation);
-
-        AbstractWorldMap map1 = new GrassField(simulationProperties);
+        AbstractWorldMap map1 = new OwlBearMap(simulationProperties);
+        if (mapType == MapType.GLOBE) {
+            AbstractWorldMap map2 = new GrassField(simulationProperties);
+            map1 = map2;
+        }
         map1.addObserver(this);
         Simulation simulation1 = new Simulation(map1, simulationProperties);
         SimulationEngine engine = new SimulationEngine(List.of(simulation1));
