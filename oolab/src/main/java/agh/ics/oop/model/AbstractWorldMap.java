@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.UUID;
 
-import static agh.ics.oop.OptionsParser.parse;
-
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
@@ -100,10 +98,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
         List<Animal> positionAnimals = animals.get(position);
         if (positionAnimals != null && !positionAnimals.isEmpty()) {
-            return positionAnimals.get(0);
+            return Optional.ofNullable(positionAnimals.get(0));
         }
         return null;
     }

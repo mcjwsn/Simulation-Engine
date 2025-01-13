@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 
-// to z wiki do poprawy
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private List<Vector2d> positions = new ArrayList<>();
     private final int size;
