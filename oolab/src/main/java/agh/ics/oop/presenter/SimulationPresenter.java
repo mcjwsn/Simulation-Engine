@@ -6,10 +6,12 @@ import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.modes.MovinType;
 import agh.ics.oop.model.modes.MutationType;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
 
 import java.util.List;
 
@@ -121,16 +123,25 @@ public class SimulationPresenter implements MapChangeListener {
                 movingType,mutationType, mapType,  genesCount,
                 energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
                 minMutation, maxMutation);
-        AbstractWorldMap map1 = new OwlBearMap(simulationProperties);
+        AbstractWorldMap map1;
+        try{
         if (mapType == MapType.GLOBE) {
-            AbstractWorldMap map2 = new GrassField(simulationProperties);
-            map1 = map2;
+            map1 = new GrassField(simulationProperties);
+            map1.addObserver(this);
+            Simulation simulation1 = new Simulation(map1, simulationProperties);
+            SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+            //engine.runAsync();
+            engine.runAsync();
         }
-        map1.addObserver(this);
-        Simulation simulation1 = new Simulation(map1, simulationProperties);
-        SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-        //engine.runAsync();
-        engine.runAsync();
+        else{map1 = new OwlBearMap(simulationProperties);
+            map1.addObserver(this);
+            Simulation simulation1 = new Simulation(map1, simulationProperties);
+            SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+            //engine.runAsync();
+            engine.runAsync();
+        }} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         hideConfigurationElements();
 
     }
@@ -208,24 +219,56 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
+        // Create StringConverter for MapType
+        StringConverter<MapType> mapTypeConverter = new StringConverter<>() {
+            @Override
+            public String toString(MapType mapType) {
+                if (mapType == null) return "";
+                return mapType.name();
+            }
 
-        SpinnerValueFactory<MutationType> valueFactory3 =
-                new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                        javafx.collections.FXCollections.observableArrayList(MutationType.values())
-                );
-        mutationTypeSpinner.setValueFactory(valueFactory3);
+            @Override
+            public MapType fromString(String string) {
+                if (string == null || string.trim().isEmpty()) return MapType.OWLBEAR;
+                return MapType.valueOf(string.trim());
+            }
+        };
 
-        SpinnerValueFactory<MapType> valueFactory1 =
-                new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                        javafx.collections.FXCollections.observableArrayList(MapType.values())
-                );
-        mapTypeSpinner.setValueFactory(valueFactory1);
-// należy zmienic tego spinner tez na value factory bo inaczej nie da
-        // dynamczinie zmieniac maksymalnej wartosci liczby traw
-        //heightSpinner.setValue(10);
-        //widthSpinner.setValue(10);
+        // Create StringConverter for MutationType
+        StringConverter<MutationType> mutationTypeConverter = new StringConverter<>() {
+            @Override
+            public String toString(MutationType mutationType) {
+                if (mutationType == null) return "";
+                return mutationType.name();
+            }
 
+            @Override
+            public MutationType fromString(String string) {
+                if (string == null || string.trim().isEmpty()) return MutationType.values()[0];
+                return MutationType.valueOf(string.trim());
+            }
+        };
+
+        // Initialize MapType spinner
+        SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE)
+        );
+        mapTypeFactory.setConverter(mapTypeConverter);
+        mapTypeSpinner.setValueFactory(mapTypeFactory);
+        mapTypeFactory.setValue(MapType.OWLBEAR); // Set default value
+
+        // Initialize MutationType spinner
+        SpinnerValueFactory<MutationType> mutationTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                FXCollections.observableArrayList(MutationType.values())
+        );
+        mutationTypeFactory.setConverter(mutationTypeConverter);
+        mutationTypeSpinner.setValueFactory(mutationTypeFactory);
+        mutationTypeFactory.setValue(MutationType.values()[0]); // Set default value
+
+        // Disable editing to prevent invalid input
+        mapTypeSpinner.setEditable(false);
+        mutationTypeSpinner.setEditable(false);
     }
 
     private void updateArea(){

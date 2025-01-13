@@ -2,5 +2,10 @@ package agh.ics.oop.model.modes;
 
 public enum MapType {
     GLOBE,
-    OWLBEAR
+    OWLBEAR;
+    @Override
+    public String toString() {
+        return name();
+    }
 }
+
