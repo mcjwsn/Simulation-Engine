@@ -22,14 +22,14 @@ public class GrassField extends AbstractWorldMap{
         }
     }
 
-
+    @Override
     public WorldElement objectAt(Vector2d position) {
         WorldElement object = super.objectAt(position);
         if(object != null) return object;
         return mapOfGrass.get(position);
     }
 
-
+    @Override
     public boolean isOccupied(Vector2d position){
         if(!super.isOccupied(position)){
             return mapOfGrass.containsKey(position);
@@ -44,12 +44,12 @@ public class GrassField extends AbstractWorldMap{
         return new Boundary(bottom, top);
     }
 
-
+    @Override
     public MapType getMapType() {
         return MapType.GLOBE;
     }
 
-
+    @Override
     public List<WorldElement> getElements() {
         List<WorldElement> elements = super.getElements();
         elements.addAll(mapOfGrass.values());

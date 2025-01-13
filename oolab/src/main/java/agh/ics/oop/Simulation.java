@@ -48,7 +48,6 @@ public class Simulation implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         while (!animals.isEmpty()) {
             if (isRunning) {
                 synchronized (this) {

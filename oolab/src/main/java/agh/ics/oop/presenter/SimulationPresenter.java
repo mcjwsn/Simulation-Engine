@@ -94,6 +94,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
     @FXML
     public void onSimulationStartClicked(){
+
         int mapWidth = widthSpinner.getValue();
         int mapHeight = heightSpinner.getValue();
         int equatorHeight = equatorHeightSpinner.getValue();
