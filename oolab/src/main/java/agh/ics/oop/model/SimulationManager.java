@@ -11,7 +11,7 @@ public class SimulationManager {
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
 
-    private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
+    private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
     private static int DAILY_GRASS_NUMBER = 0;
@@ -210,8 +210,8 @@ public class SimulationManager {
         Set<Vector2d> lessPreferred = new HashSet<>();
         int startEquatorRow = (height - 1) / 2;
         int endEquatorRow = height / 2;
-        for (int y = 0; y <= height; y++) {
-            for (int x = 0; x <= width; x++) {
+        for (int x = 0; x <= height; x++) {
+            for (int y = 0; y <= width; y++) {
                 Vector2d position = new Vector2d(x, y);
                 if (y >= startEquatorRow + 1 && y <= endEquatorRow + 1) {
                     preferred.add(position);
