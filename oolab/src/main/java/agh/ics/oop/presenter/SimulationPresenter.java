@@ -97,8 +97,8 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     public void onSimulationStartClicked(){
 
-        int mapWidth = widthSpinner.getValue();
-        int mapHeight = heightSpinner.getValue();
+        int mapWidth = widthSpinner.getValue()-1;
+        int mapHeight = heightSpinner.getValue()-1;
         int equatorHeight = equatorHeightSpinner.getValue();
         equatorHeight = Math.min(equatorHeight, mapWidth);
         int animalNumber = numberOfAnimalsSpinner.getValue();
