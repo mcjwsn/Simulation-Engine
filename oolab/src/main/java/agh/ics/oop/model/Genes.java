@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.World;
 import agh.ics.oop.model.modes.MutationType;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Genes {
         return genes.get(currentGeneIndex);
     }
 
-    public void incrementIndex(Animal animal) {
+    public void incrementIndex() {
         currentGeneIndex++;
         currentGeneIndex%=genes.size();
     }
