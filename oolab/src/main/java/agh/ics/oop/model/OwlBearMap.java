@@ -25,13 +25,13 @@ public class OwlBearMap extends AbstractWorldMap{
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
         if(owlBear.isAt(position)){
-            return owlBear;
+            return Optional.ofNullable(owlBear);
         }
-        WorldElement object = super.objectAt(position);
+        Optional<WorldElement> object = super.objectAt(position);
         if(object != null) return object;
-        return mapOfGrass.get(position);
+        return Optional.ofNullable(mapOfGrass.get(position));
     }
 
     @Override

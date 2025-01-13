@@ -162,6 +162,19 @@ public class Animal implements WorldElement {
         return new Vector2d(wrappedX, wrappedY);
     }
 
+    @Override
+    public String getImageResource() {
+        return switch (orientation) {
+            case NORTH -> "N.png";
+            case EAST -> "E.png";
+            case SOUTH -> "S.png";
+            case WEST -> "W.png";
+            case NORTHEAST -> "NE.png";
+            case NORTHWEST -> "NW.png";
+            case SOUTHEAST -> "SE.png";
+            case SOUTHWEST -> "SW.png";
+        };
+    }
 
 
 

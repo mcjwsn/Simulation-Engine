@@ -14,7 +14,7 @@ import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import java.util.List;
-
+import java.util.Optional;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -193,11 +193,14 @@ public class SimulationPresenter implements MapChangeListener {
     public void addElements(){
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
-                Vector2d pos = new Vector2d(i, j);
-                if (worldMap.isOccupied(pos)) {
-                    mapGrid.add(new Label(worldMap.objectAt(pos).toString()), i - xMin + 1, yMax - j + 1);
-                }
-                else {
+                Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
+                String labelText = optionalElement.isPresent() ? optionalElement.get().toString() : " ";
+                // Zmieniamy sposób dodawania etykiet i obrazków:
+                if (optionalElement.isPresent()) {
+                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
+                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
+                } else {
+                    // Dodajemy puste miejsce, jeśli brak elementu
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
                 GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
