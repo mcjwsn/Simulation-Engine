@@ -93,7 +93,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-
     @Override
     public boolean isOccupied(Vector2d position) {
         List<Animal> positionAnimals = animals.get(position);

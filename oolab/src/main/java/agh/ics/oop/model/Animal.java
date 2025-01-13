@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.modes.ElementType;
+import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.modes.MovinType;
 
 import java.util.ArrayList;
@@ -128,15 +129,31 @@ public class Animal implements WorldElement {
 //        this.position = newPosition;
 //    }
     public void move(AbstractWorldMap map) {
-        if (movinType == MovinType.DEFAULT) {
-            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
+        if(map.getMapType() == MapType.OWLBEAR)
+        {
+            if (movinType == MovinType.DEFAULT) {
+                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
+            }
+
+            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
+            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
+            this.orientation = newOrientation;
+            Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
+            this.position = wrappedPosition;
+        }
+        else
+        {
+            if (movinType == MovinType.DEFAULT) {
+                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
+            }
+
+            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
+            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
+            this.orientation = newOrientation;
+            Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
+            this.position = wrappedPosition;
         }
 
-        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-        this.orientation = newOrientation;
-        Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-        this.position = wrappedPosition;
     }
 
     private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {

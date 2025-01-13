@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.model.modes.MapType;
 
 import java.util.*;
 
@@ -29,7 +30,16 @@ public class SimulationManager {
     public void Update() {
         deleteDeadAnimals();
         moveALlAnimals();
+        if(map.getMapType()== MapType.OWLBEAR)
+        {
+            owlBearEat();
+        }
         eat();
+        if(map.getMapType()== MapType.OWLBEAR)
+        {
+            moveOwlBear();
+            owlBearEat();
+        }
         reproduceAnimals();
         growGrass();
         addAge();
@@ -77,6 +87,38 @@ public class SimulationManager {
             animal.removeEnergy(simulationProperties.getMoveEnergy());
         }
     }
+
+    private void moveOwlBear()
+    {
+        ((OwlBearMap)map).moveOwlBear();
+    }
+
+    private void owlBearEat()
+    {
+//        Set<Animal> animalsToRemove = new HashSet<>(((OwlBearMap)map).eatAnimals());
+//        System.out.println("Checking " + animalsToRemove.size() + " animals for death");
+//
+//        for(Animal animal : animalsToRemove) {
+//            System.out.println("Animal at " + animal.getPosition() + " eaten by OwlBear with energy: " + animal.getEnergy());
+//            animal.setDeathDate(simulationProperties.getDaysElapsed());
+//            simulation.getAnimals().remove(animal);
+//            System.out.println("Remaining animals: " + simulation.getAnimals().size());
+//        }
+        Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
+        System.out.println("Checking " + animalsToRemove.size() + " animals for being eaten");
+
+        for(Animal animal : animalsToRemove) {
+            if (animal.getPosition().equals(((OwlBearMap)map).getOwlBearPosition()))
+            {
+                System.out.println("Animal at " + animal.getPosition() + " eaten by OwlBear with energy: " + animal.getEnergy());
+                animal.setDeathDate(simulationProperties.getDaysElapsed());
+                simulation.getAnimals().remove(animal);
+                map.removeAnimal(animal);
+                System.out.println("Remaining animals: " + simulation.getAnimals().size());
+            }
+        }
+    }
+
 
     public void reproduceAnimals() {
        // System.out.println("\n=== Starting reproduction phase ===");
@@ -188,7 +230,7 @@ public class SimulationManager {
         for (int i = 0; i < numberOfPlants; i++) {
             double probability = random.nextDouble();
             Vector2d plantPosition;
-            if ((probability < PREFERRED_POSITION_PROBABILITY && !preferredPositions.isEmpty()) || lessPreferredPositions.isEmpty()) {
+            if ((probability < PREFERRED_POSITION_PROBABILITY && !preferredPositions.isEmpty()) || (lessPreferredPositions.isEmpty()&& !preferredPositions.isEmpty())) {
                 List<Vector2d> preferredList = new ArrayList<>(preferredPositions);
                 plantPosition = preferredList.get(random.nextInt(preferredList.size()));
                 preferredPositions.remove(plantPosition);
