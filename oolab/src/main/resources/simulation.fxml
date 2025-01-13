@@ -10,15 +10,15 @@
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter"
             stylesheets="@style.css">
-        <center>
-            <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
-        </center>
-        <bottom>
-            <VBox spacing="12" alignment="CENTER">
-                <TextField fx:id="textField" promptText="Enter moves"/>
-                <Label fx:id="moveLabel" text = "Move description will be displayed here" textAlignment="CENTER"/>
-                <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
-                <Button text="Start" onAction="#onSimulationStartClicked"/>
-            </VBox>
-        </bottom>
+    <center>
+        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
+    </center>
+    <bottom>
+        <VBox spacing="12" alignment="CENTER">
+            <TextField fx:id="textField" promptText="Enter moves"/>
+            <Label fx:id="moveLabel" text = "Move description will be displayed here" textAlignment="CENTER"/>
+            <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
+            <Button text="Start" onAction="#onSimulationStartClicked"/>
+        </VBox>
+    </bottom>
 </BorderPane>
