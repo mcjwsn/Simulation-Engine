@@ -63,9 +63,6 @@ public class Animal implements WorldElement {
         return children;
     }
 
-    public Animal(MapDirection orientation, Vector2d position) { // do pozniejszej poprawki
-        //this(orientation, position, new Genes(10), 100);
-    }
 
     @Override
     public String toString() {
