@@ -1,6 +1,5 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.modes.MapType;
@@ -9,12 +8,8 @@ import agh.ics.oop.model.modes.MutationType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 import java.util.List;
 
@@ -39,16 +34,55 @@ public class SimulationPresenter implements MapChangeListener {
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
-    @FXML
-    private Label infoLabel;
-    @FXML
-    private Label moveLabel;
-    @FXML
-    private TextField textField;
+
     @FXML
     private Button start;
     @FXML
     private GridPane mapGrid;
+    @FXML
+    private Spinner<Integer> widthSpinner;
+    @FXML
+    private Spinner<Integer> heightSpinner;
+    @FXML
+    private Spinner<Integer> equatorHeightSpinner;
+    @FXML
+    private Spinner<Integer> grassNumberSpinner;
+    @FXML
+    private Spinner<Integer> energyAdditionSpinner;
+    @FXML
+    // uzależnić od liczby zwierzakow i mapy
+    private Spinner<Integer> plantRegenerationSpinner;
+    @FXML
+    private Spinner<Integer> numberOfAnimalsSpinner;
+    @FXML
+    private Spinner<Integer> startingAnimalEnergySpinner;
+    @FXML
+    private Spinner<Integer> energuNeededForReproductionSpinner;
+    @FXML
+    private Spinner<Integer> energyLosingWithReproductionSpinner;
+    @FXML
+    private Spinner<Integer> minGenMutationsSpinner;
+    @FXML
+    private Spinner<Integer> maxGenMutationsSpinner;
+    @FXML
+    private Spinner<Integer> genomLengthSpinner;
+    @FXML
+    private Spinner<MutationType> mutationTypeSpinner;
+    @FXML
+    private Spinner<Integer> maxEnergySpinner;
+    @FXML
+    private Spinner<MapType> mapTypeSpinner;
+    @FXML
+    private Spinner<Integer> moveEnergySpinner;
+    @FXML
+    private VBox configBox1;
+    @FXML
+    private VBox configBox2;
+    @FXML
+    private VBox configBox3;
+    @FXML
+    private HBox configBox4;
+
 
     private void drawMap() {
         updateBounds();
@@ -60,21 +94,53 @@ public class SimulationPresenter implements MapChangeListener {
     }
     @FXML
     public void onSimulationStartClicked(){
-        try{
-            List<MoveDirection> directions = OptionsParser.parse(textField.getText().split(" "));
-            List<Vector2d> positions = List.of(new Vector2d(1,1), new Vector2d(3,1));
-            SimulationProperties simulationProperties1 = new SimulationProperties(5,5,0,3,10,2,10,5,25, MovinType.DEFAULT, MutationType.FULLRANDOM, MapType.GLOBE,5,10,5,1,0,1);
-            AbstractWorldMap map1 = new GrassField(simulationProperties1);
-            map1.addObserver(this);
-            setWorldMap((WorldMap) map1);
-            Simulation simulation1 = new Simulation(map1,simulationProperties1);
-            SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-            //engine.runAsync();
-            //infoLabel.setText("Simulation started with moves: " + moveLabel);
-            engine.runAsync();}
-        catch(Exception e){
-            infoLabel.setText(e.getMessage());
-        }
+        int mapWidth = widthSpinner.getValue();
+        int mapHeight = heightSpinner.getValue();
+        int equatorHeight = equatorHeightSpinner.getValue();
+        equatorHeight = Math.min(equatorHeight, mapWidth);
+        int animalNumber = numberOfAnimalsSpinner.getValue();
+        int grassNumber = grassNumberSpinner.getValue();
+        int grassEnergy = energyAdditionSpinner.getValue();
+        int dailySpawningGrass = plantRegenerationSpinner.getValue();
+        int startEnergy = startingAnimalEnergySpinner.getValue();
+        int maxEnergy = maxEnergySpinner.getValue();
+        MovinType movingType = MovinType.DEFAULT;
+        MutationType mutationType = mutationTypeSpinner.getValue();
+        MapType mapType = mapTypeSpinner.getValue();
+        int genesCount = genomLengthSpinner.getValue();
+        int energyLevelNeededToReproduce = energuNeededForReproductionSpinner.getValue();
+        int energyLevelToPassToChild = energyLosingWithReproductionSpinner.getValue();
+        int moveEnergy = moveEnergySpinner.getValue();
+        int minMutation = minGenMutationsSpinner.getValue();
+        int maxMutation = maxGenMutationsSpinner.getValue();
+
+        SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
+                dailySpawningGrass, startEnergy, grassEnergy, maxEnergy,
+                movingType,mutationType, mapType,  genesCount,
+                energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
+                minMutation, maxMutation);
+
+        AbstractWorldMap map1 = new GrassField(simulationProperties);
+        map1.addObserver(this);
+        Simulation simulation1 = new Simulation(map1, simulationProperties);
+        SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+        //engine.runAsync();
+        engine.runAsync();
+        hideConfigurationElements();
+
+    }
+
+    private void hideConfigurationElements() {
+        configBox1.setVisible(false); // Ukryj cały kontener
+        configBox2.setVisible(false);
+        configBox3.setVisible(false);
+        configBox4.setVisible(false);
+        configBox1.setManaged(false);
+        configBox2.setManaged(false);
+        configBox3.setManaged(false);
+        configBox4.setManaged(false);
+
+        mapGrid.requestLayout();
     }
     public void xyLabel(){
         mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
@@ -128,12 +194,43 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
-            infoLabel.setText(message);
         });
     }
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
+    }
+
+    @FXML
+    public void initialize(){
+
+        SpinnerValueFactory<MutationType> valueFactory3 =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                        javafx.collections.FXCollections.observableArrayList(MutationType.values())
+                );
+        mutationTypeSpinner.setValueFactory(valueFactory3);
+
+        SpinnerValueFactory<MapType> valueFactory1 =
+                new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                        javafx.collections.FXCollections.observableArrayList(MapType.values())
+                );
+        mapTypeSpinner.setValueFactory(valueFactory1);
+// należy zmienic tego spinner tez na value factory bo inaczej nie da
+        // dynamczinie zmieniac maksymalnej wartosci liczby traw
+        //heightSpinner.setValue(10);
+        //widthSpinner.setValue(10);
+
+    }
+
+    private void updateArea(){
+        int height = heightSpinner.getValue();
+        int width = widthSpinner.getValue();
+        int maxArea = height * width;
+        // do dokonczenia po zmienia spinnera na valuefactory
+        //if ( grassNumberSpinner.getValue() > maxArea){
+        //   grassNumberSpinner.setValueFactory(maxArea);
+        //}
+
     }
 }
