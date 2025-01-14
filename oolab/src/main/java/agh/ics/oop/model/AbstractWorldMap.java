@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.Statistics;
 import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.util.*;
 import agh.ics.oop.model.util.MapVisualizer;
@@ -128,21 +129,38 @@ public abstract class AbstractWorldMap implements WorldMap {
         observers.add(observer);
     }
 
-    public void mapChanged(String msg) {
+    public void mapChanged(Statistics statistics, String msg) {
         for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, msg);
+            observer.mapChanged(this, msg, statistics);
         }
+    }
+
+    public void setStatistics(Statistics stats, int newDay) {
+//        stats.setStatisticsParameters(
+//                this.getNumberOfAnimals(),
+//                this.getNumberOfPlants(),
+//                this.getNumberOfFreeFields(),
+//                this.getMostPopularGenotype(),
+//                this.getAverageAliveAnimalsEnergy(),
+//                this.getLifeExpectancy(),
+//                this.getAverageAliveAnimalsChildrenCount(),
+//                newDay);
+        stats.setStatisticsParameters(this.getNumberOfAnimals(), newDay);
+    }
+
+    private int getNumberOfAnimals() {
+        return simulation.getAnimals().size();
     }
 
     public void removeObserver(MapChangeListener observer) {
         observers.remove(observer);
     }
 
-    protected void notifyObservers(String message) {
-        for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, message);
-        }
-    }
+//    protected void notifyObservers(String message) {
+//        for (MapChangeListener observer : observers) {
+//            observer.mapChanged(this, message);
+//        }
+//    }
 
     @Override
     public String getId() {

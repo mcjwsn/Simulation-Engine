@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.Statistics;
 import agh.ics.oop.model.modes.MapType;
 
 import java.util.*;
@@ -10,6 +11,7 @@ public class SimulationManager {
     private final AbstractWorldMap map;
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
+    private final Statistics statistics = new Statistics();
 
     private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
@@ -43,8 +45,9 @@ public class SimulationManager {
         reproduceAnimals();
         growGrass();
         addAge();
+        map.setStatistics(statistics, simulation.getDays());
 
-        map.mapChanged("Dzien sie zakonczyl");
+        map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 
     protected void restoreEatenPlantPosition(Grass eatenGrass) {

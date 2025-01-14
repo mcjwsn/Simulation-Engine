@@ -1,23 +1,28 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.modes.MapType;
 import agh.ics.oop.model.modes.MovinType;
 import agh.ics.oop.model.modes.MutationType;
+import agh.ics.oop.model.util.ConvertUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 
 public class SimulationPresenter implements MapChangeListener {
+    Simulation simulation;
     private int xMin;
     private int yMin;
     private int xMax;
@@ -36,7 +41,26 @@ public class SimulationPresenter implements MapChangeListener {
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
-
+    @FXML
+    private Label generalAllAnimalsLabel;
+    @FXML
+    private Label generalAllPlantsLabel;
+    @FXML
+    private Label generalFreeFieldsLabel;
+    @FXML
+    private Label generalPopularGenotypesLabel;
+    @FXML
+    private Label generalAvgEnergyLivingLabel;
+    @FXML
+    private Label generalAvgLifeSpanDeadLabel;
+    @FXML
+    private Label generalAvgChildrenLabel;
+    @FXML
+    private Label generalDaysPassed;
+    @FXML
+    private Button pauseButton;
+    @FXML
+    private Button continueButton;
     @FXML
     private Button start;
     @FXML
@@ -84,6 +108,8 @@ public class SimulationPresenter implements MapChangeListener {
     private VBox configBox3;
     @FXML
     private HBox configBox4;
+    @FXML
+    private VBox statsBox;
 
 
     private void drawMap() {
@@ -129,6 +155,7 @@ public class SimulationPresenter implements MapChangeListener {
             map1 = new GrassField(simulationProperties);
             map1.addObserver(this);
             Simulation simulation1 = new Simulation(map1, simulationProperties);
+            this.simulation = simulation1;
             SimulationEngine engine = new SimulationEngine(List.of(simulation1));
             //engine.runAsync();
             engine.runAsync();
@@ -136,6 +163,7 @@ public class SimulationPresenter implements MapChangeListener {
         else{map1 = new OwlBearMap(simulationProperties);
             map1.addObserver(this);
             Simulation simulation1 = new Simulation(map1, simulationProperties);
+            this.simulation = simulation1;
             SimulationEngine engine = new SimulationEngine(List.of(simulation1));
             //engine.runAsync();
             engine.runAsync();
@@ -143,7 +171,17 @@ public class SimulationPresenter implements MapChangeListener {
             throw new RuntimeException(e);
         }
         hideConfigurationElements();
+        showGeneralStatistics();
 
+    }
+    private void showGeneralStatistics()
+    {
+        statsBox.setVisible(true);
+        statsBox.setManaged(true);
+        continueButton.setVisible(true);
+        continueButton.setManaged(true);
+        pauseButton.setVisible(true);
+        pauseButton.setManaged(true);
     }
 
     private void hideConfigurationElements() {
@@ -158,6 +196,8 @@ public class SimulationPresenter implements MapChangeListener {
 
         mapGrid.requestLayout();
     }
+
+
     public void xyLabel(){
         mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
         mapGrid.getRowConstraints().add(new RowConstraints(height));
@@ -208,13 +248,25 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
         setWorldMap(worldMap);
+        this.displayGeneralStatistics(statistics);
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
         });
     }
+    public void displayGeneralStatistics(Statistics statistics) {
+        String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
+        String days = ConvertUtils.numberToString(statistics.getDaysPassed());
+
+        Platform.runLater(() -> {
+            generalAllAnimalsLabel.setText(animalCount);
+            generalDaysPassed.setText(days);
+        });
+    }
+
+
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
@@ -283,5 +335,23 @@ public class SimulationPresenter implements MapChangeListener {
         //   grassNumberSpinner.setValueFactory(maxArea);
         //}
 
+    }
+
+    @FXML
+    public void onPauseClicked(ActionEvent actionEvent) {
+        if (simulation != null) {
+            simulation.pause();
+            Platform.runLater(() -> pauseButton.setDisable(true));
+            Platform.runLater(() -> continueButton.setDisable(false));
+        }
+    }
+
+    @FXML
+    public void onContinueClicked(ActionEvent actionEvent) {
+        if (simulation != null) {
+            simulation.start();
+            Platform.runLater(() -> pauseButton.setDisable(false));
+            Platform.runLater(() -> continueButton.setDisable(true));
+        }
     }
 }
