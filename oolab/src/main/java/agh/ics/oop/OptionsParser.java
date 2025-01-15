@@ -18,6 +18,6 @@ public class OptionsParser {
                     case "6" -> MoveDirection.SIX;
                     case "7" -> MoveDirection.SEVEN;
                     default -> throw new IllegalArgumentException(arg + " is not a legal move specification");
-                }).collect(Collectors.toList());
+                }).toList();
     }
 }

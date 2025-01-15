@@ -234,7 +234,7 @@ public class SimulationPresenter implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
-                String labelText = optionalElement.isPresent() ? optionalElement.get().toString() : " ";
+                String labelText = optionalElement.map(Object::toString).orElse(" ");
                 // Zmieniamy sposób dodawania etykiet i obrazków:
                 if (optionalElement.isPresent()) {
                     // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
