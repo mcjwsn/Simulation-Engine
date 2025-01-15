@@ -48,13 +48,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
-
-    @Override
-    public boolean canMoveTo(Vector2d position)
-    {
-        return true;
-    }
-
      public void place(Vector2d animalPosition,Animal animal) {
         //animals.computeIfAbsent(animal.getPosition(), pos -> new CopyOnWriteArrayList<>()).add(animal);
         //notifyObservers("Animal placed at " + animal.getPosition());

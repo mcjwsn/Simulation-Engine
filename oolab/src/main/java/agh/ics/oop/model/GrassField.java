@@ -7,9 +7,6 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap{
     private final Map<Vector2d, Grass> mapOfGrass = grass;
-    public GrassField(int grassNumber) {
-        generateGrass(grassNumber);
-    }
 
     public GrassField(SimulationProperties simulationProperties) {
         super(simulationProperties);
@@ -25,7 +22,7 @@ public class GrassField extends AbstractWorldMap{
     @Override
     public Optional<WorldElement> objectAt(Vector2d position) {
         Optional<WorldElement> object = super.objectAt(position);
-        if(object != null) return object;
+        if(object.isPresent()) return object;
         return Optional.ofNullable(mapOfGrass.get(position));
     }
 
@@ -56,23 +53,4 @@ public class GrassField extends AbstractWorldMap{
         return elements;
     }
 
-
-    public void fixPosition(Vector2d position, MapDirection orientation) { // do poprawy
-        int x = (position.getX()+width)%width;
-        int y = position.getY();
-        MapDirection orient = orientation;
-        if (y < 0) {
-            y = 1;
-            if (orientation == MapDirection.SOUTH) orient = MapDirection.NORTH;
-            else if (orientation == MapDirection.SOUTHEAST) orient = MapDirection.NORTHEAST;
-            else if (orientation == MapDirection.SOUTHWEST) orient = MapDirection.NORTHWEST;
-        }
-        if (y >= height) {
-            y = height-2;
-            if (orientation == MapDirection.NORTH) orient = MapDirection.SOUTH;
-            else if (orientation == MapDirection.NORTHEAST) orient = MapDirection.SOUTHEAST;
-            else if (orientation == MapDirection.NORTHWEST) orient = MapDirection.SOUTHWEST;
-        }
-
-    }
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @author apohllo, idzik
  */
-public interface WorldMap extends MoveValidator {
+public interface WorldMap {
     void place(Vector2d position, Animal animal) throws IncorrectPositionException;
 
     /*

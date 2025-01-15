@@ -41,7 +41,7 @@ public class OwlBear implements WorldElement {
         }
 
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-        while (!isWithinBounds(newPosition, map.getLowerLeftBoundary(), map.getUpperRightBoundary()) && map.canMoveTo(newPosition)) {
+        while (!isWithinBounds(newPosition, map.getLowerLeftBoundary(), map.getUpperRightBoundary())) {
             newPosition = newPosition.subtract(this.orientation.toUnitVector());
             this.orientation = this.orientation.next();
             newPosition = newPosition.add(this.orientation.toUnitVector());
