@@ -75,7 +75,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         animals.get(oldPosition).remove(animal);
         animal.move(this);
         Vector2d newPosition = animal.getPosition();
-        place(newPosition, animal);
         List<Animal> oldPositionAnimals = animals.get(oldPosition);
         if (oldPositionAnimals != null) {
             oldPositionAnimals.remove(animal);
@@ -83,6 +82,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                 animals.remove(oldPosition);
             }
         }
+        place(newPosition, animal);
     }
 
     @Override
@@ -129,21 +129,31 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void setStatistics(Statistics stats, int newDay) {
-//        stats.setStatisticsParameters(
-//                this.getNumberOfAnimals(),
-//                this.getNumberOfPlants(),
 //                this.getNumberOfFreeFields(),
 //                this.getMostPopularGenotype(),
 //                this.getAverageAliveAnimalsEnergy(),
 //                this.getLifeExpectancy(),
 //                this.getAverageAliveAnimalsChildrenCount(),
 //                newDay);
-        stats.setStatisticsParameters(this.getNumberOfAnimals(), newDay);
+        stats.setStatisticsParameters(this.getNumberOfAnimals(),
+                this.getNumberOfGrasses(),
+                this.getNumberOfFreeFields(),
+                newDay);
     }
 
     private int getNumberOfAnimals() {
         return simulation.getAnimals().size();
     }
+
+    private int getNumberOfGrasses() { return grass.size(); }
+
+    protected int getNumberOfFreeFields() {
+        Set<Vector2d> usedPositions = new HashSet<>();
+        usedPositions.addAll(animals.keySet());
+        usedPositions.addAll(grass.keySet());
+        return (width+1) * (height+1) - usedPositions.size();
+    }
+
 
     public void removeObserver(MapChangeListener observer) {
         observers.remove(observer);

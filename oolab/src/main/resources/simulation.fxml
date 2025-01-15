@@ -13,8 +13,8 @@
             <VBox fx:id="statsBox" alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 ; " managed="false" visible="false">
                 <Label text="Animals amount:" />
                 <Label fx:id="generalAllAnimalsLabel" text="0" />
-                <Label text="Total number of plants:" />
-                <Label fx:id="generalAllPlantsLabel" text="0" />
+                <Label text="Total number of grasses:" />
+                <Label fx:id="generalAllGrassesLabel" text="0" />
                 <Label text="Number of free fields:" />
                 <Label fx:id="generalFreeFieldsLabel" text="0" />
                 <Label text="Most popular genotypes:" />

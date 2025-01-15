@@ -135,8 +135,10 @@ public class Animal implements WorldElement {
             MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
             Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
             this.orientation = newOrientation;
-            Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-            this.position = wrappedPosition;
+            if(newPosition.precedes(map.getCurrentBounds().upperRight()) && newPosition.follows(map.getCurrentBounds().lowerLeft()))
+            {
+                this.position = newPosition;
+            }
         }
         else
         {

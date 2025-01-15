@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Statistics {
     private int animalAmount = 0;
-    private int plantsAmount = 0;
+    private int grassesAmount = 0;
     private int freeFieldsAmount = 0;
     private List<List<Integer>> theMostPopularGenotypes = new ArrayList<>();
     private double averageAnimalsEnergy = 0.0;
@@ -13,9 +13,11 @@ public class Statistics {
     private double averageChildAmount = 0.0;
     private int daysPassed = 0;
 
-    public void setStatisticsParameters(int animalAmount, int daysPassed) {
+    public void setStatisticsParameters(int animalAmount, int grassesAmount, int freeFieldsAmount, int daysPassed) {
         this.animalAmount = animalAmount;
         this.daysPassed = daysPassed;
+        this.grassesAmount = grassesAmount;
+        this.freeFieldsAmount = freeFieldsAmount;
     }
 
 //    public void setStatisticsParameters(int animalCount, int plantsCount, int freeFieldsCount,
@@ -35,8 +37,8 @@ public class Statistics {
         return animalAmount;
     }
 
-    public int getPlantsAmount() {
-        return plantsAmount;
+    public int getGrassesAmount() {
+        return grassesAmount;
     }
 
     public int getFreeFieldsAmount() {

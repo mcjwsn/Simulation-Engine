@@ -44,7 +44,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label generalAllAnimalsLabel;
     @FXML
-    private Label generalAllPlantsLabel;
+    private Label generalAllGrassesLabel;
     @FXML
     private Label generalFreeFieldsLabel;
     @FXML
@@ -258,11 +258,15 @@ public class SimulationPresenter implements MapChangeListener {
     }
     public void displayGeneralStatistics(Statistics statistics) {
         String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
+        String grassesCount = ConvertUtils.numberToString(statistics.getGrassesAmount());
         String days = ConvertUtils.numberToString(statistics.getDaysPassed());
+        String FreeFields = ConvertUtils.numberToString(statistics.getFreeFieldsAmount());
 
         Platform.runLater(() -> {
             generalAllAnimalsLabel.setText(animalCount);
+            generalAllGrassesLabel.setText(grassesCount);
             generalDaysPassed.setText(days);
+            generalFreeFieldsLabel.setText(FreeFields);
         });
     }
 
