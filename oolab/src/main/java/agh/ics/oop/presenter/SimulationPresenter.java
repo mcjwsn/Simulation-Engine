@@ -17,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +31,14 @@ public class SimulationPresenter implements MapChangeListener {
     private int currentMapWidth;
     private int currentMapHeight;
     private WorldMap worldMap;
+    private Animal lastClickedAnimal = null;
+    WorldElementBox lastElementBox;
 
     private final int width = 25;
     private final int height = 25;
 
     private static final int MAPLIMITHIGHT = 100;
     private static final int MAPLIMITWIDTH = 100;
-
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
@@ -57,6 +59,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label generalAvgChildrenLabel;
     @FXML
     private Label generalDaysPassed;
+    @FXML
+    private Label animalInfoLabel;
     @FXML
     private Button pauseButton;
     @FXML
@@ -230,27 +234,97 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    public void addElements(){
+    public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
-                String labelText = optionalElement.map(Object::toString).orElse(" ");
-                // Zmieniamy sposób dodawania etykiet i obrazków:
                 if (optionalElement.isPresent()) {
-                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
-                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
+                    WorldElement worldElement = optionalElement.get();
+                    WorldElementBox elementBox;
+                    if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(new Vector2d(i, j)))
+                    {
+                        elementBox = new WorldElementBox(lastClickedAnimal);
+                        elementBox.updateImageTrackedDown(lastClickedAnimal);
+                    }
+                    else {
+                        elementBox = new WorldElementBox(worldElement);
+                    }
+
+                    elementBox.setOnMouseClicked(event -> {
+                        if (worldElement instanceof Animal) {
+                            Animal clickedAnimal = (Animal) worldElement;
+
+                            if (lastClickedAnimal == clickedAnimal) {
+                                clearAnimalInfo();
+                                elementBox.updateImage(clickedAnimal);
+                                lastClickedAnimal = null;
+                            } else if(lastClickedAnimal != null) {
+                                lastElementBox = new WorldElementBox(lastClickedAnimal);
+                                lastElementBox.updateImage(lastClickedAnimal);
+                                lastClickedAnimal = clickedAnimal;
+                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                showAnimalInfo(clickedAnimal);
+                            }
+                            else {
+                                lastClickedAnimal = clickedAnimal;
+                                elementBox.updateImageTrackedDown(lastClickedAnimal);
+                                showAnimalInfo(clickedAnimal);
+                            }
+                        }
+                    });
+
+                    mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 } else {
-                    // Dodajemy puste miejsce, jeśli brak elementu
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
-                GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
             }
         }
+    }
+//
+//    public void addElements(){
+//        for (int i = xMin; i <= xMax; i++) {
+//            for (int j = yMax; j >= yMin; j--) {
+//                Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
+//                String labelText = optionalElement.map(Object::toString).orElse(" ");
+//                // Zmieniamy sposób dodawania etykiet i obrazków:
+//                if (optionalElement.isPresent()) {
+//                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
+//                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
+//                } else {
+//                    // Dodajemy puste miejsce, jeśli brak elementu
+//                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+//                }
+//                GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
+//            }
+//        }
+//    }
+    private void showAnimalInfo(WorldElement worldElement) {
+        if (worldElement instanceof Animal) {
+            Animal animal = (Animal) worldElement;
+            Platform.runLater(() -> {
+                animalInfoLabel.setText("Animal Info:\n" +
+                        "Genome: " +  Arrays.toString(animal.getGenome()) + "\n" +
+                        "Genome Index: " + animal.getGeneIndex() + "\n" +
+                        "Position: " + animal.getPosition() + "\n" +
+                        "Energy: " + animal.getEnergy() + "\n" +
+                        "Age: " + animal.getAge() + "\n");
+            });
+        }
+    }
+    private void clearAnimalInfo() {
+        Platform.runLater(() -> {
+            animalInfoLabel.setText("");  // Clear the information label
+        });
     }
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
         setWorldMap(worldMap);
         this.displayGeneralStatistics(statistics);
+
+        if (lastClickedAnimal != null) {
+            showAnimalInfo(lastClickedAnimal);
+        }
+
         Platform.runLater(() -> {
             clearGrid();
             drawMap();

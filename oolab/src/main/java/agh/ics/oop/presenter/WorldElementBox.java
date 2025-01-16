@@ -1,4 +1,5 @@
 package agh.ics.oop.presenter;
+import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.WorldElement;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -20,9 +21,53 @@ public class WorldElementBox extends VBox {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-    private void updateImage(WorldElement element) {
+//    public void updateImage(WorldElement element) {
+//        String currImage = element.getImageResource();
+//        if (!Objects.equals(currImage, lastImage)) {
+//            this.getChildren().clear();
+//            Image image = getImage(currImage);
+//            ImageView imageView = new ImageView(image);
+//            imageView.setFitWidth(IMAGE_WIDTH);
+//            imageView.setFitHeight(IMAGE_HEIGHT);
+//            this.getChildren().add(imageView);
+//
+//            lastImage = currImage;
+//        }
+//    }
+//
+//    public void updateImageTrackedDown(Animal element) {
+//        String currImage = element.getTrackedDownAnimalImageResource();
+//        if (!Objects.equals(currImage, lastImage)) {
+//            this.getChildren().clear();
+//            Image image = getImage(currImage);
+//            ImageView imageView = new ImageView(image);
+//            imageView.setFitWidth(IMAGE_WIDTH);
+//            imageView.setFitHeight(IMAGE_HEIGHT);
+//            this.getChildren().add(imageView);
+//            lastImage = currImage;
+//        }
+//    }
+    private String lastTrackedDownImage; // for tracked down animals
+
+    public void updateImage(WorldElement element) {
         String currImage = element.getImageResource();
+
         if (!Objects.equals(currImage, lastImage)) {
+            this.getChildren().clear();
+            Image image = getImage(currImage);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            this.getChildren().add(imageView);
+            lastImage = currImage; // Update the last image
+        }
+    }
+
+    public void updateImageTrackedDown(Animal element) {
+        String currImage = element.getTrackedDownAnimalImageResource();
+
+        if (!Objects.equals(currImage, lastImage)) {
+            this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(IMAGE_WIDTH);
@@ -32,8 +77,13 @@ public class WorldElementBox extends VBox {
         }
     }
 
+
     public WorldElementBox(WorldElement element) {
         updateImage(element);
+        this.setAlignment(Pos.CENTER);
+    }
+    public WorldElementBox(Animal animal, int trackedDown) {
+        updateImageTrackedDown(animal);
         this.setAlignment(Pos.CENTER);
     }
 }

@@ -10,7 +10,7 @@
         </HBox>
         <HBox>
             <!-- Left section for statistics -->
-            <VBox fx:id="statsBox" alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 ; " managed="false" visible="false">
+            <VBox fx:id="statsBox" alignment="CENTER_LEFT" managed="false" spacing="10" style="-fx-padding: 10 ; " visible="false">
                 <Label text="Animals amount:" />
                 <Label fx:id="generalAllAnimalsLabel" text="0" />
                 <Label text="Total number of grasses:" />
@@ -85,6 +85,7 @@
                  <Spinner fx:id="genomLengthSpinner" editable="True" initialValue="8" max="10" min="5" />
                  <Label text="Animals behaviour variant is set to 'pelna predestynacja'" />
              </VBox>
+             <Label fx:id="animalInfoLabel" text="" visible="true" style="-fx-padding: 0 0 0 20;" />
         </HBox>
     </top>
     <bottom>
@@ -94,8 +95,10 @@
                     <Button onAction="#onSimulationStartClicked" text="Start" />
                 </children>
             </VBox>
-            <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
-            <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />
+            <HBox alignment="CENTER" spacing="10">
+                <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
+                <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />
+            </HBox>
         </HBox>
     </bottom>
 </BorderPane>
