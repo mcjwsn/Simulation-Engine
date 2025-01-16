@@ -17,8 +17,8 @@
                 <Label fx:id="generalAllGrassesLabel" text="0" />
                 <Label text="Number of free fields:" />
                 <Label fx:id="generalFreeFieldsLabel" text="0" />
-                <Label text="Most popular genotypes:" />
-                <Label fx:id="generalPopularGenotypesLabel" text="-" />
+                <Label text="Most popular genotype:" />
+                <Label fx:id="generalPopularGenotypeLabel" text="-" />
                 <Label text="Average energy level (living):" />
                 <Label fx:id="generalAvgEnergyLivingLabel" text="0" />
                 <Label text="Average lifespan (dead):" />

@@ -97,6 +97,7 @@ public class Animal implements WorldElement {
     public int[] getGenome() { return genome; }
     public Integer getGeneIndex() { return geneIndex; }
     public Integer getChildrenMade() { return childrenNumber; }
+    public void increaseChildrenNumber() { childrenNumber++; }
     public Integer getPlantsEaten() { return grassEaten; }
 
     public void addChildToList(Animal child) {

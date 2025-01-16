@@ -7,16 +7,27 @@ public class Statistics {
     private int animalAmount = 0;
     private int grassesAmount = 0;
     private int freeFieldsAmount = 0;
-    private List<List<Integer>> theMostPopularGenotypes = new ArrayList<>();
+    private List<Integer> theMostPopularGenotype = new ArrayList<>();
     private double averageAnimalsEnergy = 0.0;
     private double averageLifespan = 0.0;
     private double averageChildAmount = 0.0;
     private int daysPassed = 0;
 
-    public void setStatisticsParameters(int animalAmount, int grassesAmount, int freeFieldsAmount, int daysPassed) {
+    public void setStatisticsParameters(int animalAmount,
+                                        int grassesAmount,
+                                        int freeFieldsAmount,
+                                        List<Integer> theMostPopularGenotype,
+                                        int averageAnimalsEnergy,
+                                        int averageLifespan,
+                                        double averageChildAmount,
+                                        int daysPassed) {
         this.animalAmount = animalAmount;
         this.daysPassed = daysPassed;
         this.grassesAmount = grassesAmount;
+        this.theMostPopularGenotype = theMostPopularGenotype;
+        this.averageAnimalsEnergy = averageAnimalsEnergy;
+        this.averageLifespan = averageLifespan;
+        this.averageChildAmount = averageChildAmount;
         this.freeFieldsAmount = freeFieldsAmount;
     }
 
@@ -45,8 +56,8 @@ public class Statistics {
         return freeFieldsAmount;
     }
 
-    public List<List<Integer>> getTheMostPopularGenotypes() {
-        return theMostPopularGenotypes;
+    public List<Integer> getTheMostPopularGenotype() {
+        return theMostPopularGenotype;
     }
 
     public double getAverageAnimalsEnergy() {

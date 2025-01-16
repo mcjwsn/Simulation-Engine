@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
+    protected List<Animal> deadAnimals = new CopyOnWriteArrayList<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
     protected List<MapChangeListener> observers = new CopyOnWriteArrayList<>();
     protected String id;
@@ -129,23 +130,22 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void setStatistics(Statistics stats, int newDay) {
-//                this.getNumberOfFreeFields(),
-//                this.getMostPopularGenotype(),
-//                this.getAverageAliveAnimalsEnergy(),
-//                this.getLifeExpectancy(),
-//                this.getAverageAliveAnimalsChildrenCount(),
-//                newDay);
         stats.setStatisticsParameters(this.getNumberOfAnimals(),
                 this.getNumberOfGrasses(),
                 this.getNumberOfFreeFields(),
+                this.getMostPopularGenotype(),
+                this.getAverageAliveAnimalsEnergy(),
+                this.getAverageAnimalLifeSpan(),
+                this.getAverageChildrenAmount(),
                 newDay);
     }
 
     private int getNumberOfAnimals() {
-        return simulation.getAnimals().size();
-    }
+        return animals.size();}
 
-    private int getNumberOfGrasses() { return grass.size(); }
+    private int getNumberOfGrasses() {
+        return grass.size();}
+
 
     protected int getNumberOfFreeFields() {
         Set<Vector2d> usedPositions = new HashSet<>();
@@ -153,6 +153,69 @@ public abstract class AbstractWorldMap implements WorldMap {
         usedPositions.addAll(grass.keySet());
         return (width+1) * (height+1) - usedPositions.size();
     }
+
+
+    protected List<Integer> getMostPopularGenotype() {
+        List<Animal> animalsList = simulation.getAnimals();
+        Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
+
+        for (Animal animal : animalsList) {
+            List<Integer> genotype = Arrays.stream(animal.getGenome())
+                    .boxed()
+                    .toList();
+
+            genotypePopularity.put(genotype, genotypePopularity.getOrDefault(genotype, 0) + 1);
+        }
+
+        return genotypePopularity.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(Collections.emptyList());
+    }
+
+    protected int getAverageAliveAnimalsEnergy()
+    {
+        List<Animal> animalsList = simulation.getAnimals();
+        if (animalsList == null || animalsList.isEmpty()) {
+            return 0;
+        }
+        int averageEnergy = 0;
+        for (Animal animal : animalsList) {
+            averageEnergy += animal.getEnergy();
+        }
+        return averageEnergy/animalsList.size();
+    }
+
+    protected int getAverageAnimalLifeSpan()
+    {
+        if(deadAnimals.size() == 0)
+        {
+            return 0;
+        }
+
+        int meanAge = 0;
+        for(Animal animal : deadAnimals)
+        {
+            meanAge += animal.getAge();
+        }
+        return meanAge/deadAnimals.size();
+    }
+
+    protected double getAverageChildrenAmount()
+    {
+        List<Animal> animalsList = simulation.getAnimals();
+        int avgChildrenAmount = 0;
+        if (animalsList.size() == 0 || animalsList == null) {
+            return 0;
+        }
+        for(Animal animal : animalsList)
+        {
+            avgChildrenAmount += animal.getChildren().size();
+        }
+        return (double)avgChildrenAmount/animalsList.size();
+    }
+
 
 
     public void removeObserver(MapChangeListener observer) {
@@ -177,8 +240,14 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public synchronized void removeAnimal(Animal animal) {
+        Vector2d position = animal.getPosition();
         animals.get(animal.getPosition()).remove(animal);
+        if (animals.get(position).isEmpty()) {
+            animals.remove(position);
+        }
+        deadAnimals.add(animal);
     }
+
     public synchronized void placeGrass(Vector2d plantPosition, Grass grassObject) {
         grass.put(plantPosition, grassObject);
         freePositionsForPlants.remove(plantPosition);

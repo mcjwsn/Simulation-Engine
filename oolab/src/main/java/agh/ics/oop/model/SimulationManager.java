@@ -45,8 +45,8 @@ public class SimulationManager {
         reproduceAnimals();
         growGrass();
         addAge();
-        map.setStatistics(statistics, simulation.getDays());
 
+        map.setStatistics(statistics, simulation.getDays());
         map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 

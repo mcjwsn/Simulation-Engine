@@ -48,7 +48,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label generalFreeFieldsLabel;
     @FXML
-    private Label generalPopularGenotypesLabel;
+    private Label generalPopularGenotypeLabel;
     @FXML
     private Label generalAvgEnergyLivingLabel;
     @FXML
@@ -259,14 +259,22 @@ public class SimulationPresenter implements MapChangeListener {
     public void displayGeneralStatistics(Statistics statistics) {
         String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
         String grassesCount = ConvertUtils.numberToString(statistics.getGrassesAmount());
-        String days = ConvertUtils.numberToString(statistics.getDaysPassed());
         String FreeFields = ConvertUtils.numberToString(statistics.getFreeFieldsAmount());
+        String theMostPopularGenotype = ConvertUtils.convertGenotypeToString(statistics.getTheMostPopularGenotype());
+        String averageAliveAnimalsEnergy = ConvertUtils.numberToString(statistics.getAverageAnimalsEnergy());
+        String averageAnimalLifeSpan = ConvertUtils.numberToString(statistics.getAverageLifespan());
+        String averageChildAmount = ConvertUtils.numberToString(statistics.getAverageChildAmount());
+        String days = ConvertUtils.numberToString(statistics.getDaysPassed());
 
         Platform.runLater(() -> {
             generalAllAnimalsLabel.setText(animalCount);
             generalAllGrassesLabel.setText(grassesCount);
             generalDaysPassed.setText(days);
             generalFreeFieldsLabel.setText(FreeFields);
+            generalPopularGenotypeLabel.setText(theMostPopularGenotype);
+            generalAvgLifeSpanDeadLabel.setText(averageAnimalLifeSpan);
+            generalAvgChildrenLabel.setText(averageChildAmount);
+            generalAvgEnergyLivingLabel.setText(averageAliveAnimalsEnergy);
         });
     }
 
