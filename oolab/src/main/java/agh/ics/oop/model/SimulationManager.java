@@ -163,8 +163,10 @@ public class SimulationManager {
 
                         a1.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a1.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
+                        a1.increaseChildrenNumber();
                         a2.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a2.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
+                        a2.increaseChildrenNumber();
 
                        // System.out.println("After reproduction:");
                       //  System.out.println("Parent 1 energy: " + a1.getEnergy());

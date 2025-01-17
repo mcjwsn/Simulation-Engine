@@ -34,8 +34,6 @@ public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
-    private List<WorldElementBox> elementBoxes = new ArrayList<>();
-
 
     private final int width = 25;
     private final int height = 25;
@@ -250,7 +248,7 @@ public class SimulationPresenter implements MapChangeListener {
                         {
                             elementBox = new WorldElementBox(lastClickedAnimal);
                             elementBox.updateImageTrackedDown(lastClickedAnimal);
-                            elementBoxes.add(elementBox);
+                            lastElementBox = elementBox;
                         }
                         else
                         {
@@ -264,10 +262,7 @@ public class SimulationPresenter implements MapChangeListener {
                     }
 
                     elementBox.setOnMouseClicked(event -> {
-                        System.out.println(worldElement.toString());
                         if (worldElement instanceof Animal) {
-//                            lastElementBox = new WorldElementBox((Animal) lastClickedAnimal);
-//                            lastClickedAnimal = null;
                             Animal clickedAnimal = (Animal) worldElement;
 
                             if (lastClickedAnimal == clickedAnimal) {
@@ -276,11 +271,6 @@ public class SimulationPresenter implements MapChangeListener {
                                 lastClickedAnimal = null;
                             }
                             else if(lastClickedAnimal != null) {
-                                if(elementBoxes.isEmpty()==false)
-                                {
-                                    elementBoxes.get(elementBoxes.size() - 1).updateImage(lastClickedAnimal);
-                                }
-                                elementBoxes.add(elementBox);
                                 lastElementBox.updateImage(lastClickedAnimal);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
@@ -291,7 +281,7 @@ public class SimulationPresenter implements MapChangeListener {
 
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(lastClickedAnimal);
+                                elementBox.updateImageTrackedDown(clickedAnimal);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
@@ -331,9 +321,12 @@ public class SimulationPresenter implements MapChangeListener {
                 animalInfoLabel.setText("Animal Info:\n" +
                         "Genome: " +  Arrays.toString(animal.getGenome()) + "\n" +
                         "Genome Index: " + animal.getGeneIndex() + "\n" +
-                        "Position: " + animal.getPosition() + "\n" +
                         "Energy: " + animal.getEnergy() + "\n" +
-                        "Age: " + animal.getAge() + "\n");
+                        "Grasses eaten: " + animal.getPlantsEaten() + "\n" +
+                        "Children amount: " + animal.getChildrenMade() + "\n" +
+                        "Position: " + animal.getPosition() + "\n" +
+                        "Age: " + animal.getAge() + "\n" +
+                        "Death date: " + animal.getDeathDate() + "\n");
             });
         }
     }
