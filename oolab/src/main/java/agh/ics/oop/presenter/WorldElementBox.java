@@ -49,6 +49,16 @@ public class WorldElementBox extends VBox {
 //    }
     private String lastTrackedDownImage; // for tracked down animals
 
+    public void fix(WorldElement element) {
+        String currImage = element.getImageResource();
+        this.getChildren().clear();
+        Image image = getImage(currImage);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setFitHeight(IMAGE_HEIGHT);
+//        this.getChildren().add(imageView);
+    }
+
     public void updateImage(WorldElement element) {
         String currImage = element.getImageResource();
 
@@ -70,8 +80,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(IMAGE_WIDTH);
-            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(IMAGE_WIDTH + 15);
+            imageView.setFitHeight(IMAGE_HEIGHT + 15);
             this.getChildren().add(imageView);
             lastImage = currImage;
         }
@@ -82,8 +92,8 @@ public class WorldElementBox extends VBox {
         updateImage(element);
         this.setAlignment(Pos.CENTER);
     }
-    public WorldElementBox(Animal animal, int trackedDown) {
-        updateImageTrackedDown(animal);
+    public WorldElementBox(Animal animal) {
+        updateImage(animal);
         this.setAlignment(Pos.CENTER);
     }
 }

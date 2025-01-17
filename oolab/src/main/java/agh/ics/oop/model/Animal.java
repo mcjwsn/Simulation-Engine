@@ -25,7 +25,7 @@ public class Animal implements WorldElement {
     private int childrenNumber;
     private SimulationProperties simulationProperties;
     int age;
-    private int deathDate;
+    private int deathDate = -1;
 
     private final List<Animal> children = new ArrayList<Animal>();
     private static final Random random = new Random();
@@ -117,6 +117,11 @@ public class Animal implements WorldElement {
         this.deathDate = deathDate;
     }
 
+    public int getDeathDate()
+    {
+        return deathDate;
+    }
+
 //    public void move(MoveValidator map) {
 //        if(movinType == MovinType.DEFAULT) {
 //            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
@@ -177,17 +182,16 @@ public class Animal implements WorldElement {
     }
 
     public String getTrackedDownAnimalImageResource() {
-//        return switch (orientation) {
-//            case NORTH -> "N.png";
-//            case EAST -> "E.png";
-//            case SOUTH -> "S.png";
-//            case WEST -> "W.png";
-//            case NORTHEAST -> "NE.png";
-//            case NORTHWEST -> "NW.png";
-//            case SOUTHEAST -> "SE.png";
-//            case SOUTHWEST -> "SW.png";
-//        };
-        return "td.png";
+        return switch (orientation) {
+            case NORTH -> "N1.png";
+            case EAST -> "E1.png";
+            case SOUTH -> "S1.png";
+            case WEST -> "W1.png";
+            case NORTHEAST -> "NE1.png";
+            case NORTHWEST -> "NW1.png";
+            case SOUTHEAST -> "SE1.png";
+            case SOUTHWEST -> "SW1.png";
+        };
     }
 
 

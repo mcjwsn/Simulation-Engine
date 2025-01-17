@@ -17,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,9 @@ public class SimulationPresenter implements MapChangeListener {
     private int currentMapHeight;
     private WorldMap worldMap;
     private Animal lastClickedAnimal = null;
-    WorldElementBox lastElementBox;
+    private WorldElementBox lastElementBox = null;
+    private List<WorldElementBox> elementBoxes = new ArrayList<>();
+
 
     private final int width = 25;
     private final int height = 25;
@@ -241,37 +244,60 @@ public class SimulationPresenter implements MapChangeListener {
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
                     WorldElementBox elementBox;
-                    if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(new Vector2d(i, j)))
+                    if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(worldElement.getPosition()))
                     {
-                        elementBox = new WorldElementBox(lastClickedAnimal);
-                        elementBox.updateImageTrackedDown(lastClickedAnimal);
+                        if(lastClickedAnimal.getDeathDate() == -1)
+                        {
+                            elementBox = new WorldElementBox(lastClickedAnimal);
+                            elementBox.updateImageTrackedDown(lastClickedAnimal);
+                            elementBoxes.add(elementBox);
+                        }
+                        else
+                        {
+                            elementBox = new WorldElementBox(worldElement);
+                            lastClickedAnimal = null;
+                        }
                     }
-                    else {
+                    else
+                    {
                         elementBox = new WorldElementBox(worldElement);
                     }
 
                     elementBox.setOnMouseClicked(event -> {
+                        System.out.println(worldElement.toString());
                         if (worldElement instanceof Animal) {
+//                            lastElementBox = new WorldElementBox((Animal) lastClickedAnimal);
+//                            lastClickedAnimal = null;
                             Animal clickedAnimal = (Animal) worldElement;
 
                             if (lastClickedAnimal == clickedAnimal) {
                                 clearAnimalInfo();
                                 elementBox.updateImage(clickedAnimal);
                                 lastClickedAnimal = null;
-                            } else if(lastClickedAnimal != null) {
-                                lastElementBox = new WorldElementBox(lastClickedAnimal);
+                            }
+                            else if(lastClickedAnimal != null) {
+                                if(elementBoxes.isEmpty()==false)
+                                {
+                                    elementBoxes.get(elementBoxes.size() - 1).updateImage(lastClickedAnimal);
+                                }
+                                elementBoxes.add(elementBox);
                                 lastElementBox.updateImage(lastClickedAnimal);
+                                lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
                                 elementBox.updateImageTrackedDown(clickedAnimal);
                                 showAnimalInfo(clickedAnimal);
                             }
                             else {
+
+                                lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
                                 elementBox.updateImageTrackedDown(lastClickedAnimal);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
+
                     });
+
 
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 } else {
