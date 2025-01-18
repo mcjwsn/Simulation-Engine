@@ -136,7 +136,4 @@ public class SimulationProperties {
         return maxMutation;
     }
 
-    public void resetDaysElapsed() {
-        daysElapsed = 0;
-    }
 }

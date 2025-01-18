@@ -3,7 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SettingsScreenControler">
+<BorderPane minHeight="750.0" minWidth="750.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SettingsScreenControler"
+            style="-fx-background-image: url('icon.jpg');
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-size: cover;">
     <top>
         <HBox alignment="CENTER">
             <Label text="Set variables of simulation" />

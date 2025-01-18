@@ -6,9 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx"
+<AnchorPane minHeight="750.0" minWidth="750.0" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="agh.ics.oop.presenter.StartScreenController">
-    <Button fx:id="startButton" text="Start" onAction="#onStartClicked"
-            layoutX="100" layoutY="100" />
+            fx:controller="agh.ics.oop.presenter.StartScreenController"
+            stylesheets="@style.css"
+            style="-fx-background-image: url('icon.jpg');
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-size: cover;">
+    <Button fx:id="startButton" text="Start" onAction="#onStartClicked" styleClass="pixel-button"
+            layoutX="338.0" layoutY="320.0" />
 </AnchorPane>

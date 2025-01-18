@@ -6,6 +6,7 @@ import agh.ics.oop.model.WorldMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import agh.ics.oop.SimulationApp;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class StartScreenController implements MapChangeListener {

@@ -18,3 +18,30 @@ HBox {
     -fx-font-weight: bold;
     -fx-text-fill: #3498db;
 }
+
+.pixel-button {
+    -fx-background-color: #4caf50; /* Zielony kolor */
+    -fx-text-fill: white; /* Biały tekst */
+    -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
+    -fx-font-size: 14px; /* Wielkość tekstu */
+    -fx-padding: 10 20; /* Wewnątrz przycisku */
+    -fx-border-color: #2d6a35; /* Obrys */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px; /* Delikatne zaokrąglenie */
+    -fx-effect: dropshadow(gaussian, #2d6a35, 3, 0.5, 3, 3); /* Pikselowy cień */
+    -fx-background-radius: 5px; /* Dopasowanie zaokrąglenia */
+    -fx-cursor: hand; /* Zmiana kursora na rękę */
+    -fx-alignment: center; /* Wyśrodkowanie tekstu */
+}
+
+.pixel-button:hover {
+    -fx-background-color: #3e8e41; /* Ciemniejszy zielony */
+    -fx-effect: dropshadow(gaussian, #2d6a35, 1, 0.5, 1, 1); /* Subtelne zmniejszenie cienia */
+}
+
+.pixel-button:pressed {
+    -fx-background-color: #366836; /* Jeszcze ciemniejszy zielony */
+    -fx-effect: none; /* Brak cienia */
+    -fx-translate-x: 3px; /* Wciśnięcie w prawo */
+    -fx-translate-y: 3px; /* Wciśnięcie w dół */
+}
