@@ -350,22 +350,22 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
-            updateCharts(statistics);
+            //updateCharts(statistics);
         });
     }
 
-    private void updateCharts(Statistics statistics) {
-        // Pobieramy aktualny dzień i wartości z `Statistics`
-        int currentDay = statistics.getDaysPassed();
-        int animalCount = statistics.getAnimalAmount();
-        int grassCount = statistics.getGrassesAmount();
-
-        // Aktualizujemy dane na wykresie dla zwierząt
-        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
-
-        // Aktualizujemy dane na wykresie dla traw
-        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
-    }
+//    private void updateCharts(Statistics statistics) {
+//        // Pobieramy aktualny dzień i wartości z `Statistics`
+//        int currentDay = statistics.getDaysPassed();
+//        int animalCount = statistics.getAnimalAmount();
+//        int grassCount = statistics.getGrassesAmount();
+//
+//        // Aktualizujemy dane na wykresie dla zwierząt
+//        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
+//
+//        // Aktualizujemy dane na wykresie dla traw
+//        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+//    }
 
     public void displayGeneralStatistics(Statistics statistics) {
         String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
@@ -448,13 +448,13 @@ public class SimulationPresenter implements MapChangeListener {
         mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
 
-        animalChart.getXAxis().setLabel("Dzień");
-        animalChart.getYAxis().setLabel("Liczba zwierząt");
-        animalChart.setTitle("Liczba zwierząt w czasie");
+       // animalChart.getXAxis().setLabel("Dzień");
+       // animalChart.getYAxis().setLabel("Liczba zwierząt");
+       // animalChart.setTitle("Liczba zwierząt w czasie");
 
-        grassChart.getXAxis().setLabel("Dzień");
-        grassChart.getYAxis().setLabel("Liczba traw");
-        grassChart.setTitle("Liczba traw w czasie");
+        //grassChart.getXAxis().setLabel("Dzień");
+      //  grassChart.getYAxis().setLabel("Liczba traw");
+      //  grassChart.setTitle("Liczba traw w czasie");
 
     }
 
