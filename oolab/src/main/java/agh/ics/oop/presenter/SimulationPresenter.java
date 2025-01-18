@@ -1,23 +1,30 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.modes.MapType;
-import agh.ics.oop.model.modes.MovinType;
-import agh.ics.oop.model.modes.MutationType;
+import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.Enums.MovinType;
+import agh.ics.oop.model.Enums.MutationType;
+import agh.ics.oop.model.util.ConvertUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 
 public class SimulationPresenter implements MapChangeListener {
+    Simulation simulation;
     private int xMin;
     private int yMin;
     private int xMax;
@@ -25,6 +32,8 @@ public class SimulationPresenter implements MapChangeListener {
     private int currentMapWidth;
     private int currentMapHeight;
     private WorldMap worldMap;
+    private Animal lastClickedAnimal = null;
+    private WorldElementBox lastElementBox = null;
 
     private final int width = 25;
     private final int height = 25;
@@ -32,11 +41,31 @@ public class SimulationPresenter implements MapChangeListener {
     private static final int MAPLIMITHIGHT = 100;
     private static final int MAPLIMITWIDTH = 100;
 
-
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
-
+    @FXML
+    private Label generalAllAnimalsLabel;
+    @FXML
+    private Label generalAllGrassesLabel;
+    @FXML
+    private Label generalFreeFieldsLabel;
+    @FXML
+    private Label generalPopularGenotypeLabel;
+    @FXML
+    private Label generalAvgEnergyLivingLabel;
+    @FXML
+    private Label generalAvgLifeSpanDeadLabel;
+    @FXML
+    private Label generalAvgChildrenLabel;
+    @FXML
+    private Label generalDaysPassed;
+    @FXML
+    private Label animalInfoLabel;
+    @FXML
+    private Button pauseButton;
+    @FXML
+    private Button continueButton;
     @FXML
     private Button start;
     @FXML
@@ -84,7 +113,12 @@ public class SimulationPresenter implements MapChangeListener {
     private VBox configBox3;
     @FXML
     private HBox configBox4;
-
+    @FXML
+    private VBox statsBox;
+    @FXML
+    private LineChart<Number, Number> animalChart;
+    @FXML
+    private LineChart<Number, Number> grassChart;
 
     private void drawMap() {
         updateBounds();
@@ -129,6 +163,7 @@ public class SimulationPresenter implements MapChangeListener {
             map1 = new GrassField(simulationProperties);
             map1.addObserver(this);
             Simulation simulation1 = new Simulation(map1, simulationProperties);
+            this.simulation = simulation1;
             SimulationEngine engine = new SimulationEngine(List.of(simulation1));
             //engine.runAsync();
             engine.runAsync();
@@ -136,6 +171,7 @@ public class SimulationPresenter implements MapChangeListener {
         else{map1 = new OwlBearMap(simulationProperties);
             map1.addObserver(this);
             Simulation simulation1 = new Simulation(map1, simulationProperties);
+            this.simulation = simulation1;
             SimulationEngine engine = new SimulationEngine(List.of(simulation1));
             //engine.runAsync();
             engine.runAsync();
@@ -143,7 +179,17 @@ public class SimulationPresenter implements MapChangeListener {
             throw new RuntimeException(e);
         }
         hideConfigurationElements();
+        showGeneralStatistics();
 
+    }
+    private void showGeneralStatistics()
+    {
+        statsBox.setVisible(true);
+        statsBox.setManaged(true);
+        continueButton.setVisible(true);
+        continueButton.setManaged(true);
+        pauseButton.setVisible(true);
+        pauseButton.setManaged(true);
     }
 
     private void hideConfigurationElements() {
@@ -158,6 +204,8 @@ public class SimulationPresenter implements MapChangeListener {
 
         mapGrid.requestLayout();
     }
+
+
     public void xyLabel(){
         mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
         mapGrid.getRowConstraints().add(new RowConstraints(height));
@@ -190,31 +238,158 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    public void addElements(){
+    public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
-                String labelText = optionalElement.isPresent() ? optionalElement.get().toString() : " ";
-                // Zmieniamy sposób dodawania etykiet i obrazków:
                 if (optionalElement.isPresent()) {
-                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
-                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
+                    WorldElement worldElement = optionalElement.get();
+                    WorldElementBox elementBox;
+                    if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(worldElement.getPosition()))
+                    {
+                        if(lastClickedAnimal.getDeathDate() == -1)
+                        {
+                            elementBox = new WorldElementBox(lastClickedAnimal);
+                            elementBox.updateImageTrackedDown(lastClickedAnimal);
+                            lastElementBox = elementBox;
+                        }
+                        else
+                        {
+                            elementBox = new WorldElementBox(worldElement);
+                            lastClickedAnimal = null;
+                        }
+                    }
+                    else
+                    {
+                        elementBox = new WorldElementBox(worldElement);
+                    }
+
+                    elementBox.setOnMouseClicked(event -> {
+                        if (worldElement instanceof Animal) {
+                            Animal clickedAnimal = (Animal) worldElement;
+
+                            if (lastClickedAnimal == clickedAnimal) {
+                                clearAnimalInfo();
+                                elementBox.updateImage(clickedAnimal);
+                                lastClickedAnimal = null;
+                            }
+                            else if(lastClickedAnimal != null) {
+                                lastElementBox.updateImage(lastClickedAnimal);
+                                lastElementBox = elementBox;
+                                lastClickedAnimal = clickedAnimal;
+                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                showAnimalInfo(clickedAnimal);
+                            }
+                            else {
+
+                                lastElementBox = elementBox;
+                                lastClickedAnimal = clickedAnimal;
+                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                showAnimalInfo(clickedAnimal);
+                            }
+                        }
+
+                    });
+
+
+                    mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 } else {
-                    // Dodajemy puste miejsce, jeśli brak elementu
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
-                GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
             }
         }
     }
+//
+//    public void addElements(){
+//        for (int i = xMin; i <= xMax; i++) {
+//            for (int j = yMax; j >= yMin; j--) {
+//                Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
+//                String labelText = optionalElement.map(Object::toString).orElse(" ");
+//                // Zmieniamy sposób dodawania etykiet i obrazków:
+//                if (optionalElement.isPresent()) {
+//                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
+//                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
+//                } else {
+//                    // Dodajemy puste miejsce, jeśli brak elementu
+//                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+//                }
+//                GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
+//            }
+//        }
+//    }
+    private void showAnimalInfo(WorldElement worldElement) {
+        if (worldElement instanceof Animal) {
+            Animal animal = (Animal) worldElement;
+            Platform.runLater(() -> {
+                animalInfoLabel.setText("Animal Info:\n" +
+                        "Genome: " +  Arrays.toString(animal.getGenome()) + "\n" +
+                        "Genome Index: " + animal.getGeneIndex() + "\n" +
+                        "Energy: " + animal.getEnergy() + "\n" +
+                        "Grasses eaten: " + animal.getPlantsEaten() + "\n" +
+                        "Children amount: " + animal.getChildrenMade() + "\n" +
+                        "Position: " + animal.getPosition() + "\n" +
+                        "Age: " + animal.getAge() + "\n" +
+                        "Death date: " + animal.getDeathDate() + "\n");
+            });
+        }
+    }
+    private void clearAnimalInfo() {
+        Platform.runLater(() -> {
+            animalInfoLabel.setText("");  // Clear the information label
+        });
+    }
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
         setWorldMap(worldMap);
+        this.displayGeneralStatistics(statistics);
+
+        if (lastClickedAnimal != null) {
+            showAnimalInfo(lastClickedAnimal);
+        }
+
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
+            //updateCharts(statistics);
         });
     }
+
+//    private void updateCharts(Statistics statistics) {
+//        // Pobieramy aktualny dzień i wartości z `Statistics`
+//        int currentDay = statistics.getDaysPassed();
+//        int animalCount = statistics.getAnimalAmount();
+//        int grassCount = statistics.getGrassesAmount();
+//
+//        // Aktualizujemy dane na wykresie dla zwierząt
+//        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
+//
+//        // Aktualizujemy dane na wykresie dla traw
+//        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+//    }
+
+    public void displayGeneralStatistics(Statistics statistics) {
+        String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
+        String grassesCount = ConvertUtils.numberToString(statistics.getGrassesAmount());
+        String FreeFields = ConvertUtils.numberToString(statistics.getFreeFieldsAmount());
+        String theMostPopularGenotype = ConvertUtils.convertGenotypeToString(statistics.getTheMostPopularGenotype());
+        String averageAliveAnimalsEnergy = ConvertUtils.numberToString(statistics.getAverageAnimalsEnergy());
+        String averageAnimalLifeSpan = ConvertUtils.numberToString(statistics.getAverageLifespan());
+        String averageChildAmount = ConvertUtils.numberToString(statistics.getAverageChildAmount());
+        String days = ConvertUtils.numberToString(statistics.getDaysPassed());
+
+        Platform.runLater(() -> {
+            generalAllAnimalsLabel.setText(animalCount);
+            generalAllGrassesLabel.setText(grassesCount);
+            generalDaysPassed.setText(days);
+            generalFreeFieldsLabel.setText(FreeFields);
+            generalPopularGenotypeLabel.setText(theMostPopularGenotype);
+            generalAvgLifeSpanDeadLabel.setText(averageAnimalLifeSpan);
+            generalAvgChildrenLabel.setText(averageChildAmount);
+            generalAvgEnergyLivingLabel.setText(averageAliveAnimalsEnergy);
+        });
+    }
+
+
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
@@ -272,6 +447,15 @@ public class SimulationPresenter implements MapChangeListener {
         // Disable editing to prevent invalid input
         mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
+
+       // animalChart.getXAxis().setLabel("Dzień");
+       // animalChart.getYAxis().setLabel("Liczba zwierząt");
+       // animalChart.setTitle("Liczba zwierząt w czasie");
+
+        //grassChart.getXAxis().setLabel("Dzień");
+      //  grassChart.getYAxis().setLabel("Liczba traw");
+      //  grassChart.setTitle("Liczba traw w czasie");
+
     }
 
     private void updateArea(){
@@ -283,5 +467,23 @@ public class SimulationPresenter implements MapChangeListener {
         //   grassNumberSpinner.setValueFactory(maxArea);
         //}
 
+    }
+
+    @FXML
+    public void onPauseClicked(ActionEvent actionEvent) {
+        if (simulation != null) {
+            simulation.pause();
+            Platform.runLater(() -> pauseButton.setDisable(true));
+            Platform.runLater(() -> continueButton.setDisable(false));
+        }
+    }
+
+    @FXML
+    public void onContinueClicked(ActionEvent actionEvent) {
+        if (simulation != null) {
+            simulation.start();
+            Platform.runLater(() -> pauseButton.setDisable(false));
+            Platform.runLater(() -> continueButton.setDisable(true));
+        }
     }
 }

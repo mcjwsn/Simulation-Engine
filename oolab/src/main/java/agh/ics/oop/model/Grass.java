@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.modes.ElementType;
+import agh.ics.oop.model.Enums.ElementType;
 
 public class Grass implements WorldElement{
     private Vector2d position;

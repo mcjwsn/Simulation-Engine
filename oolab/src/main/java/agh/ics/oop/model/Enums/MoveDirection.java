@@ -1,4 +1,4 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.Enums;
 
 public enum MoveDirection {
     ZERO,

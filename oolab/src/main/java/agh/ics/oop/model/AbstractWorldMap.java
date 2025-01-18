@@ -1,7 +1,8 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.Statistics;
+import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.*;
 import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
+    protected List<Animal> deadAnimals = new CopyOnWriteArrayList<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
     protected List<MapChangeListener> observers = new CopyOnWriteArrayList<>();
     protected String id;
@@ -47,13 +49,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
-
-    @Override
-    public boolean canMoveTo(Vector2d position)
-    {
-        return true;
-    }
-
      public void place(Vector2d animalPosition,Animal animal) {
         //animals.computeIfAbsent(animal.getPosition(), pos -> new CopyOnWriteArrayList<>()).add(animal);
         //notifyObservers("Animal placed at " + animal.getPosition());
@@ -81,7 +76,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         animals.get(oldPosition).remove(animal);
         animal.move(this);
         Vector2d newPosition = animal.getPosition();
-        place(newPosition, animal);
         List<Animal> oldPositionAnimals = animals.get(oldPosition);
         if (oldPositionAnimals != null) {
             oldPositionAnimals.remove(animal);
@@ -89,6 +83,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                 animals.remove(oldPosition);
             }
         }
+        place(newPosition, animal);
     }
 
     @Override
@@ -128,21 +123,114 @@ public abstract class AbstractWorldMap implements WorldMap {
         observers.add(observer);
     }
 
-    public void mapChanged(String msg) {
+    public void mapChanged(Statistics statistics, String msg) {
         for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, msg);
+            observer.mapChanged(this, msg, statistics);
         }
     }
+
+    public void setStatistics(Statistics stats, int newDay) {
+        stats.setStatisticsParameters(this.getNumberOfAnimals(),
+                this.getNumberOfGrasses(),
+                this.getNumberOfFreeFields(),
+                this.getMostPopularGenotype(),
+                this.getAverageAliveAnimalsEnergy(),
+                this.getAverageAnimalLifeSpan(),
+                this.getAverageChildrenAmount(),
+                newDay);
+    }
+
+    private int getNumberOfAnimals() {
+        int cnt = 0;
+        for (List<Animal> animalList : animals.values()) {
+            cnt+=animalList.size();
+        }
+        return cnt;}
+
+    private int getNumberOfGrasses() {
+        return grass.size();}
+
+
+    protected int getNumberOfFreeFields() {
+        Set<Vector2d> usedPositions = new HashSet<>();
+        usedPositions.addAll(animals.keySet());
+        usedPositions.addAll(grass.keySet());
+        return (width+1) * (height+1) - usedPositions.size();
+    }
+
+
+    protected List<Integer> getMostPopularGenotype() {
+        List<Animal> animalsList = simulation.getAnimals();
+        Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
+
+        for (Animal animal : animalsList) {
+            List<Integer> genotype = Arrays.stream(animal.getGenome())
+                    .boxed()
+                    .toList();
+
+            genotypePopularity.put(genotype, genotypePopularity.getOrDefault(genotype, 0) + 1);
+        }
+
+        return genotypePopularity.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(Collections.emptyList());
+    }
+
+    protected int getAverageAliveAnimalsEnergy()
+    {
+        List<Animal> animalsList = simulation.getAnimals();
+        if (animalsList == null || animalsList.isEmpty()) {
+            return 0;
+        }
+        int averageEnergy = 0;
+        for (Animal animal : animalsList) {
+            averageEnergy += animal.getEnergy();
+        }
+        return averageEnergy/animalsList.size();
+    }
+
+    protected int getAverageAnimalLifeSpan()
+    {
+        if(deadAnimals.isEmpty())
+        {
+            return 0;
+        }
+
+        int meanAge = 0;
+        for(Animal animal : deadAnimals)
+        {
+            meanAge += animal.getAge();
+        }
+        return meanAge/deadAnimals.size();
+    }
+
+    protected double getAverageChildrenAmount()
+    {
+        List<Animal> animalsList = simulation.getAnimals();
+        int avgChildrenAmount = 0;
+        if (animalsList.isEmpty()) {
+            return 0;
+        }
+        for(Animal animal : animalsList)
+        {
+            avgChildrenAmount += animal.getChildren().size();
+        }
+        return (double)avgChildrenAmount/animalsList.size();
+    }
+
+
 
     public void removeObserver(MapChangeListener observer) {
         observers.remove(observer);
     }
 
-    protected void notifyObservers(String message) {
-        for (MapChangeListener observer : observers) {
-            observer.mapChanged(this, message);
-        }
-    }
+//    protected void notifyObservers(String message) {
+//        for (MapChangeListener observer : observers) {
+//            observer.mapChanged(this, message);
+//        }
+//    }
 
     @Override
     public String getId() {
@@ -156,18 +244,20 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public synchronized void removeAnimal(Animal animal) {
+        Vector2d position = animal.getPosition();
         animals.get(animal.getPosition()).remove(animal);
+        if (animals.get(position).isEmpty()) {
+            animals.remove(position);
+        }
+        deadAnimals.add(animal);
     }
+
     public synchronized void placeGrass(Vector2d plantPosition, Grass grassObject) {
         grass.put(plantPosition, grassObject);
         freePositionsForPlants.remove(plantPosition);
     }
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
-    }
-
-    public Integer getGrassNumber() {
-        return grass.size();
     }
 
     public Integer getEmptyCount() {

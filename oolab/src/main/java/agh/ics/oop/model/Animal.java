@@ -1,8 +1,9 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.modes.ElementType;
-import agh.ics.oop.model.modes.MapType;
-import agh.ics.oop.model.modes.MovinType;
+import agh.ics.oop.model.Enums.ElementType;
+import agh.ics.oop.model.Enums.MapDirection;
+import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.Enums.MovinType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Animal implements WorldElement {
     private int childrenNumber;
     private SimulationProperties simulationProperties;
     int age;
-    private int deathDate;
+    private int deathDate = -1;
 
     private final List<Animal> children = new ArrayList<Animal>();
     private static final Random random = new Random();
@@ -97,6 +98,7 @@ public class Animal implements WorldElement {
     public int[] getGenome() { return genome; }
     public Integer getGeneIndex() { return geneIndex; }
     public Integer getChildrenMade() { return childrenNumber; }
+    public void increaseChildrenNumber() { childrenNumber++; }
     public Integer getPlantsEaten() { return grassEaten; }
 
     public void addChildToList(Animal child) {
@@ -114,6 +116,11 @@ public class Animal implements WorldElement {
 
     public void setDeathDate(int deathDate){
         this.deathDate = deathDate;
+    }
+
+    public int getDeathDate()
+    {
+        return deathDate;
     }
 
 //    public void move(MoveValidator map) {
@@ -135,8 +142,10 @@ public class Animal implements WorldElement {
             MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
             Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
             this.orientation = newOrientation;
-            Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-            this.position = wrappedPosition;
+            if(newPosition.precedes(map.getCurrentBounds().upperRight()) && newPosition.follows(map.getCurrentBounds().lowerLeft()))
+            {
+                this.position = newPosition;
+            }
         }
         else
         {
@@ -170,6 +179,19 @@ public class Animal implements WorldElement {
             case NORTHWEST -> "NW.png";
             case SOUTHEAST -> "SE.png";
             case SOUTHWEST -> "SW.png";
+        };
+    }
+
+    public String getTrackedDownAnimalImageResource() {
+        return switch (orientation) {
+            case NORTH -> "N1.png";
+            case EAST -> "E1.png";
+            case SOUTH -> "S1.png";
+            case WEST -> "W1.png";
+            case NORTHEAST -> "NE1.png";
+            case NORTHWEST -> "NW1.png";
+            case SOUTHEAST -> "SE1.png";
+            case SOUTHWEST -> "SW1.png";
         };
     }
 

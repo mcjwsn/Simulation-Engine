@@ -1,5 +1,5 @@
 package agh.ics.oop.model;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
@@ -89,6 +89,14 @@ public class OwlBearMap extends AbstractWorldMap{
 //        }
 //        return deletedAnimals;
 //    }
+    @Override
+    protected int getNumberOfFreeFields() {
+        Set<Vector2d> usedPositions = new HashSet<>();
+        usedPositions.addAll(animals.keySet());
+        usedPositions.addAll(grass.keySet());
+        usedPositions.add(owlBear.getPosition());
+        return (width+1) * (height+1) - usedPositions.size();
+    }
 
 
     public static int integerPart(double number) {

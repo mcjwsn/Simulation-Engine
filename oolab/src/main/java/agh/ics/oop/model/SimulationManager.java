@@ -1,7 +1,8 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.Statistics;
+import agh.ics.oop.model.Enums.MapType;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class SimulationManager {
     private final AbstractWorldMap map;
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
+    private final Statistics statistics = new Statistics();
 
     private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
@@ -44,7 +46,8 @@ public class SimulationManager {
         growGrass();
         addAge();
 
-        map.mapChanged("Dzien sie zakonczyl");
+        map.setStatistics(statistics, simulation.getDays());
+        map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 
     protected void restoreEatenPlantPosition(Grass eatenGrass) {
@@ -160,8 +163,10 @@ public class SimulationManager {
 
                         a1.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a1.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
+                        a1.increaseChildrenNumber();
                         a2.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
                         a2.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
+                        a2.increaseChildrenNumber();
 
                        // System.out.println("After reproduction:");
                       //  System.out.println("Parent 1 energy: " + a1.getEnergy());
@@ -203,28 +208,65 @@ public class SimulationManager {
         }
     }
 
-    public static void initializePositions(AbstractWorldMap map) {
-        int width = map.getWidth();
-        int height = map.getHeight();
-        Set<Vector2d> preferred = new HashSet<>();
-        Set<Vector2d> lessPreferred = new HashSet<>();
-        int startEquatorRow = (height - 1) / 2;
-        int endEquatorRow = height / 2;
-        for (int x = 0; x <= height; x++) {
-            for (int y = 0; y <= width; y++) {
-                Vector2d position = new Vector2d(x, y);
-                if (y >= startEquatorRow + 1 && y <= endEquatorRow + 1) {
-                    preferred.add(position);
-                } else {
-                    lessPreferred.add(position);
-                }
+//    public void initializePositions(AbstractWorldMap map) {
+//        int equatorHeight = simulationProperties.getEquatorHeight();
+//        int width = map.getWidth();
+//        int height = map.getHeight();
+//        Set<Vector2d> preferred = new HashSet<>();
+//        Set<Vector2d> lessPreferred = new HashSet<>();
+//        int startEquatorRow = (height - 1) / 2;
+//        int endEquatorRow = height / 2;
+//        for (int x = 0; x <= height; x++) {
+//            for (int y = 0; y <= width; y++) {
+//                Vector2d position = new Vector2d(x, y);
+//                if (y >= startEquatorRow + 1 && y <= endEquatorRow + 1) {
+//                    preferred.add(position);
+//                } else {
+//                    lessPreferred.add(position);
+//                }
+//            }
+//        }
+//        preferredPositions.clear();
+//        preferredPositions.addAll(preferred);
+//        lessPreferredPositions.clear();
+//        lessPreferredPositions.addAll(lessPreferred);
+//    }
+public void initializePositions(AbstractWorldMap map) {
+    int equatorHeight = simulationProperties.getEquatorHeight(); // The height of the equator
+    int width = map.getWidth();
+    int height = map.getHeight();
+
+    Set<Vector2d> preferred = new HashSet<>();
+    Set<Vector2d> lessPreferred = new HashSet<>();
+
+    // Calculate the start and end rows for the equator based on equatorHeight
+    int centerRow = width / 2; // The central row of the map
+    int startEquatorRow = centerRow - equatorHeight / 2; // Start of the equator
+    int endEquatorRow = centerRow + equatorHeight / 2; // End of the equator
+
+    // Ensure the range stays within the bounds of the map
+    startEquatorRow = Math.max(startEquatorRow, 0); // Prevent going below row 0
+    endEquatorRow = Math.min(endEquatorRow, height - 1); // Prevent going beyond the last row
+
+    // Loop through all positions on the map
+    for (int x = 0; x <= height; x++) {
+        for (int y = 0; y <= width; y++) {
+            Vector2d position = new Vector2d(x, y);
+            if (y >= startEquatorRow && y <= endEquatorRow) {
+                preferred.add(position); // Positions within the equator
+            } else {
+                lessPreferred.add(position); // Positions outside the equator
             }
         }
-        preferredPositions.clear();
-        preferredPositions.addAll(preferred);
-        lessPreferredPositions.clear();
-        lessPreferredPositions.addAll(lessPreferred);
     }
+
+    // Update the position sets
+    preferredPositions.clear();
+    preferredPositions.addAll(preferred);
+    lessPreferredPositions.clear();
+    lessPreferredPositions.addAll(lessPreferred);
+}
+
 
     public void generateGrass(int numberOfPlants) {
         for (int i = 0; i < numberOfPlants; i++) {

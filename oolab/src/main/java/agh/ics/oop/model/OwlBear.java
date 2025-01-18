@@ -1,10 +1,8 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.Simulation;
-import agh.ics.oop.model.modes.ElementType;
-import agh.ics.oop.model.modes.MovinType;
-
-import java.util.Map;
+import agh.ics.oop.model.Enums.ElementType;
+import agh.ics.oop.model.Enums.MapDirection;
+import agh.ics.oop.model.Enums.MoveDirection;
 
 public class OwlBear implements WorldElement {
     private Vector2d position;
@@ -41,7 +39,7 @@ public class OwlBear implements WorldElement {
         }
 
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
-        while (!isWithinBounds(newPosition, map.getLowerLeftBoundary(), map.getUpperRightBoundary()) && map.canMoveTo(newPosition)) {
+        while (!isWithinBounds(newPosition, map.getLowerLeftBoundary(), map.getUpperRightBoundary())) {
             newPosition = newPosition.subtract(this.orientation.toUnitVector());
             this.orientation = this.orientation.next();
             newPosition = newPosition.add(this.orientation.toUnitVector());
