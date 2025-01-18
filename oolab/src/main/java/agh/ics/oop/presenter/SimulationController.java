@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SpinnerValueFactory;
@@ -280,18 +281,18 @@ public class SimulationController implements MapChangeListener {
         });
     }
 
-//    private void updateCharts(Statistics statistics) {
-//        // Pobieramy aktualny dzień i wartości z `Statistics`
-//        int currentDay = statistics.getDaysPassed();
-//        int animalCount = statistics.getAnimalAmount();
-//        int grassCount = statistics.getGrassesAmount();
-//
-//        // Aktualizujemy dane na wykresie dla zwierząt
-//        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
-//
-//        // Aktualizujemy dane na wykresie dla traw
-//        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
-//    }
+    private void updateCharts(Statistics statistics) {
+        // Pobieramy aktualny dzień i wartości z `Statistics`
+        int currentDay = statistics.getDaysPassed();
+        int animalCount = statistics.getAnimalAmount();
+        int grassCount = statistics.getGrassesAmount();
+
+        // Aktualizujemy dane na wykresie dla zwierząt
+        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
+
+        // Aktualizujemy dane na wykresie dla traw
+        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+    }
 
     public void displayGeneralStatistics(Statistics statistics) {
         String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());

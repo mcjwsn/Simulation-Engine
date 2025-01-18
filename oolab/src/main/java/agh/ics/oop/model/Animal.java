@@ -59,11 +59,10 @@ public class Animal implements WorldElement {
         this.childrenNumber = 0;
         this.birthdate = simulationProperties.getDaysElapsed();
     }
-
+    
     public List<Animal> getChildren() {
         return children;
     }
-
 
     @Override
     public String toString() {
@@ -88,7 +87,6 @@ public class Animal implements WorldElement {
     }
 
     public void setEnergy(int var) {energy = var;}
-
 
     public ElementType getType(){
         return ElementType.ANIMAL;
@@ -138,15 +136,6 @@ public class Animal implements WorldElement {
         return deathDate;
     }
 
-//    public void move(MoveValidator map) {
-//        if(movinType == MovinType.DEFAULT) {
-//            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-//        }
-//        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-//        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-//        this.orientation = newOrientation;
-//        this.position = newPosition;
-//    }
     public void move(AbstractWorldMap map) {
         if(map.getMapType() == MapType.OWLBEAR)
         {
@@ -225,11 +214,6 @@ public class Animal implements WorldElement {
             return "energy4.png";
         }
     }
-
-
-
-
-
 
     public void removeEnergy(int energy) { this.energy -= energy; }
 

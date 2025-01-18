@@ -12,23 +12,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="Labels"
             prefHeight="400.0" prefWidth="600.0">
-    <HBox>
-        <LineChart fx:id="animalChart" layoutX="20" layoutY="300" prefHeight="200" prefWidth="400">
-            <xAxis>
-                <NumberAxis label="Dzień" />
-            </xAxis>
-            <yAxis>
-                <NumberAxis label="Liczba zwierząt" />
-            </yAxis>
-        </LineChart>
-        <LineChart fx:id="grassChart" layoutX="450" layoutY="300" prefHeight="200" prefWidth="400">
-            <xAxis>
-                <NumberAxis label="Dzień" />
-            </xAxis>
-            <yAxis>
-                <NumberAxis label="Liczba traw" />
-            </yAxis>
-        </LineChart>
-    </HBox>
+
 
 </AnchorPane>

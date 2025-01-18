@@ -119,6 +119,7 @@ public class SimulationProperties {
     public int getEnergyLevelToPassToChild() {
         return energyLevelToPassToChild;
     }
+
     public int getMoveEnergy() {
         return moveEnergy;
     }

@@ -7,22 +7,9 @@ import agh.ics.oop.presenter.StartScreenController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class SimulationApp extends Application {
-    private Stage primaryStage;
-
-    public void start3(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
-        MapChangeListener listener = loader.getController();
-        BorderPane viewRoot = loader.load();
-        configureStage(primaryStage, viewRoot);
-        primaryStage.show();
-    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
@@ -55,14 +42,5 @@ public class SimulationApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simulation");
         primaryStage.show();
-    }
-
-
-    private void configureStage(Stage primaryStage, BorderPane viewRoot) {
-        Scene scene = new Scene(viewRoot);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Simulation App");
-        primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
-        primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 }

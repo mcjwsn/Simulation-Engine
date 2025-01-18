@@ -38,7 +38,9 @@
                     </rowConstraints>
                 </GridPane>
             </VBox>
-
+            <HBox>
+                <Label fx:id="animalInfoLabel" text="" visible="true" style="-fx-padding: 0 0 0 20;" />
+            </HBox>
         </HBox>
     </top>
     <bottom>

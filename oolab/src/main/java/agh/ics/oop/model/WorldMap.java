@@ -1,7 +1,6 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.*;
-import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.List;
 import java.util.Optional;
