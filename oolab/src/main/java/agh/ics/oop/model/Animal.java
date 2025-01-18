@@ -225,12 +225,7 @@ public class Animal implements WorldElement {
             return "energy4.png";
         }
     }
-
-
-
-
-
-
+    
     public void removeEnergy(int energy) { this.energy -= energy; }
 
     // dodac funckje do liczenia dzieci/przodkow
