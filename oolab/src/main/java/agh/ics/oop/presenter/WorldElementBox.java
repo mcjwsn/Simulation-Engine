@@ -13,7 +13,10 @@ import java.util.Objects;
 public class WorldElementBox extends VBox {
     private static final int IMAGE_HEIGHT = 20;
     private static final int IMAGE_WIDTH = 20;
+    private static final int ENERGY_IMAGE_HEIGHT = 3;
+    private static final int ENERGY_IMAGE_WIDTH = 14;
     private String lastImage;
+    private String lastEnergyLevel;
     private static final Map<String, Image> imageCache = new HashMap<>();
 
     // Cache'ujemy Image zamiast ImageView
@@ -69,6 +72,10 @@ public class WorldElementBox extends VBox {
             imageView.setFitWidth(IMAGE_WIDTH);
             imageView.setFitHeight(IMAGE_HEIGHT);
             this.getChildren().add(imageView);
+            if (element instanceof Animal)
+            {
+                addEnergyLevel((Animal) element);
+            }
             lastImage = currImage; // Update the last image
         }
     }
@@ -83,10 +90,23 @@ public class WorldElementBox extends VBox {
             imageView.setFitWidth(IMAGE_WIDTH + 15);
             imageView.setFitHeight(IMAGE_HEIGHT + 15);
             this.getChildren().add(imageView);
+            addEnergyLevel(element);
             lastImage = currImage;
         }
     }
 
+    private void addEnergyLevel(Animal animal) {
+        String energyLevel = animal.getEnergyLevelResource();
+
+        if (!Objects.equals(energyLevel, lastEnergyLevel)) {
+            Image image = getImage(energyLevel);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(ENERGY_IMAGE_WIDTH);
+            imageView.setFitHeight(ENERGY_IMAGE_HEIGHT);
+            this.getChildren().add(imageView);
+            lastImage = energyLevel; // Update the last image
+        }
+    }
 
     public WorldElementBox(WorldElement element) {
         updateImage(element);

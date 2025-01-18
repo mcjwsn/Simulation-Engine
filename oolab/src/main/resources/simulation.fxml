@@ -69,7 +69,7 @@
                  <Label text="Set number of Animals" />
                  <Spinner fx:id="numberOfAnimalsSpinner" editable="True" initialValue="25" max="50" min="1" />
                  <Label text="Set number of starting energy for Animals" />
-                 <Spinner fx:id="startingAnimalEnergySpinner" editable="True" initialValue="50" max="500" min="10" />
+                 <Spinner fx:id="startingAnimalEnergySpinner" editable="True" initialValue="10" max="500" min="10" />
                  <Label text="Set number of energy needed for reporduction" />
                  <Spinner fx:id="energuNeededForReproductionSpinner" editable="True" initialValue="25" max="50" min="1" />
                  <Label text="Set the energy that animals lose by reproduction" />

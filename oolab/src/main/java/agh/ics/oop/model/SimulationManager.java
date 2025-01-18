@@ -90,7 +90,7 @@ public class SimulationManager {
     }
 
     private void moveALlAnimals() {
-        for(Animal animal : simulation.getAnimals()){
+        for(Animal animal : simulation.getAnimals()) {
             map.move(animal);
             animal.removeEnergy(simulationProperties.getMoveEnergy());
         }

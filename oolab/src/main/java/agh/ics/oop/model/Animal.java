@@ -87,6 +87,8 @@ public class Animal implements WorldElement {
         return energy;
     }
 
+    public void setEnergy(int var) {energy = var;}
+
 
     public ElementType getType(){
         return ElementType.ANIMAL;
@@ -106,8 +108,21 @@ public class Animal implements WorldElement {
     }
 
     public void eat(int grassEnergyLevel) { // jedzenie
-        this.energy += grassEnergyLevel;
-        this.grassEaten+=1;
+        if(this.energy+grassEnergyLevel <= simulationProperties.getMaxEnergy())
+        {
+            this.energy += grassEnergyLevel;
+            this.grassEaten+=1;
+        }
+        else if (this.energy!= simulationProperties.getMaxEnergy())
+        {
+            this.energy = simulationProperties.getMaxEnergy();
+            this.grassEaten+=1;
+        }
+        else
+        {
+            this.energy = simulationProperties.getMaxEnergy();
+        }
+
     }
 
     public void addAge(){
@@ -194,6 +209,24 @@ public class Animal implements WorldElement {
             case SOUTHWEST -> "SW1.png";
         };
     }
+
+    public String getEnergyLevelResource() {
+        int maxEnergy = simulationProperties.getMaxEnergy();
+        double energyPercentage = (double) this.energy;
+        if (energyPercentage < 0.2*maxEnergy) {
+            return "energy0.png";
+        } else if (energyPercentage < 0.4*maxEnergy) {
+            return "energy1.png";
+        } else if (energyPercentage < 0.6*maxEnergy) {
+            return "energy2.png";
+        } else if (energyPercentage < 0.8*maxEnergy) {
+            return "energy3.png";
+        } else {
+            return "energy4.png";
+        }
+    }
+
+
 
 
 
