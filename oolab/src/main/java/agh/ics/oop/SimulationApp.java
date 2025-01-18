@@ -23,10 +23,6 @@ public class SimulationApp extends Application {
         configureStage(primaryStage, viewRoot);
         primaryStage.show();
     }
-    public void start2(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
-        //showStartScreen();
-    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
@@ -39,17 +35,19 @@ public class SimulationApp extends Application {
         primaryStage.show();
     }
 
-    public void showSettingsScreen() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/settingsScreen.fxml"));
+    public void showSettingsScreen(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("settingsScreen.fxml"));
         Scene scene = new Scene(loader.load());
         SettingsScreenControler controller = loader.getController();
         controller.setMainApp(this);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Settings");
+        primaryStage.show();
     }
 
     public void showSimulationScreen(SimulationProperties properties) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulationScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("simulationScreen.fxml"));
         Scene scene = new Scene(loader.load());
         SimulationController controller = loader.getController();
         controller.setSimulationProperties(properties);
