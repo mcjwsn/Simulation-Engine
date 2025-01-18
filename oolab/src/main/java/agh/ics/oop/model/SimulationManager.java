@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.util.ConvertUtils;
 
 import java.util.*;
 
@@ -17,6 +18,10 @@ public class SimulationManager {
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
     private static int DAILY_GRASS_NUMBER = 0;
+
+    public static Set<Vector2d> getPreferredPositions() {
+        return preferredPositions;
+    }
 
     protected static final Random random = new Random();
 
@@ -56,11 +61,20 @@ public class SimulationManager {
     }
 
     protected void restoreEatenPlantPosition(Grass eatenGrass) {
-        Vector2d availablePosition = eatenGrass.getPosition();
+        int equatorHeight = simulationProperties.getEquatorHeight();
+        int width = map.getWidth();
         int height = map.getHeight();
-        int startEquatorRow = (height - 1) / 2;
-        int endEquatorRow = height / 2;
-        if (availablePosition.getY() >= startEquatorRow + 1 && availablePosition.getY() <= endEquatorRow + 1) {
+
+        int centerRow = width / 2;
+        int startEquatorRow = centerRow - equatorHeight / 2;
+        int endEquatorRow = centerRow + equatorHeight / 2;
+
+        startEquatorRow = Math.max(startEquatorRow, 0);
+        endEquatorRow = Math.min(endEquatorRow, height - 1);
+
+        Vector2d availablePosition = eatenGrass.getPosition();
+
+        if (availablePosition.getY() >= startEquatorRow && availablePosition.getY() <= endEquatorRow) {
             preferredPositions.add(availablePosition);
         } else {
             lessPreferredPositions.add(availablePosition);
@@ -244,7 +258,6 @@ public void initializePositions(AbstractWorldMap map) {
     Set<Vector2d> preferred = new HashSet<>();
     Set<Vector2d> lessPreferred = new HashSet<>();
 
-    // Calculate the start and end rows for the equator based on equatorHeight
     int centerRow = width / 2; // The central row of the map
     int startEquatorRow = centerRow - equatorHeight / 2; // Start of the equator
     int endEquatorRow = centerRow + equatorHeight / 2; // End of the equator

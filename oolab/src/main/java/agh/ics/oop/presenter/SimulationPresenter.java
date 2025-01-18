@@ -12,15 +12,18 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import javax.swing.text.IconView;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -34,6 +37,7 @@ public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
+    private boolean showFieldsBool = false;
 
     private final int width = 25;
     private final int height = 25;
@@ -66,6 +70,10 @@ public class SimulationPresenter implements MapChangeListener {
     private Button pauseButton;
     @FXML
     private Button continueButton;
+    @FXML
+    private Button showGenotype;
+    @FXML
+    private Button showFields;
     @FXML
     private Button start;
     @FXML
@@ -190,6 +198,10 @@ public class SimulationPresenter implements MapChangeListener {
         continueButton.setManaged(true);
         pauseButton.setVisible(true);
         pauseButton.setManaged(true);
+        showFields.setVisible(true);
+        showFields.setManaged(true);
+        showGenotype.setVisible(true);
+        showGenotype.setManaged(true);
     }
 
     private void hideConfigurationElements() {
@@ -293,10 +305,14 @@ public class SimulationPresenter implements MapChangeListener {
 
 
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
-                } else {
+                }
+                else {
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
             }
+        }
+        if(showFieldsBool){
+            showFields();
         }
     }
 //
@@ -476,6 +492,79 @@ public class SimulationPresenter implements MapChangeListener {
             Platform.runLater(() -> pauseButton.setDisable(true));
             Platform.runLater(() -> continueButton.setDisable(false));
         }
+    }
+
+    @FXML
+    public void onShowGenotype(ActionEvent actionEvent) {
+        System.out.printf("Nigga");
+    }
+
+//    @FXML
+//    public void onShowFields(ActionEvent actionEvent) {
+//        showFieldsBool = !showFieldsBool;
+//
+//        Set<Vector2d> prefPos = simulation.getPreferedPositions();
+//
+//        if (showFieldsBool) {
+//            for (Vector2d pos : prefPos) {
+//                Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
+//                if (!optionalElement.isPresent()) {
+//                    WorldElement prefCell = new PrefferdCell(pos);
+//                    WorldElementBox elementBox = new WorldElementBox(prefCell);
+//                    mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
+//                }
+//            }
+//        } else {
+//            for (Vector2d pos : prefPos) {
+//                int col = pos.getX() - xMin + 1;
+//                int row = yMax - pos.getY() + 1;
+//
+//                Node targetNode = null;
+//                for (Node node : mapGrid.getChildren()) {
+//                    Integer nodeColumn = GridPane.getColumnIndex(node);
+//                    Integer nodeRow = GridPane.getRowIndex(node);
+//
+//                    if (nodeColumn != null && nodeRow != null && nodeColumn == col && nodeRow == row) {
+//                        targetNode = node;
+//                        break;
+//                    }
+//                }
+//
+//                // Remove the node if found
+//                if (targetNode != null) {
+//                    mapGrid.getChildren().remove(targetNode);
+//                }
+//            }
+//        }
+//    }
+
+    private void showFields()
+    {
+        Set<Vector2d> prefPos = simulation.getPreferedPositions();
+
+        for(Vector2d pos : prefPos){
+            Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
+            if (!optionalElement.isPresent()) {
+                WorldElement prefCell = new PrefferdCell(pos);
+                WorldElementBox elementBox = new WorldElementBox(prefCell);
+                mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
+            }
+        }
+    }
+
+    @FXML
+    public void onShowFields(ActionEvent actionEvent) {
+        showFieldsBool = !showFieldsBool;
+
+        if(showFieldsBool){
+            showFields();
+        }
+        else
+        {
+            clearGrid();
+            drawMap();
+        }
+
     }
 
     @FXML

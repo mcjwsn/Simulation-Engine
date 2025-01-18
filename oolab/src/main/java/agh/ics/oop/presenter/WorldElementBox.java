@@ -62,6 +62,29 @@ public class WorldElementBox extends VBox {
 //        this.getChildren().add(imageView);
     }
 
+    public void showPrefferedCell(WorldElement element)
+    {
+        String prefField = element.getImageResource();
+
+        Image image = getImage(prefField);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        this.getChildren().add(imageView);
+//        if(this.getChildren() == null)
+//        {
+//            Image image = getImage(prefField);
+//            ImageView imageView = new ImageView(image);
+//            imageView.setFitWidth(IMAGE_WIDTH);
+//            imageView.setFitHeight(IMAGE_HEIGHT);
+//            this.getChildren().add(imageView);
+//        }
+    }
+    public void hidePrefferedField()
+    {
+        this.getChildren().clear();
+    }
+
     public void updateImage(WorldElement element) {
         String currImage = element.getImageResource();
 
