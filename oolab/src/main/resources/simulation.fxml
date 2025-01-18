@@ -64,6 +64,7 @@
                     </rowConstraints>
                 </GridPane>
             </VBox>
+
              <VBox fx:id="configBox2">
                  <Label text="Set number of Animals" />
                  <Spinner fx:id="numberOfAnimalsSpinner" editable="True" initialValue="25" max="50" min="1" />

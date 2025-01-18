@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
@@ -113,7 +115,10 @@ public class SimulationPresenter implements MapChangeListener {
     private HBox configBox4;
     @FXML
     private VBox statsBox;
-
+    @FXML
+    private LineChart<Number, Number> animalChart;
+    @FXML
+    private LineChart<Number, Number> grassChart;
 
     private void drawMap() {
         updateBounds();
@@ -345,8 +350,23 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
+            updateCharts(statistics);
         });
     }
+
+    private void updateCharts(Statistics statistics) {
+        // Pobieramy aktualny dzień i wartości z `Statistics`
+        int currentDay = statistics.getDaysPassed();
+        int animalCount = statistics.getAnimalAmount();
+        int grassCount = statistics.getGrassesAmount();
+
+        // Aktualizujemy dane na wykresie dla zwierząt
+        animalChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, animalCount));
+
+        // Aktualizujemy dane na wykresie dla traw
+        grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+    }
+
     public void displayGeneralStatistics(Statistics statistics) {
         String animalCount = ConvertUtils.numberToString(statistics.getAnimalAmount());
         String grassesCount = ConvertUtils.numberToString(statistics.getGrassesAmount());
@@ -427,6 +447,15 @@ public class SimulationPresenter implements MapChangeListener {
         // Disable editing to prevent invalid input
         mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
+
+        animalChart.getXAxis().setLabel("Dzień");
+        animalChart.getYAxis().setLabel("Liczba zwierząt");
+        animalChart.setTitle("Liczba zwierząt w czasie");
+
+        grassChart.getXAxis().setLabel("Dzień");
+        grassChart.getYAxis().setLabel("Liczba traw");
+        grassChart.setTitle("Liczba traw w czasie");
+
     }
 
     private void updateArea(){
