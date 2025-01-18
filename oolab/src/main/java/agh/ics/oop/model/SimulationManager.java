@@ -28,6 +28,11 @@ public class SimulationManager {
         initializePositions(map);
     }
 
+    public void Init() {
+        map.setStatistics(statistics, simulation.getDays());
+        map.mapChanged(statistics, "Dzien sie zakonczyl");
+    }
+
     // operacja podczas nowego dnia
     public void Update() {
         deleteDeadAnimals();

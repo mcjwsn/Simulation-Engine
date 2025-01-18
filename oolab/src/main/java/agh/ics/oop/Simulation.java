@@ -43,8 +43,9 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
+        simulationManager.Init();
         try {
-            Thread.sleep(2500); // initialization
+            Thread.sleep(1000); // initialization
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

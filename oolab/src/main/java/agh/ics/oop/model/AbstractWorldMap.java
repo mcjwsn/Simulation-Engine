@@ -140,12 +140,15 @@ public abstract class AbstractWorldMap implements WorldMap {
                 newDay);
     }
 
+//    private int getNumberOfAnimals() {
+//        int cnt = 0;
+//        for (List<Animal> animalList : animals.values()) {
+//            cnt+=animalList.size();
+//        }
+//        return cnt;}
     private int getNumberOfAnimals() {
-        int cnt = 0;
-        for (List<Animal> animalList : animals.values()) {
-            cnt+=animalList.size();
-        }
-        return cnt;}
+        return simulation.getAnimals().size();
+}
 
     private int getNumberOfGrasses() {
         return grass.size();}
