@@ -14,8 +14,8 @@ import java.io.IOException;
 
 public class SimulationApp extends Application {
     private Stage primaryStage;
-    @Override
-    public void start(Stage primaryStage) throws IOException {
+
+    public void start3(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         MapChangeListener listener = loader.getController();
@@ -25,11 +25,12 @@ public class SimulationApp extends Application {
     }
     public void start2(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        showStartScreen();
+        //showStartScreen();
     }
-
-    public void showStartScreen() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startScreen.fxml"));
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("startScreen.fxml"));
         Scene scene = new Scene(loader.load());
         StartScreenController controller = loader.getController();
         controller.setMainApp(this);
