@@ -1,12 +1,6 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.modes.MapType;
-import agh.ics.oop.model.modes.MovinType;
-import agh.ics.oop.model.modes.MutationType;
-import agh.ics.oop.model.util.*;
-import agh.ics.oop.presenter.*;
-import javafx.application.Platform;
 
 import java.util.*;
 

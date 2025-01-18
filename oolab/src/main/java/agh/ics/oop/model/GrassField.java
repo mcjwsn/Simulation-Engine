@@ -1,8 +1,7 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.*;
-import agh.ics.oop.model.util.RandomPointsGenerator;
 import java.util.*;
 
 public class GrassField extends AbstractWorldMap{
@@ -12,19 +11,7 @@ public class GrassField extends AbstractWorldMap{
         super(simulationProperties);
     }
 
-    private void generateGrass(int grassNumber){
-        RandomPointsGenerator randomPositionGenerator = new RandomPointsGenerator((int) Math.sqrt(10 * grassNumber), (int) Math.sqrt(10 * grassNumber), 2 * grassNumber);
-        for (Vector2d grassPosition : randomPositionGenerator) {
-            mapOfGrass.put(grassPosition, new Grass(grassPosition));
-        }
-    }
-
     @Override
-//    public Optional<WorldElement> objectAt(Vector2d position) {
-//        Optional<WorldElement> object = super.objectAt(position);
-//        if(object.isPresent()) return object;
-//        return Optional.ofNullable(mapOfGrass.get(position));
-//    }
     public Optional<WorldElement> objectAt(Vector2d position) {
         Optional<WorldElement> object = super.objectAt(position);
         if(object != null) return object;

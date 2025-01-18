@@ -1,8 +1,9 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.modes.ElementType;
-import agh.ics.oop.model.modes.MapType;
-import agh.ics.oop.model.modes.MovinType;
+import agh.ics.oop.model.Enums.ElementType;
+import agh.ics.oop.model.Enums.MapDirection;
+import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.Enums.MovinType;
 
 import java.util.ArrayList;
 import java.util.List;

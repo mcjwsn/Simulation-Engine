@@ -2,7 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.*;
 import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
@@ -141,7 +141,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     private int getNumberOfAnimals() {
-        return animals.size();}
+        int cnt = 0;
+        for (List<Animal> animalList : animals.values()) {
+            cnt+=animalList.size();
+        }
+        return cnt;}
 
     private int getNumberOfGrasses() {
         return grass.size();}
@@ -189,7 +193,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     protected int getAverageAnimalLifeSpan()
     {
-        if(deadAnimals.size() == 0)
+        if(deadAnimals.isEmpty())
         {
             return 0;
         }
@@ -206,7 +210,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     {
         List<Animal> animalsList = simulation.getAnimals();
         int avgChildrenAmount = 0;
-        if (animalsList.size() == 0 || animalsList == null) {
+        if (animalsList.isEmpty()) {
             return 0;
         }
         for(Animal animal : animalsList)
@@ -254,10 +258,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
-    }
-
-    public Integer getGrassNumber() {
-        return grass.size();
     }
 
     public Integer getEmptyCount() {

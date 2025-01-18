@@ -2,7 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.Enums.MapType;
 
 import java.util.*;
 

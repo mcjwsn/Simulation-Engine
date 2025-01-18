@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.World;
-import agh.ics.oop.model.modes.MutationType;
+import agh.ics.oop.model.Enums.MoveDirection;
+import agh.ics.oop.model.Enums.MutationType;
 
 import java.util.ArrayList;
 import java.util.List;

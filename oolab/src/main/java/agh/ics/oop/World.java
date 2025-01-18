@@ -1,11 +1,9 @@
 package agh.ics.oop;
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.modes.MapType;
-import agh.ics.oop.model.modes.MovinType;
-import agh.ics.oop.model.modes.MutationType;
-import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.Enums.MovinType;
+import agh.ics.oop.model.Enums.MutationType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class World {

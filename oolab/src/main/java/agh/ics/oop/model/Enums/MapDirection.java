@@ -1,4 +1,6 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.Enums;
+
+import agh.ics.oop.model.Vector2d;
 
 public enum MapDirection {
     NORTH,EAST,SOUTH,WEST,NORTHEAST,SOUTHEAST,SOUTHWEST,NORTHWEST;

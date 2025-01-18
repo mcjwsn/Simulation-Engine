@@ -1,5 +1,5 @@
 package agh.ics.oop.model;
-import agh.ics.oop.model.modes.MapType;
+import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;

@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author apohllo, idzik
  */
 public interface WorldMap {
-    void place(Vector2d position, Animal animal) throws IncorrectPositionException;
+    void place(Vector2d position, Animal animal);
 
     /*
      * Moves an animal (if it is present on the map) according to specified direction.
@@ -31,7 +31,7 @@ public interface WorldMap {
      * @return True if the position is occupied.
      */
     default boolean isOccupied(Vector2d position){
-        return objectAt(position)!=null;
+        return objectAt(position).isPresent();
     }
 
     /*
