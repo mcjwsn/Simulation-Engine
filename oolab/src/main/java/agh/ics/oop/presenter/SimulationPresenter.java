@@ -150,6 +150,7 @@ public class SimulationPresenter implements MapChangeListener {
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
         int maxMutation = maxGenMutationsSpinner.getValue();
+        continueButton.setDisable(true);
         initialize();
 
         SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
