@@ -2,7 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.LineChart?>
 <BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationController">
     <top>
         <HBox>
@@ -26,18 +27,41 @@
                 <Label fx:id="generalDaysPassed" text="0" />
             </VBox>
 
-            <!-- Right section for inputs and grid -->
-            <VBox>
-                <!-- Grid for simulation -->
-                <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
-                    <columnConstraints>
-                        <ColumnConstraints />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints />
-                    </rowConstraints>
-                </GridPane>
-            </VBox>
+            <!-- Center section for grid and charts -->
+            <HBox spacing="20">
+                <!-- Grid section -->
+                <VBox>
+                    <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
+                        <columnConstraints>
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <!-- Charts section -->
+                <VBox fx:id = 'Charts' visible="false" spacing="10">
+                    <LineChart fx:id="animalChart" prefHeight="200" prefWidth="400">
+                        <xAxis>
+                            <NumberAxis label="Dzień" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Liczba zwierząt" />
+                        </yAxis>
+                    </LineChart>
+                    <LineChart fx:id="grassChart" prefHeight="200" prefWidth="400">
+                        <xAxis>
+                            <NumberAxis label="Dzień" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Liczba traw" />
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+            </HBox>
+
             <HBox>
                 <Label fx:id="animalInfoLabel" text="" visible="true" style="-fx-padding: 0 0 0 20;" />
             </HBox>

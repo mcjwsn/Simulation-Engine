@@ -84,6 +84,10 @@ public class SimulationController implements MapChangeListener {
     private LineChart<Number, Number> animalChart;
     @FXML
     private LineChart<Number, Number> grassChart;
+    @FXML
+    private VBox Charts;
+
+
 
     private void drawMap() {
         updateBounds();
@@ -95,11 +99,13 @@ public class SimulationController implements MapChangeListener {
     }
     @FXML
     public void onSimulationStartClicked(){
+        Charts.setVisible(true);
         configBox3.setVisible(false);
         configBox3.setManaged(false);
         continueButton.setDisable(true);
         AbstractWorldMap map1;
         configBox3.setVisible(false);
+        initializeCharts();
 
         int mapWidth = simulationProperties.getMapWidth();
         int mapHeight = simulationProperties.getMapHeight();
@@ -277,7 +283,7 @@ public class SimulationController implements MapChangeListener {
         Platform.runLater(() -> {
             clearGrid();
             drawMap();
-            //updateCharts(statistics);
+            updateCharts(statistics);
         });
     }
 
@@ -292,6 +298,18 @@ public class SimulationController implements MapChangeListener {
 
         // Aktualizujemy dane na wykresie dla traw
         grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+    }
+
+    private void initializeCharts() {
+        // Create series for animals
+        XYChart.Series<Number, Number> animalSeries = new XYChart.Series<>();
+        animalSeries.setName("Animals");
+        animalChart.getData().add(animalSeries);
+
+        // Create series for grass
+        XYChart.Series<Number, Number> grassSeries = new XYChart.Series<>();
+        grassSeries.setName("Grass");
+        grassChart.getData().add(grassSeries);
     }
 
     public void displayGeneralStatistics(Statistics statistics) {
