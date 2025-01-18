@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Button;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 public class SettingsScreenControler {
@@ -55,6 +56,7 @@ public class SettingsScreenControler {
 
     @FXML
     public void onStartSimulationClicked() throws Exception {
+
         int mapWidth = widthSpinner.getValue()-1;
         int mapHeight = heightSpinner.getValue()-1;
         int equatorHeight = equatorHeightSpinner.getValue();
@@ -81,7 +83,8 @@ public class SettingsScreenControler {
                 movingType,mutationType, mapType,  genesCount,
                 energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
                 minMutation, maxMutation);
-        mainApp.showSimulationScreen(simulationProperties);
+        Stage newStage = new Stage();
+        mainApp.showSimulationScreen(newStage, simulationProperties);
     }
 
     public void setMainApp(SimulationApp mainApp) {

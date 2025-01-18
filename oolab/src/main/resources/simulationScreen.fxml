@@ -1,15 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="agh.ics.oop.presenter.SimulationController">
-    <center>
-        <GridPane fx:id="mapGrid"/>
-    </center>
+<BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationController">
+    <top>
+        <HBox>
+            <!-- Left section for statistics -->
+            <VBox fx:id="statsBox" alignment="CENTER_LEFT" managed="false" spacing="10" style="-fx-padding: 10 ; " visible="false">
+                <Label text="Animals amount:" />
+                <Label fx:id="generalAllAnimalsLabel" text="0" />
+                <Label text="Total number of grasses:" />
+                <Label fx:id="generalAllGrassesLabel" text="0" />
+                <Label text="Number of free fields:" />
+                <Label fx:id="generalFreeFieldsLabel" text="0" />
+                <Label text="Most popular genotype:" />
+                <Label fx:id="generalPopularGenotypeLabel" text="-" />
+                <Label text="Average energy level (living):" />
+                <Label fx:id="generalAvgEnergyLivingLabel" text="0" />
+                <Label text="Average lifespan (dead):" />
+                <Label fx:id="generalAvgLifeSpanDeadLabel" text="0" />
+                <Label text="Average number of children (living):" />
+                <Label fx:id="generalAvgChildrenLabel" text="0" />
+                <Label text="Days passed:" />
+                <Label fx:id="generalDaysPassed" text="0" />
+            </VBox>
+
+            <!-- Right section for inputs and grid -->
+            <VBox>
+                <!-- Grid for simulation -->
+                <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
+                    <columnConstraints>
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+            </VBox>
+
+        </HBox>
+    </top>
+    <bottom>
+        <HBox>
+            <VBox fx:id="configBox3" alignment="CENTER" spacing="12">
+                <children>
+                    <Button onAction="#onSimulationStartClicked" text="Start" />
+                </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
+                <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />
+            </HBox>
+        </HBox>
+    </bottom>
 </BorderPane>

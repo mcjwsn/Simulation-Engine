@@ -46,13 +46,15 @@ public class SimulationApp extends Application {
         primaryStage.show();
     }
 
-    public void showSimulationScreen(SimulationProperties properties) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("simulationScreen.fxml"));
+    public void showSimulationScreen(Stage primaryStage, SimulationProperties properties) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("simulationScreen.fxml"));
         Scene scene = new Scene(loader.load());
         SimulationController controller = loader.getController();
         controller.setSimulationProperties(properties);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simulation");
+        primaryStage.show();
     }
 
 
