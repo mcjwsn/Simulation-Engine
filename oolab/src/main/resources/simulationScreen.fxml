@@ -77,6 +77,8 @@
             <HBox alignment="CENTER" spacing="10">
                 <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
                 <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />
+                <Button fx:id="showFields" managed="true" onAction="#onShowFields" text="Preferred fields" visible="false" />
+                <Button fx:id="showGenotype" managed="true" onAction="#onShowGenotype" text="The most popular genotype" visible="false" />
             </HBox>
         </HBox>
     </bottom>

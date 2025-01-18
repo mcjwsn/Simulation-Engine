@@ -26,6 +26,7 @@ import javafx.util.StringConverter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class SimulationController implements MapChangeListener {
     private SimulationProperties simulationProperties;
@@ -67,6 +68,7 @@ public class SimulationController implements MapChangeListener {
     private WorldMap worldMap;
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
+    private boolean showFieldsBool = false;
 
     private final int width = 25;
     private final int height = 25;
@@ -86,6 +88,10 @@ public class SimulationController implements MapChangeListener {
     private LineChart<Number, Number> grassChart;
     @FXML
     private VBox Charts;
+    @FXML
+    private Button showGenotype;
+    @FXML
+    private Button showFields;
 
 
 
@@ -154,6 +160,10 @@ public class SimulationController implements MapChangeListener {
         continueButton.setManaged(true);
         pauseButton.setVisible(true);
         pauseButton.setManaged(true);
+        showFields.setVisible(true);
+        showFields.setManaged(true);
+        showGenotype.setVisible(true);
+        showGenotype.setManaged(true);
     }
 
 
@@ -249,6 +259,9 @@ public class SimulationController implements MapChangeListener {
                 }
             }
         }
+        if(showFieldsBool){
+            showFields();
+        }
     }
     private void showAnimalInfo(WorldElement worldElement) {
         if (worldElement instanceof Animal) {
@@ -270,6 +283,34 @@ public class SimulationController implements MapChangeListener {
         Platform.runLater(() -> {
             animalInfoLabel.setText("");  // Clear the information label
         });
+    }
+    @FXML
+    public void onShowGenotype(ActionEvent actionEvent) {
+        System.out.printf("Nigga");
+    }
+    private void showFields()
+    {
+        Set<Vector2d> prefPos = simulation.getPreferedPositions();
+        for(Vector2d pos : prefPos){
+            Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
+            if (!optionalElement.isPresent()) {
+                WorldElement prefCell = new PrefferdCell(pos);
+                WorldElementBox elementBox = new WorldElementBox(prefCell);
+                mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
+            }
+        }
+    }
+    @FXML
+    public void onShowFields(ActionEvent actionEvent) {
+        showFieldsBool = !showFieldsBool;
+        if(showFieldsBool){
+            showFields();
+        }
+        else
+        {
+            clearGrid();
+            drawMap();
+        }
     }
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {

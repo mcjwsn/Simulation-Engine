@@ -115,4 +115,8 @@ public class Simulation implements Runnable {
     public int getDays() {
         return days;
     }
+
+    public Set<Vector2d> getPreferedPositions() {
+        return SimulationManager.getPreferredPositions();
+    }
 }

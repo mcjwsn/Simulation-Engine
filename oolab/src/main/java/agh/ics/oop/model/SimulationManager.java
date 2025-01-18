@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.util.ConvertUtils;
 
 import java.util.*;
 
@@ -33,6 +34,10 @@ public class SimulationManager {
         map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 
+    public static Set<Vector2d> getPreferredPositions() {
+        return preferredPositions;
+    }
+
     // operacja podczas nowego dnia
     public void Update() {
         deleteDeadAnimals();
@@ -56,11 +61,16 @@ public class SimulationManager {
     }
 
     protected void restoreEatenPlantPosition(Grass eatenGrass) {
-        Vector2d availablePosition = eatenGrass.getPosition();
+        int equatorHeight = simulationProperties.getEquatorHeight();
+        int width = map.getWidth();
         int height = map.getHeight();
-        int startEquatorRow = (height - 1) / 2;
-        int endEquatorRow = height / 2;
-        if (availablePosition.getY() >= startEquatorRow + 1 && availablePosition.getY() <= endEquatorRow + 1) {
+        int centerRow = width / 2;
+        int startEquatorRow = centerRow - equatorHeight / 2;
+        int endEquatorRow = centerRow + equatorHeight / 2;
+        startEquatorRow = Math.max(startEquatorRow, 0);
+        endEquatorRow = Math.min(endEquatorRow, height - 1);
+        Vector2d availablePosition = eatenGrass.getPosition();
+        if (availablePosition.getY() >= startEquatorRow && availablePosition.getY() <= endEquatorRow) {
             preferredPositions.add(availablePosition);
         } else {
             lessPreferredPositions.add(availablePosition);
