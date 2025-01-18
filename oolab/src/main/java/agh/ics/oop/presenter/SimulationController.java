@@ -13,37 +13,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+public class SimulationController implements MapChangeListener {
+    private SimulationProperties simulationProperties;
 
-public class SimulationPresenter implements MapChangeListener {
-    Simulation simulation;
-    private int xMin;
-    private int yMin;
-    private int xMax;
-    private int yMax;
-    private int currentMapWidth;
-    private int currentMapHeight;
-    private WorldMap worldMap;
-    private Animal lastClickedAnimal = null;
-    private WorldElementBox lastElementBox = null;
-
-    private final int width = 25;
-    private final int height = 25;
-
-    private static final int MAPLIMITHIGHT = 100;
-    private static final int MAPLIMITWIDTH = 100;
-
-    public void setWorldMap(WorldMap worldMap) {
-        this.worldMap = worldMap;
-    }
+    @FXML
+    private GridPane mapGrid;
     @FXML
     private Label generalAllAnimalsLabel;
     @FXML
@@ -67,54 +54,31 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Button continueButton;
     @FXML
-    private Button start;
-    @FXML
-    private GridPane mapGrid;
-    @FXML
-    private Spinner<Integer> widthSpinner;
-    @FXML
-    private Spinner<Integer> heightSpinner;
-    @FXML
-    private Spinner<Integer> equatorHeightSpinner;
-    @FXML
-    private Spinner<Integer> grassNumberSpinner;
-    @FXML
-    private Spinner<Integer> energyAdditionSpinner;
-    @FXML
-    // uzależnić od liczby zwierzakow i mapy
-    private Spinner<Integer> plantRegenerationSpinner;
-    @FXML
-    private Spinner<Integer> numberOfAnimalsSpinner;
-    @FXML
-    private Spinner<Integer> startingAnimalEnergySpinner;
-    @FXML
-    private Spinner<Integer> energuNeededForReproductionSpinner;
-    @FXML
-    private Spinner<Integer> energyLosingWithReproductionSpinner;
-    @FXML
-    private Spinner<Integer> minGenMutationsSpinner;
-    @FXML
-    private Spinner<Integer> maxGenMutationsSpinner;
-    @FXML
-    private Spinner<Integer> genomLengthSpinner;
-    @FXML
-    private Spinner<MutationType> mutationTypeSpinner;
-    @FXML
-    private Spinner<Integer> maxEnergySpinner;
-    @FXML
-    private Spinner<MapType> mapTypeSpinner;
-    @FXML
-    private Spinner<Integer> moveEnergySpinner;
-    @FXML
-    private VBox configBox1;
-    @FXML
-    private VBox configBox2;
-    @FXML
     private VBox configBox3;
-    @FXML
-    private HBox configBox4;
-    @FXML
-    private VBox statsBox;
+
+    Simulation simulation;
+    private int xMin;
+    private int yMin;
+    private int xMax;
+    private int yMax;
+    private int currentMapWidth;
+    private int currentMapHeight;
+    private WorldMap worldMap;
+    private Animal lastClickedAnimal = null;
+    private WorldElementBox lastElementBox = null;
+
+    private final int width = 25;
+    private final int height = 25;
+
+    private static final int MAPLIMITHIGHT = 100;
+    private static final int MAPLIMITWIDTH = 100;
+
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
+    }
+    public void setSimulationProperties(SimulationProperties properties) {
+        this.simulationProperties = properties;
+    }
     @FXML
     private LineChart<Number, Number> animalChart;
     @FXML
@@ -130,80 +94,59 @@ public class SimulationPresenter implements MapChangeListener {
     }
     @FXML
     public void onSimulationStartClicked(){
-
-        int mapWidth = widthSpinner.getValue()-1;
-        int mapHeight = heightSpinner.getValue()-1;
-        int equatorHeight = equatorHeightSpinner.getValue();
-        equatorHeight = Math.min(equatorHeight, mapWidth);
-        int animalNumber = numberOfAnimalsSpinner.getValue();
-        int grassNumber = grassNumberSpinner.getValue();
-        int grassEnergy = energyAdditionSpinner.getValue();
-        int dailySpawningGrass = plantRegenerationSpinner.getValue();
-        int startEnergy = startingAnimalEnergySpinner.getValue();
-        int maxEnergy = maxEnergySpinner.getValue();
-        MovinType movingType = MovinType.DEFAULT;
-        MutationType mutationType = mutationTypeSpinner.getValue();
-        MapType mapType = mapTypeSpinner.getValue();
-        int genesCount = genomLengthSpinner.getValue();
-        int energyLevelNeededToReproduce = energuNeededForReproductionSpinner.getValue();
-        int energyLevelToPassToChild = energyLosingWithReproductionSpinner.getValue();
-        int moveEnergy = moveEnergySpinner.getValue();
-        int minMutation = minGenMutationsSpinner.getValue();
-        int maxMutation = maxGenMutationsSpinner.getValue();
+        configBox3.setVisible(false);
+        configBox3.setManaged(false);
         continueButton.setDisable(true);
-        initialize();
-
-        SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
-                dailySpawningGrass, startEnergy, grassEnergy, maxEnergy,
-                movingType,mutationType, mapType,  genesCount,
-                energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
-                minMutation, maxMutation);
         AbstractWorldMap map1;
+        configBox3.setVisible(false);
+
+        int mapWidth = simulationProperties.getMapWidth();
+        int mapHeight = simulationProperties.getMapHeight();
+        int equatorHeight = simulationProperties.getEquatorHeight();
+        int animalNumber = simulationProperties.getStartAnimalNumber();
+        int grassNumber = simulationProperties.getGrassNumber();
+        int grassEnergy = simulationProperties.getGrassEnergy();
+        int dailySpawningGrass = simulationProperties.getDailySpawningGrass();
+        int startEnergy = simulationProperties.getStartEnergy();
+        int maxEnergy = simulationProperties.getMaxEnergy();
+        MovinType movingType = MovinType.DEFAULT;
+        MutationType mutationType = simulationProperties.getMutationType();
+        MapType mapType = simulationProperties.getMapType();
+        int genesCount = simulationProperties.getGenesCount();
+        int energyLevelNeededToReproduce = simulationProperties.getEnergyLevelNeededToReproduce();
+        int energyLevelToPassToChild = simulationProperties.getEnergyLevelToPassToChild();
+        int moveEnergy = simulationProperties.getMoveEnergy();
+        int minMutation = simulationProperties.getMinMutation();
+        int maxMutation = simulationProperties.getMaxMutation();
         try{
-        if (mapType == MapType.GLOBE) {
-            map1 = new GrassField(simulationProperties);
-            map1.addObserver(this);
-            Simulation simulation1 = new Simulation(map1, simulationProperties);
-            this.simulation = simulation1;
-            SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-            //engine.runAsync();
-            engine.runAsync();
-        }
-        else{map1 = new OwlBearMap(simulationProperties);
-            map1.addObserver(this);
-            Simulation simulation1 = new Simulation(map1, simulationProperties);
-            this.simulation = simulation1;
-            SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-            //engine.runAsync();
-            engine.runAsync();
-        }} catch (Exception e) {
+            if (mapType == MapType.GLOBE) {
+                map1 = new GrassField(simulationProperties);
+                map1.addObserver((MapChangeListener) this);
+                Simulation simulation1 = new Simulation(map1, simulationProperties);
+                this.simulation = simulation1;
+                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+                //engine.runAsync();
+                engine.runAsync();
+            }
+            else{map1 = new OwlBearMap(simulationProperties);
+                map1.addObserver((MapChangeListener) this);
+                Simulation simulation1 = new Simulation(map1, simulationProperties);
+                this.simulation = simulation1;
+                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+                //engine.runAsync();
+                engine.runAsync();
+            }} catch (Exception e) {
             throw new RuntimeException(e);
         }
-        hideConfigurationElements();
         showGeneralStatistics();
 
     }
     private void showGeneralStatistics()
     {
-        statsBox.setVisible(true);
-        statsBox.setManaged(true);
         continueButton.setVisible(true);
         continueButton.setManaged(true);
         pauseButton.setVisible(true);
         pauseButton.setManaged(true);
-    }
-
-    private void hideConfigurationElements() {
-        configBox1.setVisible(false); // Ukryj cały kontener
-        configBox2.setVisible(false);
-        configBox3.setVisible(false);
-        configBox4.setVisible(false);
-        configBox1.setManaged(false);
-        configBox2.setManaged(false);
-        configBox3.setManaged(false);
-        configBox4.setManaged(false);
-
-        mapGrid.requestLayout();
     }
 
 
@@ -300,24 +243,6 @@ public class SimulationPresenter implements MapChangeListener {
             }
         }
     }
-//
-//    public void addElements(){
-//        for (int i = xMin; i <= xMax; i++) {
-//            for (int j = yMax; j >= yMin; j--) {
-//                Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
-//                String labelText = optionalElement.map(Object::toString).orElse(" ");
-//                // Zmieniamy sposób dodawania etykiet i obrazków:
-//                if (optionalElement.isPresent()) {
-//                    // Dodajemy tylko obrazek (WorldElementBox) w odpowiednie miejsce
-//                    mapGrid.add(new WorldElementBox(optionalElement.get()), i - xMin + 1, yMax - j + 1);
-//                } else {
-//                    // Dodajemy puste miejsce, jeśli brak elementu
-//                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
-//                }
-//                GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
-//            }
-//        }
-//    }
     private void showAnimalInfo(WorldElement worldElement) {
         if (worldElement instanceof Animal) {
             Animal animal = (Animal) worldElement;
@@ -397,78 +322,6 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getRowConstraints().clear();
     }
 
-    @FXML
-    public void initialize() {
-        // Create StringConverter for MapType
-        StringConverter<MapType> mapTypeConverter = new StringConverter<>() {
-            @Override
-            public String toString(MapType mapType) {
-                if (mapType == null) return "";
-                return mapType.name();
-            }
-
-            @Override
-            public MapType fromString(String string) {
-                if (string == null || string.trim().isEmpty()) return MapType.OWLBEAR;
-                return MapType.valueOf(string.trim());
-            }
-        };
-
-        // Create StringConverter for MutationType
-        StringConverter<MutationType> mutationTypeConverter = new StringConverter<>() {
-            @Override
-            public String toString(MutationType mutationType) {
-                if (mutationType == null) return "";
-                return mutationType.name();
-            }
-
-            @Override
-            public MutationType fromString(String string) {
-                if (string == null || string.trim().isEmpty()) return MutationType.values()[0];
-                return MutationType.valueOf(string.trim());
-            }
-        };
-
-        // Initialize MapType spinner
-        SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE)
-        );
-        mapTypeFactory.setConverter(mapTypeConverter);
-        mapTypeSpinner.setValueFactory(mapTypeFactory);
-        mapTypeFactory.setValue(MapType.OWLBEAR); // Set default value
-
-        // Initialize MutationType spinner
-        SpinnerValueFactory<MutationType> mutationTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                FXCollections.observableArrayList(MutationType.values())
-        );
-        mutationTypeFactory.setConverter(mutationTypeConverter);
-        mutationTypeSpinner.setValueFactory(mutationTypeFactory);
-        mutationTypeFactory.setValue(MutationType.values()[0]); // Set default value
-
-        // Disable editing to prevent invalid input
-        mapTypeSpinner.setEditable(false);
-        mutationTypeSpinner.setEditable(false);
-
-       // animalChart.getXAxis().setLabel("Dzień");
-       // animalChart.getYAxis().setLabel("Liczba zwierząt");
-       // animalChart.setTitle("Liczba zwierząt w czasie");
-
-        //grassChart.getXAxis().setLabel("Dzień");
-      //  grassChart.getYAxis().setLabel("Liczba traw");
-      //  grassChart.setTitle("Liczba traw w czasie");
-
-    }
-
-    private void updateArea(){
-        int height = heightSpinner.getValue();
-        int width = widthSpinner.getValue();
-        int maxArea = height * width;
-        // do dokonczenia po zmienia spinnera na valuefactory
-        //if ( grassNumberSpinner.getValue() > maxArea){
-        //   grassNumberSpinner.setValueFactory(maxArea);
-        //}
-
-    }
 
     @FXML
     public void onPauseClicked(ActionEvent actionEvent) {
