@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.LineChart?>
-<BorderPane minHeight="650.0" minWidth="950.0" xmlns="http://javafx.com/javafx/17.0.12"
+<BorderPane minHeight="750.0" minWidth="1050.0" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="agh.ics.oop.presenter.SimulationController"
             >
