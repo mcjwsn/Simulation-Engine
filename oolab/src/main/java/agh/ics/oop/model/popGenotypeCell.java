@@ -15,7 +15,9 @@ public class popGenotypeCell implements WorldElement{
     }
     @Override
     public String getImageResource() {
-        return "popGenotype.png";
+        //return "popGenotype.png";
+        //return "pop.jpg";
+        return "try.png";
     }
     public ElementType getType() {
         return ElementType.PREFERRED_CELL;
