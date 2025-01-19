@@ -23,15 +23,16 @@ public class Grass implements WorldElement{
 
     @Override
     public String getImageResource() {
-        Random random = new Random();
-        return switch(random.nextInt(5)){
-        case 0 -> "grass/grass1.jpg";
-        case 1 -> "grass/grass2.jpg";
-        case 2 -> "grass/grass3.jpg";
-        case 3 -> "grass/grass4.jpg";
-        case 4 -> "grass/grass5.jpg";
-        default -> "grass/grass.png"; // wizualizacja bledow
-        };
+        //Random random = new Random();
+//        return switch(random.nextInt(5)){
+//        case 0 -> "grass/grass1.jpg";
+//        case 1 -> "grass/grass2.jpg";
+//        case 2 -> "grass/grass3.jpg";
+//        case 3 -> "grass/grass4.jpg";
+//        case 4 -> "grass/grass5.jpg";
+//        default -> "grass/grass.png"; // wizualizacja bledow
+//        };
+        return "grass/grassmix.jpg";
     }
 
     public ElementType getType() {
