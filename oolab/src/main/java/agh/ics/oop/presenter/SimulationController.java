@@ -71,6 +71,7 @@ public class SimulationController implements MapChangeListener {
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
     private boolean showFieldsBool = false;
+    private Set<Vector2d> prefPos;
 
     private final int width = 25;
     private final int height = 25;
@@ -96,6 +97,8 @@ public class SimulationController implements MapChangeListener {
     private Button showFields;
     @FXML
     private VBox statsBox;
+    private boolean showGenotypeBool = false;
+    List<Integer> popularGenotype;
 
 
     private void drawMap() {
@@ -156,6 +159,7 @@ public class SimulationController implements MapChangeListener {
             throw new RuntimeException(e);
         }
         showGeneralStatistics();
+        prefPos = simulation.getPreferedPositions();
 
     }
     private void showGeneralStatistics()
@@ -206,9 +210,24 @@ public class SimulationController implements MapChangeListener {
     public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
+                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
+                {
+                    WorldElement prefCell = new PrefferdCell(new Vector2d(i, j));
+                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
+                }
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
+                    if(worldElement instanceof Animal)
+                    {
+                        if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool)
+                        {
+                            popGenotypeCell popGenomeCell = new popGenotypeCell(new Vector2d(i, j));
+                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell);
+                            mapGrid.add(elementBoxPopularGenome, i - xMin + 1, yMax - j + 1);
+                        }
+                    }
                     WorldElementBox elementBox;
                     if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(worldElement.getPosition()))
                     {
@@ -255,17 +274,15 @@ public class SimulationController implements MapChangeListener {
                         }
 
                     });
-
-
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 } else {
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
             }
         }
-        if(showFieldsBool){
-            showFields();
-        }
+        //if(showFieldsBool){
+           // showFields();
+       // }
     }
     private void showAnimalInfo(WorldElement worldElement) {
         if (worldElement instanceof Animal) {
@@ -290,29 +307,20 @@ public class SimulationController implements MapChangeListener {
     }
     @FXML
     public void onShowGenotype(ActionEvent actionEvent) {
-        Platform.runLater(() -> {
-            int a = simulationProperties.getGenesCount();
-            String str = "1".repeat(a);
-            genotypeInfoLabel.setText(str);});
+        showGenotypeBool = !showGenotypeBool;
+        clearGrid();
+        drawMap();
 
-    }
-    private void showFields()
-    {
-        Set<Vector2d> prefPos = simulation.getPreferedPositions();
-        for(Vector2d pos : prefPos){
-            Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
-            if (optionalElement.isEmpty()) {
-                WorldElement prefCell = new PrefferdCell(pos);
-                WorldElementBox elementBox = new WorldElementBox(prefCell);
-                mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
-            }
-        }
     }
     @FXML
     public void onShowFields(ActionEvent actionEvent) {
         showFieldsBool = !showFieldsBool;
+        clearGrid();
+        drawMap();
         if(showFieldsBool){
-            showFields();
+            clearGrid();
+            addElements();
+            drawMap();
         }
         else
         {
@@ -323,6 +331,7 @@ public class SimulationController implements MapChangeListener {
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
         setWorldMap(worldMap);
+        popularGenotype = worldMap.getMostPopularGenotype();
         this.displayGeneralStatistics(statistics);
 
         if (lastClickedAnimal != null) {

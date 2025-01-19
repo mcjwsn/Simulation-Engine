@@ -156,7 +156,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-    protected List<Integer> getMostPopularGenotype() {
+    @Override
+    public List<Integer> getMostPopularGenotype() {
         List<Animal> animalsList = simulation.getAnimals();
         Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
 

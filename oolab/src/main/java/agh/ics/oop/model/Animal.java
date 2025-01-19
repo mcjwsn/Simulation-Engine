@@ -6,6 +6,7 @@ import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.Enums.MovinType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -67,6 +68,13 @@ public class Animal implements WorldElement {
     @Override
     public String toString() {
         return String.valueOf(orientation);
+    }
+
+    public List<Integer> getGenotype() {
+        List<Integer> genotype = Arrays.stream(this.getGenome())
+                .boxed()
+                .toList();
+        return genotype;
     }
 
     @Override

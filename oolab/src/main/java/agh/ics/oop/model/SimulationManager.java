@@ -13,6 +13,7 @@ public class SimulationManager {
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
+    private Set<Vector2d> equatorField = new HashSet<>();
 
     private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
@@ -34,8 +35,25 @@ public class SimulationManager {
         map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 
-    public static Set<Vector2d> getPreferredPositions() {
-        return preferredPositions;
+    public Set<Vector2d> getPreferredPositions() {
+        int equatorHeight = simulationProperties.getEquatorHeight();
+        int width = map.getWidth();
+        int height = map.getHeight();
+        Set<Vector2d> preferred = new HashSet<>();
+        int centerRow = width / 2;
+        int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+        int endEquatorRow = startEquatorRow + equatorHeight - 1;
+        startEquatorRow = Math.max(startEquatorRow, 0);
+        endEquatorRow = Math.min(endEquatorRow, height - 1);
+        for (int x = 0; x <= height; x++) {
+            for (int y = 0; y <= width; y++) {
+                Vector2d position = new Vector2d(x, y);
+                if (y >= startEquatorRow && y <= endEquatorRow) {
+                    preferred.add(position);
+                }
+            }
+        }
+        return preferred;
     }
 
     // operacja podczas nowego dnia
@@ -65,8 +83,8 @@ public class SimulationManager {
         int width = map.getWidth();
         int height = map.getHeight();
         int centerRow = width / 2;
-        int startEquatorRow = centerRow - equatorHeight / 2;
-        int endEquatorRow = centerRow + equatorHeight / 2;
+        int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+        int endEquatorRow = startEquatorRow + equatorHeight - 1;
         startEquatorRow = Math.max(startEquatorRow, 0);
         endEquatorRow = Math.min(endEquatorRow, height - 1);
         Vector2d availablePosition = eatenGrass.getPosition();
@@ -256,12 +274,11 @@ public void initializePositions(AbstractWorldMap map) {
 
     // Calculate the start and end rows for the equator based on equatorHeight
     int centerRow = width / 2; // The central row of the map
-    int startEquatorRow = centerRow - equatorHeight / 2; // Start of the equator
-    int endEquatorRow = centerRow + equatorHeight / 2; // End of the equator
+    int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+    int endEquatorRow = startEquatorRow + equatorHeight - 1;
 
-    // Ensure the range stays within the bounds of the map
-    startEquatorRow = Math.max(startEquatorRow, 0); // Prevent going below row 0
-    endEquatorRow = Math.min(endEquatorRow, height - 1); // Prevent going beyond the last row
+    startEquatorRow = Math.max(startEquatorRow, 0);
+    endEquatorRow = Math.min(endEquatorRow, height - 1);
 
     // Loop through all positions on the map
     for (int x = 0; x <= height; x++) {

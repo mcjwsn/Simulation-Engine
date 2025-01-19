@@ -49,4 +49,6 @@ public interface WorldMap {
     String getId();
 
     Boundary getCurrentBounds();
+
+    List<Integer> getMostPopularGenotype();
 }

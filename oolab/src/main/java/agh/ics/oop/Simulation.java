@@ -117,6 +117,6 @@ public class Simulation implements Runnable {
     }
 
     public Set<Vector2d> getPreferedPositions() {
-        return SimulationManager.getPreferredPositions();
+        return simulationManager.getPreferredPositions();
     }
 }
