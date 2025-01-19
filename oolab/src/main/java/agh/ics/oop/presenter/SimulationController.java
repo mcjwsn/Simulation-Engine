@@ -94,7 +94,8 @@ public class SimulationController implements MapChangeListener {
     private Button showGenotype;
     @FXML
     private Button showFields;
-
+    @FXML
+    private VBox statsBox;
 
 
     private void drawMap() {
@@ -107,6 +108,7 @@ public class SimulationController implements MapChangeListener {
     }
     @FXML
     public void onSimulationStartClicked(){
+        statsBox.setVisible(true);
         Charts.setVisible(true);
         configBox3.setVisible(false);
         configBox3.setManaged(false);

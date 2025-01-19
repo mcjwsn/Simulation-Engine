@@ -4,11 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.LineChart?>
-<BorderPane minHeight="650.0" minWidth="950.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationController">
+<BorderPane minHeight="650.0" minWidth="950.0" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="agh.ics.oop.presenter.SimulationController"
+            >
     <top>
         <HBox>
             <!-- Left section for statistics -->
-            <VBox fx:id="statsBox" alignment="CENTER_LEFT" managed="false" spacing="10" style="-fx-padding: 10 ; " visible="false">
+            <VBox fx:id="statsBox" alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 ; " visible="false">
                 <Label text="Animals amount:" />
                 <Label fx:id="generalAllAnimalsLabel" text="0" />
                 <Label text="Total number of grasses:" />
@@ -31,7 +34,8 @@
             <HBox spacing="20">
                 <!-- Grid section -->
                 <VBox>
-                    <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
+                    <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true"
+                              style="-fx-background-color: #00FF01;">
                         <columnConstraints>
                             <ColumnConstraints />
                         </columnConstraints>
