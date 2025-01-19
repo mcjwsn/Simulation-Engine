@@ -210,12 +210,6 @@ public class SimulationController implements MapChangeListener {
     public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
-                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
-                {
-                    WorldElement prefCell = new PrefferdCell(new Vector2d(i, j));
-                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
-                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
-                }
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
@@ -278,7 +272,14 @@ public class SimulationController implements MapChangeListener {
                 } else {
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
+                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
+                {
+                    PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
+                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
+                }
             }
+
         }
         //if(showFieldsBool){
            // showFields();

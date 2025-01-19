@@ -1,5 +1,6 @@
 package agh.ics.oop.presenter;
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.PrefferdCell;
 import agh.ics.oop.model.WorldElement;
 import agh.ics.oop.model.popGenotypeCell;
 import javafx.geometry.Pos;
@@ -18,6 +19,8 @@ public class WorldElementBox extends VBox {
     private static final int ENERGY_IMAGE_WIDTH = 14;
     private static final int GENOME_IMAGE_HEIGHT = 30;
     private static final int GENOME_IMAGE_WIDTH = 30;
+    private static final int PREF_CELL_IMAGE_HEIGHT = 25;
+    private static final int PREF_CELL_IMAGE_WIDTH = 25;
     private String lastImage;
     private String lastEnergyLevel;
     private static final Map<String, Image> imageCache = new HashMap<>();
@@ -34,6 +37,18 @@ public class WorldElementBox extends VBox {
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(GENOME_IMAGE_WIDTH);
         imageView.setFitHeight(GENOME_IMAGE_HEIGHT);
+        this.getChildren().add(imageView);
+    }
+
+    public void updateImage(PrefferdCell element)
+    {
+        String currImage = element.getImageResource();
+        Image image = getImage(currImage);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(PREF_CELL_IMAGE_WIDTH);
+        imageView.setFitHeight(PREF_CELL_IMAGE_HEIGHT);
+
+        imageView.setOpacity(0.5);
         this.getChildren().add(imageView);
     }
 
@@ -86,6 +101,10 @@ public class WorldElementBox extends VBox {
     }
 
     public WorldElementBox(WorldElement element) {
+        updateImage(element);
+        this.setAlignment(Pos.CENTER);
+    }
+    public WorldElementBox(PrefferdCell element) {
         updateImage(element);
         this.setAlignment(Pos.CENTER);
     }
