@@ -65,6 +65,9 @@
             <HBox>
                 <Label fx:id="animalInfoLabel" text="" visible="true" style="-fx-padding: 0 0 0 20;" />
             </HBox>
+            <HBox>
+                <Label fx:id="genotypeInfoLabel" text="" visible="true" />
+            </HBox>
         </HBox>
     </top>
     <bottom>

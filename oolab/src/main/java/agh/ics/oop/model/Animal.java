@@ -174,29 +174,11 @@ public class Animal implements WorldElement {
 
     @Override
     public String getImageResource() {
-        return switch (orientation) {
-            case NORTH -> "N.png";
-            case EAST -> "E.png";
-            case SOUTH -> "S.png";
-            case WEST -> "W.png";
-            case NORTHEAST -> "NE.png";
-            case NORTHWEST -> "NW.png";
-            case SOUTHEAST -> "SE.png";
-            case SOUTHWEST -> "SW.png";
-        };
+        return "animal.jpg";
     }
 
     public String getTrackedDownAnimalImageResource() {
-        return switch (orientation) {
-            case NORTH -> "N1.png";
-            case EAST -> "E1.png";
-            case SOUTH -> "S1.png";
-            case WEST -> "W1.png";
-            case NORTHEAST -> "NE1.png";
-            case NORTHWEST -> "NW1.png";
-            case SOUTHEAST -> "SE1.png";
-            case SOUTHWEST -> "SW1.png";
-        };
+        return "animal1.jpg";
     }
 
     public String getEnergyLevelResource() {

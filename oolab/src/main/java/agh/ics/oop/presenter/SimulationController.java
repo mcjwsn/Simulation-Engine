@@ -52,6 +52,8 @@ public class SimulationController implements MapChangeListener {
     @FXML
     private Label animalInfoLabel;
     @FXML
+    private Label genotypeInfoLabel;
+    @FXML
     private Button pauseButton;
     @FXML
     private Button continueButton;
@@ -286,14 +288,18 @@ public class SimulationController implements MapChangeListener {
     }
     @FXML
     public void onShowGenotype(ActionEvent actionEvent) {
-        System.out.printf("Nigga");
+        Platform.runLater(() -> {
+            int a = simulationProperties.getGenesCount();
+            String str = "1".repeat(a);
+            genotypeInfoLabel.setText(str);});
+
     }
     private void showFields()
     {
         Set<Vector2d> prefPos = simulation.getPreferedPositions();
         for(Vector2d pos : prefPos){
             Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
-            if (!optionalElement.isPresent()) {
+            if (optionalElement.isEmpty()) {
                 WorldElement prefCell = new PrefferdCell(pos);
                 WorldElementBox elementBox = new WorldElementBox(prefCell);
                 mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
@@ -375,13 +381,11 @@ public class SimulationController implements MapChangeListener {
         });
     }
 
-
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
-
 
     @FXML
     public void onPauseClicked(ActionEvent actionEvent) {
