@@ -17,10 +17,10 @@ public class WorldElementBox extends VBox {
     private static final int IMAGE_WIDTH = 18;
     private static final int ENERGY_IMAGE_HEIGHT = 3;
     private static final int ENERGY_IMAGE_WIDTH = 14;
-    private static final int GENOME_IMAGE_HEIGHT = 25;
-    private static final int GENOME_IMAGE_WIDTH = 25;
-    private static final int PREF_CELL_IMAGE_HEIGHT = 25;
-    private static final int PREF_CELL_IMAGE_WIDTH = 25;
+    private static final int GENOME_IMAGE_HEIGHT = 20;
+    private static final int GENOME_IMAGE_WIDTH = 20;
+    private static final int PREF_CELL_IMAGE_HEIGHT = 20;
+    private static final int PREF_CELL_IMAGE_WIDTH = 20;
     private String lastImage;
     private String lastEnergyLevel;
     private static final Map<String, Image> imageCache = new HashMap<>();

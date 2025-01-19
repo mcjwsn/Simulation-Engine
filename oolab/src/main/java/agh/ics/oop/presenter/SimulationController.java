@@ -220,7 +220,8 @@ public class SimulationController implements MapChangeListener {
 
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
 
-                } else {
+                }
+                else {
                     // Dla pustych preferowanych pól dodaj pusty WorldElementBox z otoczką
                     if (prefPos.contains(position) && showFieldsBool) {
                         WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position));
