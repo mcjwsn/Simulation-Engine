@@ -33,6 +33,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public AbstractWorldMap(SimulationProperties simulationProperties){
+        this.id = UUID.randomUUID().toString();
         animals = new HashMap<>();
         grass = new HashMap<>();
         observers = new LinkedList<>();

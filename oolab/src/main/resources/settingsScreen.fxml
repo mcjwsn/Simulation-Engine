@@ -62,8 +62,10 @@
         </HBox>
     </top>
     <bottom>
-        <VBox alignment="CENTER">
-                <Button onAction="#onStartSimulationClicked" text="Start" styleClass="pixel-button" />
-        </VBox>
+        <HBox alignment="CENTER">
+            <Button onAction="#onStartSimulationClicked" text="Start" styleClass="pixel-button" />
+            <Button fx:id="exportCsvButton" onAction="#onExportCsvClicked" text="Export CSV" styleClass="pixel-button" />
+            <Button fx:id="importCsvButton" onAction="#onImportCsvClicked" text="Import CSV" styleClass="pixel-button" />
+        </HBox>
     </bottom>
 </BorderPane>

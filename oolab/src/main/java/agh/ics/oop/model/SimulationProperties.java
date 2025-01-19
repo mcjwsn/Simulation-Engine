@@ -138,5 +138,5 @@ public class SimulationProperties {
         return maxMutation;
     }
 
-    public int isCSV() {return CSV;}
+    public int getCSV() {return CSV;}
 }
