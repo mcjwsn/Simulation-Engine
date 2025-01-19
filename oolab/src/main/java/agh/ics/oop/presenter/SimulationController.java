@@ -211,6 +211,12 @@ public class SimulationController implements MapChangeListener {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
+                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
+                {
+                    PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
+                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
+                }
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
                     if(worldElement instanceof Animal)
@@ -268,18 +274,12 @@ public class SimulationController implements MapChangeListener {
                         }
 
                     });
+
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 } else {
                     mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
                 }
-                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
-                {
-                    PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
-                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
-                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
-                }
             }
-
         }
     }
     private void showAnimalInfo(WorldElement worldElement) {
