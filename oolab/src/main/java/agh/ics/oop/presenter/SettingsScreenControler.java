@@ -53,6 +53,8 @@ public class SettingsScreenControler {
     private Spinner<MapType> mapTypeSpinner;
     @FXML
     private Spinner<Integer> moveEnergySpinner;
+    @FXML
+    private Spinner<Integer> CSVSpinner;
 
     @FXML
     public void onStartSimulationClicked() throws Exception {
@@ -76,13 +78,14 @@ public class SettingsScreenControler {
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
         int maxMutation = maxGenMutationsSpinner.getValue();
+        int CSV = CSVSpinner.getValue();
         initialize();
 
         SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
                 dailySpawningGrass, startEnergy, grassEnergy, maxEnergy,
                 movingType,mutationType, mapType,  genesCount,
                 energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
-                minMutation, maxMutation);
+                minMutation, maxMutation,CSV);
         Stage newStage = new Stage();
         mainApp.showSimulationScreen(newStage, simulationProperties);
     }
