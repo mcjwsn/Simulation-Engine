@@ -20,10 +20,7 @@ import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import javax.swing.text.IconView;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -38,6 +35,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
     private boolean showFieldsBool = false;
+    private boolean showGenotypeBool = false;
+    List<Integer> popularGenotype;
     private Set<Vector2d> prefPos;
 
     private final int width = 25;
@@ -182,7 +181,6 @@ public class SimulationPresenter implements MapChangeListener {
             Simulation simulation1 = new Simulation(map1, simulationProperties);
             this.simulation = simulation1;
             SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-            //engine.runAsync();
             engine.runAsync();
         }} catch (Exception e) {
             throw new RuntimeException(e);
@@ -190,8 +188,8 @@ public class SimulationPresenter implements MapChangeListener {
         hideConfigurationElements();
         showGeneralStatistics();
         prefPos = simulation.getPreferedPositions();
-
     }
+
     private void showGeneralStatistics()
     {
         statsBox.setVisible(true);
@@ -264,6 +262,15 @@ public class SimulationPresenter implements MapChangeListener {
                 Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
+                    if(worldElement instanceof Animal)
+                    {
+                        if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool)
+                        {
+                            popGenotypeCell popGenomeCell = new popGenotypeCell(new Vector2d(i, j));
+                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell);
+                            mapGrid.add(elementBoxPopularGenome, i - xMin + 1, yMax - j + 1);
+                        }
+                    }
                     WorldElementBox elementBox;
                     if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(worldElement.getPosition()))
                     {
@@ -363,6 +370,7 @@ public class SimulationPresenter implements MapChangeListener {
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
         setWorldMap(worldMap);
+        popularGenotype = worldMap.getMostPopularGenotype();
         this.displayGeneralStatistics(statistics);
 
         if (lastClickedAnimal != null) {
@@ -502,8 +510,9 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public void onShowGenotype(ActionEvent actionEvent) {
-
-        System.out.printf("Nigga");
+        showGenotypeBool = !showGenotypeBool;
+        clearGrid();
+        drawMap();
     }
 
     @FXML

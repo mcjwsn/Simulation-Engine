@@ -5,9 +5,7 @@ import agh.ics.oop.model.Enums.MapDirection;
 import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.Enums.MovinType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static agh.ics.oop.model.Genes.getStartingGenes;
 
@@ -147,6 +145,14 @@ public class Animal implements WorldElement {
 //        this.orientation = newOrientation;
 //        this.position = newPosition;
 //    }
+public List<Integer> getGenotype() {
+        List<Integer> genotype = Arrays.stream(this.getGenome())
+                .boxed()
+                .toList();
+
+    return genotype;
+}
+
     public void move(AbstractWorldMap map) {
         if(map.getMapType() == MapType.OWLBEAR)
         {

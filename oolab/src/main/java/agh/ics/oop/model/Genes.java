@@ -34,7 +34,7 @@ public class Genes {
         Random random = new Random();
         int[] genes = new int[genNumb];
         for (int i = 0; i < genNumb; i++){
-            genes[i] = random.nextInt(0, 7);
+            genes[i] = random.nextInt(0, 8);
         }
         return genes;
     }

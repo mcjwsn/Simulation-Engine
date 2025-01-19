@@ -161,8 +161,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         return (width+1) * (height+1) - usedPositions.size();
     }
 
-
-    protected List<Integer> getMostPopularGenotype() {
+    @Override
+    public List<Integer> getMostPopularGenotype() {
         List<Animal> animalsList = simulation.getAnimals();
         Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
 
