@@ -28,8 +28,9 @@ public class SimulationManager {
         Set<Vector2d> preferred = new HashSet<>();
 
         int centerRow = width / 2;
-        int startEquatorRow = centerRow - equatorHeight / 2;
-        int endEquatorRow = centerRow + equatorHeight / 2;
+        int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+//        int endEquatorRow = centerRow + equatorHeight / 2;
+        int endEquatorRow = startEquatorRow + equatorHeight - 1;
 
         startEquatorRow = Math.max(startEquatorRow, 0);
         endEquatorRow = Math.min(endEquatorRow, height - 1);
@@ -89,8 +90,9 @@ public class SimulationManager {
         int height = map.getHeight();
 
         int centerRow = width / 2;
-        int startEquatorRow = centerRow - equatorHeight / 2;
-        int endEquatorRow = centerRow + equatorHeight / 2;
+        int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+//        int endEquatorRow = centerRow + equatorHeight / 2;
+        int endEquatorRow = startEquatorRow + equatorHeight - 1;
 
         startEquatorRow = Math.max(startEquatorRow, 0);
         endEquatorRow = Math.min(endEquatorRow, height - 1);
@@ -281,15 +283,14 @@ public void initializePositions(AbstractWorldMap map) {
     Set<Vector2d> preferred = new HashSet<>();
     Set<Vector2d> lessPreferred = new HashSet<>();
 
-    int centerRow = width / 2; // The central row of the map
-    int startEquatorRow = centerRow - equatorHeight / 2; // Start of the equator
-    int endEquatorRow = centerRow + equatorHeight / 2; // End of the equator
+    int centerRow = width / 2;
+    int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+//    int endEquatorRow = centerRow + equatorHeight / 2;
+    int endEquatorRow = startEquatorRow + equatorHeight - 1;
 
-    // Ensure the range stays within the bounds of the map
-    startEquatorRow = Math.max(startEquatorRow, 0); // Prevent going below row 0
-    endEquatorRow = Math.min(endEquatorRow, height - 1); // Prevent going beyond the last row
+    startEquatorRow = Math.max(startEquatorRow, 0);
+    endEquatorRow = Math.min(endEquatorRow, height - 1);
 
-    // Loop through all positions on the map
     for (int x = 0; x <= height; x++) {
         for (int y = 0; y <= width; y++) {
             Vector2d position = new Vector2d(x, y);
