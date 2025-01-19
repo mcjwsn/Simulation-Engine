@@ -98,4 +98,14 @@ public class WorldElementBox extends VBox {
         updateImageGenotype(cell);
         this.setAlignment(Pos.CENTER);
     }
+    private boolean isPreferred = false;
+
+    public void setPreferred(boolean preferred) {
+        this.isPreferred = preferred;
+        if (preferred) {
+            this.setStyle("-fx-border-color: yellow; -fx-border-width: 2; -fx-border-radius: 5;");
+        } else {
+            this.setStyle("");
+        }
+    }
 }

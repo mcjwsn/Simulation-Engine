@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -210,42 +211,40 @@ public class SimulationController implements MapChangeListener {
     public void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
-                if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
-                {
-                    WorldElement prefCell = new PrefferdCell(new Vector2d(i, j));
-                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
-                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
-                }
-                Optional<WorldElement> optionalElement = worldMap.objectAt(new Vector2d(i, j));
+                Vector2d position = new Vector2d(i, j);
+                Optional<WorldElement> optionalElement = worldMap.objectAt(position);
+
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
-                    if(worldElement instanceof Animal)
-                    {
-                        if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool)
-                        {
-                            popGenotypeCell popGenomeCell = new popGenotypeCell(new Vector2d(i, j));
+                    WorldElementBox elementBox;
+
+                    if (worldElement instanceof Animal) {
+                        if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool) {
+                            popGenotypeCell popGenomeCell = new popGenotypeCell(position);
                             WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell);
+                            if (prefPos.contains(position) && showFieldsBool) {
+                                elementBoxPopularGenome.setPreferred(true);
+                            }
                             mapGrid.add(elementBoxPopularGenome, i - xMin + 1, yMax - j + 1);
                         }
                     }
-                    WorldElementBox elementBox;
-                    if(lastClickedAnimal!=null && lastClickedAnimal.getPosition().equals(worldElement.getPosition()))
-                    {
-                        if(lastClickedAnimal.getDeathDate() == -1)
-                        {
+
+                    if (lastClickedAnimal != null && lastClickedAnimal.getPosition().equals(worldElement.getPosition())) {
+                        if (lastClickedAnimal.getDeathDate() == -1) {
                             elementBox = new WorldElementBox(lastClickedAnimal);
                             elementBox.updateImageTrackedDown(lastClickedAnimal);
                             lastElementBox = elementBox;
-                        }
-                        else
-                        {
+                        } else {
                             elementBox = new WorldElementBox(worldElement);
                             lastClickedAnimal = null;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         elementBox = new WorldElementBox(worldElement);
+                    }
+
+                    // Dodaj otoczkę jeśli pozycja jest preferowana
+                    if (prefPos.contains(position) && showFieldsBool) {
+                        elementBox.setPreferred(true);
                     }
 
                     elementBox.setOnMouseClicked(event -> {
@@ -256,33 +255,35 @@ public class SimulationController implements MapChangeListener {
                                 clearAnimalInfo();
                                 elementBox.updateImage(clickedAnimal);
                                 lastClickedAnimal = null;
-                            }
-                            else if(lastClickedAnimal != null) {
+                            } else if (lastClickedAnimal != null) {
                                 lastElementBox.updateImage(lastClickedAnimal);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
                                 elementBox.updateImageTrackedDown(clickedAnimal);
                                 showAnimalInfo(clickedAnimal);
-                            }
-                            else {
-
+                            } else {
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
                                 elementBox.updateImageTrackedDown(clickedAnimal);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
-
                     });
+
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
+
                 } else {
-                    mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                    // Dla pustych preferowanych pól dodaj pusty WorldElementBox z otoczką
+                    if (prefPos.contains(position) && showFieldsBool) {
+                        WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position));
+                        emptyPreferredBox.setPreferred(true);
+                        mapGrid.add(emptyPreferredBox, i - xMin + 1, yMax - j + 1);
+                    } else {
+                        mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                    }
                 }
             }
         }
-        //if(showFieldsBool){
-           // showFields();
-       // }
     }
     private void showAnimalInfo(WorldElement worldElement) {
         if (worldElement instanceof Animal) {
