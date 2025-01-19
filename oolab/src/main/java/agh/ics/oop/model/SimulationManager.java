@@ -17,10 +17,33 @@ public class SimulationManager {
     private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
+    private Set<Vector2d> equatorField = new HashSet<>();
     private static int DAILY_GRASS_NUMBER = 0;
 
-    public static Set<Vector2d> getPreferredPositions() {
-        return preferredPositions;
+    public Set<Vector2d> getPreferredPositions() {
+        int equatorHeight = simulationProperties.getEquatorHeight();
+        int width = map.getWidth();
+        int height = map.getHeight();
+
+        Set<Vector2d> preferred = new HashSet<>();
+
+        int centerRow = width / 2;
+        int startEquatorRow = centerRow - equatorHeight / 2;
+        int endEquatorRow = centerRow + equatorHeight / 2;
+
+        startEquatorRow = Math.max(startEquatorRow, 0);
+        endEquatorRow = Math.min(endEquatorRow, height - 1);
+
+        for (int x = 0; x <= height; x++) {
+            for (int y = 0; y <= width; y++) {
+                Vector2d position = new Vector2d(x, y);
+                if (y >= startEquatorRow && y <= endEquatorRow) {
+                    preferred.add(position);
+                }
+            }
+        }
+
+        return preferred;
     }
 
     protected static final Random random = new Random();
@@ -271,14 +294,13 @@ public void initializePositions(AbstractWorldMap map) {
         for (int y = 0; y <= width; y++) {
             Vector2d position = new Vector2d(x, y);
             if (y >= startEquatorRow && y <= endEquatorRow) {
-                preferred.add(position); // Positions within the equator
+                preferred.add(position);
             } else {
-                lessPreferred.add(position); // Positions outside the equator
+                lessPreferred.add(position);
             }
         }
     }
 
-    // Update the position sets
     preferredPositions.clear();
     preferredPositions.addAll(preferred);
     lessPreferredPositions.clear();

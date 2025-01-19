@@ -38,6 +38,7 @@ public class SimulationPresenter implements MapChangeListener {
     private Animal lastClickedAnimal = null;
     private WorldElementBox lastElementBox = null;
     private boolean showFieldsBool = false;
+    private Set<Vector2d> prefPos;
 
     private final int width = 25;
     private final int height = 25;
@@ -188,6 +189,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
         hideConfigurationElements();
         showGeneralStatistics();
+        prefPos = simulation.getPreferedPositions();
 
     }
     private void showGeneralStatistics()
@@ -302,8 +304,12 @@ public class SimulationPresenter implements MapChangeListener {
                         }
 
                     });
-
-
+                    if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
+                    {
+                        WorldElement prefCell = new PrefferdCell(new Vector2d(i, j));
+                        WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                        mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
+                    }
                     mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
                 }
                 else {
@@ -311,9 +317,9 @@ public class SimulationPresenter implements MapChangeListener {
                 }
             }
         }
-        if(showFieldsBool){
-            showFields();
-        }
+//        if(showFieldsBool){
+//            showFields();
+//        }
     }
 //
 //    public void addElements(){
@@ -499,65 +505,28 @@ public class SimulationPresenter implements MapChangeListener {
         System.out.printf("Nigga");
     }
 
-//    @FXML
-//    public void onShowFields(ActionEvent actionEvent) {
-//        showFieldsBool = !showFieldsBool;
-//
+//    private void showFields()
+//    {
 //        Set<Vector2d> prefPos = simulation.getPreferedPositions();
 //
-//        if (showFieldsBool) {
-//            for (Vector2d pos : prefPos) {
-//                Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
-//                if (!optionalElement.isPresent()) {
-//                    WorldElement prefCell = new PrefferdCell(pos);
-//                    WorldElementBox elementBox = new WorldElementBox(prefCell);
-//                    mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
-//                }
-//            }
-//        } else {
-//            for (Vector2d pos : prefPos) {
-//                int col = pos.getX() - xMin + 1;
-//                int row = yMax - pos.getY() + 1;
-//
-//                Node targetNode = null;
-//                for (Node node : mapGrid.getChildren()) {
-//                    Integer nodeColumn = GridPane.getColumnIndex(node);
-//                    Integer nodeRow = GridPane.getRowIndex(node);
-//
-//                    if (nodeColumn != null && nodeRow != null && nodeColumn == col && nodeRow == row) {
-//                        targetNode = node;
-//                        break;
-//                    }
-//                }
-//
-//                // Remove the node if found
-//                if (targetNode != null) {
-//                    mapGrid.getChildren().remove(targetNode);
-//                }
+//        for(Vector2d pos : prefPos){
+//            Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
+//            if (!optionalElement.isPresent()) {
+//                WorldElement prefCell = new PrefferdCell(pos);
+//                WorldElementBox elementBox = new WorldElementBox(prefCell);
+//                mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
 //            }
 //        }
 //    }
-
-    private void showFields()
-    {
-        Set<Vector2d> prefPos = simulation.getPreferedPositions();
-
-        for(Vector2d pos : prefPos){
-            Optional<WorldElement> optionalElement = worldMap.objectAt(pos);
-            if (!optionalElement.isPresent()) {
-                WorldElement prefCell = new PrefferdCell(pos);
-                WorldElementBox elementBox = new WorldElementBox(prefCell);
-                mapGrid.add(elementBox, pos.getX() - xMin + 1, yMax - pos.getY() + 1);
-            }
-        }
-    }
 
     @FXML
     public void onShowFields(ActionEvent actionEvent) {
         showFieldsBool = !showFieldsBool;
 
         if(showFieldsBool){
-            showFields();
+            clearGrid();
+            addElements();
+            drawMap();
         }
         else
         {
