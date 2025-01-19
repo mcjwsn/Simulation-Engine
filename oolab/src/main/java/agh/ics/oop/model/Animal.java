@@ -74,14 +74,6 @@ public class Animal implements WorldElement {
         return position;
     }
 
-    public MapDirection getOrientation() {
-        return orientation;
-    }
-
-    public boolean isAt(Vector2d position){
-        return this.position.equals(position);
-    }
-
     public int getEnergy(){
         return energy;
     }
@@ -183,18 +175,14 @@ public class Animal implements WorldElement {
 
     public String getEnergyLevelResource() {
         int maxEnergy = simulationProperties.getMaxEnergy();
-        double energyPercentage = (double) this.energy;
-        if (energyPercentage < 0.2*maxEnergy) {
-            return "energy0.png";
-        } else if (energyPercentage < 0.4*maxEnergy) {
-            return "energy1.png";
-        } else if (energyPercentage < 0.6*maxEnergy) {
-            return "energy2.png";
-        } else if (energyPercentage < 0.8*maxEnergy) {
-            return "energy3.png";
-        } else {
-            return "energy4.png";
-        }
+        int energyLevel = (int) (5.0 * this.energy / maxEnergy);
+        return switch (energyLevel) {
+            case 0 -> "energy/energy0.png";
+            case 1 -> "energy/energy1.png";
+            case 2 -> "energy/energy2.png";
+            case 3 -> "energy/energy3.png";
+            default -> "energy/energy4.png";
+        };
     }
 
     public void removeEnergy(int energy) { this.energy -= energy; }

@@ -3,7 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.Enums.ElementType;
 
 public class PrefferdCell implements WorldElement {
-    private Vector2d position;
+    private final Vector2d position;
     public PrefferdCell(Vector2d position) {
         this.position = position;
     }

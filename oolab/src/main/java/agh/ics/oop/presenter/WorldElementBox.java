@@ -87,8 +87,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(IMAGE_WIDTH + 15);
-            imageView.setFitHeight(IMAGE_HEIGHT + 15);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setFitHeight(IMAGE_HEIGHT);
             this.getChildren().add(imageView);
             addEnergyLevel(element);
             lastImage = currImage;
