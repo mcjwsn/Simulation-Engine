@@ -1,7 +1,7 @@
 MapWidth,10
 MapHeight,10
 EquatorHeight,2
-GrassNumber,50
+GrassNumber,25
 EnergyAddition,5
 PlantRegeneration,10
 NumberOfAnimals,25

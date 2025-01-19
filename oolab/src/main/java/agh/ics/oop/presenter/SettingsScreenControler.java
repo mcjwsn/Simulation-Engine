@@ -96,8 +96,8 @@ public class SettingsScreenControler {
 
     @FXML
     private void onExportCsvClicked() throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/PO_2024_PN1830_ARNAUTOV_WISNIEWSKI";
-        String defaultDirectory = projectPath + "/CSV/Exports/";
+        String projectPath = System.getProperty("user.dir") + "/CSV";
+        String defaultDirectory = projectPath + "/Exports/";
 
         FileChooser fileChooser = new FileChooser();
 
@@ -155,7 +155,7 @@ public class SettingsScreenControler {
 
     @FXML
     private void onImportCsvClicked() throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/PO_2024_PN1830_ARNAUTOV_WISNIEWSKI";
+        String projectPath = System.getProperty("user.dir");
         String defaultDirectory = projectPath + "/CSV/Exports/";
 
         FileChooser fileChooser = new FileChooser();
