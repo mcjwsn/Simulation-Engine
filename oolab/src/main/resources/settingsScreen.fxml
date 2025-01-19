@@ -57,7 +57,7 @@
                 <Label text="Set variant of the map" styleClass="pixel-spinner"/>
                 <Spinner fx:id="mapTypeSpinner" editable="True" styleClass="pixel-spinner"/>
                 <Label text="Set length of the genome" styleClass="pixel-spinner"/>
-                <Spinner fx:id="genomLengthSpinner" editable="True" initialValue="8" max="10" min="5" styleClass="pixel-spinner"/>
+                <Spinner fx:id="genomLengthSpinner" editable="True" initialValue="8" max="10" min="2" styleClass="pixel-spinner"/>
             </VBox>
         </HBox>
     </top>

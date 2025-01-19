@@ -17,7 +17,7 @@ public class PrefferdCell implements WorldElement {
     }
     @Override
     public String getImageResource() {
-        return "prefCell.png";
+        return "empty.png";
     }
     public ElementType getType() {
         return ElementType.PREFERRED_CELL;

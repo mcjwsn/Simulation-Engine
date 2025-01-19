@@ -76,11 +76,6 @@
     </top>
     <bottom>
         <HBox>
-            <VBox fx:id="configBox3" alignment="CENTER" spacing="12">
-                <children>
-                    <Button onAction="#onSimulationStartClicked" text="Start" />
-                </children>
-            </VBox>
             <HBox alignment="CENTER" spacing="10">
                 <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
                 <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />

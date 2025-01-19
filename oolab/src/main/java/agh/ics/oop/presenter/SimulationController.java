@@ -58,8 +58,6 @@ public class SimulationController implements MapChangeListener {
     private Button pauseButton;
     @FXML
     private Button continueButton;
-    @FXML
-    private VBox configBox3;
 
     Simulation simulation;
     private int xMin;
@@ -83,9 +81,7 @@ public class SimulationController implements MapChangeListener {
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
-    public void setSimulationProperties(SimulationProperties properties) {
-        this.simulationProperties = properties;
-    }
+
     @FXML
     private LineChart<Number, Number> animalChart;
     @FXML
@@ -109,59 +105,6 @@ public class SimulationController implements MapChangeListener {
         rowsFunction();
         addElements();
         mapGrid.setGridLinesVisible(true);
-    }
-    @FXML
-    public void onSimulationStartClicked(){
-        statsBox.setVisible(true);
-        Charts.setVisible(true);
-        configBox3.setVisible(false);
-        configBox3.setManaged(false);
-        continueButton.setDisable(true);
-        AbstractWorldMap map1;
-        configBox3.setVisible(false);
-        initializeCharts();
-
-        int mapWidth = simulationProperties.getMapWidth();
-        int mapHeight = simulationProperties.getMapHeight();
-        int equatorHeight = simulationProperties.getEquatorHeight();
-        int animalNumber = simulationProperties.getStartAnimalNumber();
-        int grassNumber = simulationProperties.getGrassNumber();
-        int grassEnergy = simulationProperties.getGrassEnergy();
-        int dailySpawningGrass = simulationProperties.getDailySpawningGrass();
-        int startEnergy = simulationProperties.getStartEnergy();
-        int maxEnergy = simulationProperties.getMaxEnergy();
-        MovinType movingType = MovinType.DEFAULT;
-        MutationType mutationType = simulationProperties.getMutationType();
-        MapType mapType = simulationProperties.getMapType();
-        int genesCount = simulationProperties.getGenesCount();
-        int energyLevelNeededToReproduce = simulationProperties.getEnergyLevelNeededToReproduce();
-        int energyLevelToPassToChild = simulationProperties.getEnergyLevelToPassToChild();
-        int moveEnergy = simulationProperties.getMoveEnergy();
-        int minMutation = simulationProperties.getMinMutation();
-        int maxMutation = simulationProperties.getMaxMutation();
-        try{
-            if (mapType == MapType.GLOBE) {
-                map1 = new GrassField(simulationProperties);
-                map1.addObserver((MapChangeListener) this);
-                Simulation simulation1 = new Simulation(map1, simulationProperties);
-                this.simulation = simulation1;
-                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-                //engine.runAsync();
-                engine.runAsync();
-            }
-            else{map1 = new OwlBearMap(simulationProperties);
-                map1.addObserver((MapChangeListener) this);
-                Simulation simulation1 = new Simulation(map1, simulationProperties);
-                this.simulation = simulation1;
-                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
-                //engine.runAsync();
-                engine.runAsync();
-            }} catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        showGeneralStatistics();
-        prefPos = simulation.getPreferedPositions();
-
     }
     private void showGeneralStatistics()
     {
@@ -420,5 +363,49 @@ public class SimulationController implements MapChangeListener {
             Platform.runLater(() -> pauseButton.setDisable(false));
             Platform.runLater(() -> continueButton.setDisable(true));
         }
+    }
+    public void initializeSimulation() {
+        statsBox.setVisible(true);
+        Charts.setVisible(true);
+        continueButton.setDisable(true);
+
+        AbstractWorldMap map1;
+
+        try {
+            if (simulationProperties.getMapType() == MapType.GLOBE) {
+                map1 = new GrassField(simulationProperties);
+                map1.addObserver((MapChangeListener) this);
+                Simulation simulation1 = new Simulation(map1, simulationProperties);
+                this.simulation = simulation1;
+                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+                engine.runAsync();
+            } else {
+                map1 = new OwlBearMap(simulationProperties);
+                map1.addObserver((MapChangeListener) this);
+                Simulation simulation1 = new Simulation(map1, simulationProperties);
+                this.simulation = simulation1;
+                SimulationEngine engine = new SimulationEngine(List.of(simulation1));
+                engine.runAsync();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        showGeneralStatistics();
+        prefPos = simulation.getPreferedPositions();
+    }
+
+    public void setSimulationProperties(SimulationProperties properties) {
+        this.simulationProperties = properties;
+        initializeSimulation(); // Call initialization after properties are set
+    }
+
+    @FXML
+    public void initialize() {
+        statsBox.setVisible(true);
+        Charts.setVisible(true);
+        continueButton.setDisable(true);
+        initializeCharts();
+        showGeneralStatistics();
     }
 }
