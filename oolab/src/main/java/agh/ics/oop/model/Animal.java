@@ -174,11 +174,11 @@ public class Animal implements WorldElement {
 
     @Override
     public String getImageResource() {
-        return "animal.jpg";
+        return "animal.png";
     }
 
     public String getTrackedDownAnimalImageResource() {
-        return "animal1.jpg";
+        return "animal1.png";
     }
 
     public String getEnergyLevelResource() {
