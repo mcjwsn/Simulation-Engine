@@ -281,9 +281,6 @@ public class SimulationController implements MapChangeListener {
             }
 
         }
-        //if(showFieldsBool){
-           // showFields();
-       // }
     }
     private void showAnimalInfo(WorldElement worldElement) {
         if (worldElement instanceof Animal) {

@@ -17,8 +17,8 @@ public class WorldElementBox extends VBox {
     private static final int IMAGE_WIDTH = 18;
     private static final int ENERGY_IMAGE_HEIGHT = 3;
     private static final int ENERGY_IMAGE_WIDTH = 14;
-    private static final int GENOME_IMAGE_HEIGHT = 30;
-    private static final int GENOME_IMAGE_WIDTH = 30;
+    private static final int GENOME_IMAGE_HEIGHT = 25;
+    private static final int GENOME_IMAGE_WIDTH = 25;
     private static final int PREF_CELL_IMAGE_HEIGHT = 25;
     private static final int PREF_CELL_IMAGE_WIDTH = 25;
     private String lastImage;
