@@ -2,6 +2,8 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.Enums.ElementType;
 
+import java.util.Random;
+
 public class Grass implements WorldElement{
     private Vector2d position;
 
@@ -21,7 +23,16 @@ public class Grass implements WorldElement{
 
     @Override
     public String getImageResource() {
-        return "grass.png";
+        //Random random = new Random();
+//        return switch(random.nextInt(5)){
+//        case 0 -> "grass/grass1.jpg";
+//        case 1 -> "grass/grass2.jpg";
+//        case 2 -> "grass/grass3.jpg";
+//        case 3 -> "grass/grass4.jpg";
+//        case 4 -> "grass/grass5.jpg";
+//        default -> "grass/grass.png"; // wizualizacja bledow
+//        };
+        return "grass/grassmix.jpg";
     }
 
     public ElementType getType() {

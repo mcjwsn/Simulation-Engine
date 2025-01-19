@@ -6,6 +6,7 @@ import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.Enums.MovinType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -59,15 +60,21 @@ public class Animal implements WorldElement {
         this.childrenNumber = 0;
         this.birthdate = simulationProperties.getDaysElapsed();
     }
-
+    
     public List<Animal> getChildren() {
         return children;
     }
 
-
     @Override
     public String toString() {
         return String.valueOf(orientation);
+    }
+
+    public List<Integer> getGenotype() {
+        List<Integer> genotype = Arrays.stream(this.getGenome())
+                .boxed()
+                .toList();
+        return genotype;
     }
 
     @Override
@@ -75,20 +82,11 @@ public class Animal implements WorldElement {
         return position;
     }
 
-    public MapDirection getOrientation() {
-        return orientation;
-    }
-
-    public boolean isAt(Vector2d position){
-        return this.position.equals(position);
-    }
-
     public int getEnergy(){
         return energy;
     }
 
     public void setEnergy(int var) {energy = var;}
-
 
     public ElementType getType(){
         return ElementType.ANIMAL;
@@ -138,15 +136,6 @@ public class Animal implements WorldElement {
         return deathDate;
     }
 
-//    public void move(MoveValidator map) {
-//        if(movinType == MovinType.DEFAULT) {
-//            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-//        }
-//        MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-//        Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-//        this.orientation = newOrientation;
-//        this.position = newPosition;
-//    }
     public void move(AbstractWorldMap map) {
         if(map.getMapType() == MapType.OWLBEAR)
         {
@@ -185,51 +174,24 @@ public class Animal implements WorldElement {
 
     @Override
     public String getImageResource() {
-        return switch (orientation) {
-            case NORTH -> "N.png";
-            case EAST -> "E.png";
-            case SOUTH -> "S.png";
-            case WEST -> "W.png";
-            case NORTHEAST -> "NE.png";
-            case NORTHWEST -> "NW.png";
-            case SOUTHEAST -> "SE.png";
-            case SOUTHWEST -> "SW.png";
-        };
+        return "animal.jpg";
     }
 
     public String getTrackedDownAnimalImageResource() {
-        return switch (orientation) {
-            case NORTH -> "N1.png";
-            case EAST -> "E1.png";
-            case SOUTH -> "S1.png";
-            case WEST -> "W1.png";
-            case NORTHEAST -> "NE1.png";
-            case NORTHWEST -> "NW1.png";
-            case SOUTHEAST -> "SE1.png";
-            case SOUTHWEST -> "SW1.png";
-        };
+        return "animal1.jpg";
     }
 
     public String getEnergyLevelResource() {
         int maxEnergy = simulationProperties.getMaxEnergy();
-        double energyPercentage = (double) this.energy;
-        if (energyPercentage < 0.2*maxEnergy) {
-            return "energy0.png";
-        } else if (energyPercentage < 0.4*maxEnergy) {
-            return "energy1.png";
-        } else if (energyPercentage < 0.6*maxEnergy) {
-            return "energy2.png";
-        } else if (energyPercentage < 0.8*maxEnergy) {
-            return "energy3.png";
-        } else {
-            return "energy4.png";
-        }
+        int energyLevel = (int) (5.0 * this.energy / maxEnergy);
+        return switch (energyLevel) {
+            case 0 -> "energy/energy0.png";
+            case 1 -> "energy/energy1.png";
+            case 2 -> "energy/energy2.png";
+            case 3 -> "energy/energy3.png";
+            default -> "energy/energy4.png";
+        };
     }
-
-
-
-
-
 
     public void removeEnergy(int energy) { this.energy -= energy; }
 

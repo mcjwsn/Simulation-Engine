@@ -140,12 +140,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 newDay);
     }
 
-//    private int getNumberOfAnimals() {
-//        int cnt = 0;
-//        for (List<Animal> animalList : animals.values()) {
-//            cnt+=animalList.size();
-//        }
-//        return cnt;}
     private int getNumberOfAnimals() {
         return simulation.getAnimals().size();
 }
@@ -162,7 +156,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-    protected List<Integer> getMostPopularGenotype() {
+    @Override
+    public List<Integer> getMostPopularGenotype() {
         List<Animal> animalsList = simulation.getAnimals();
         Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
 

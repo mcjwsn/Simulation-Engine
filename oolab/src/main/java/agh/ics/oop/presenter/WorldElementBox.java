@@ -1,6 +1,8 @@
 package agh.ics.oop.presenter;
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.PrefferdCell;
 import agh.ics.oop.model.WorldElement;
+import agh.ics.oop.model.popGenotypeCell;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,10 +13,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WorldElementBox extends VBox {
-    private static final int IMAGE_HEIGHT = 20;
-    private static final int IMAGE_WIDTH = 20;
+    private static final int IMAGE_HEIGHT = 18;
+    private static final int IMAGE_WIDTH = 18;
     private static final int ENERGY_IMAGE_HEIGHT = 3;
     private static final int ENERGY_IMAGE_WIDTH = 14;
+    private static final int GENOME_IMAGE_HEIGHT = 20;
+    private static final int GENOME_IMAGE_WIDTH = 20;
+    private static final int PREF_CELL_IMAGE_HEIGHT = 20;
+    private static final int PREF_CELL_IMAGE_WIDTH = 20;
     private String lastImage;
     private String lastEnergyLevel;
     private static final Map<String, Image> imageCache = new HashMap<>();
@@ -24,43 +30,29 @@ public class WorldElementBox extends VBox {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-//    public void updateImage(WorldElement element) {
-//        String currImage = element.getImageResource();
-//        if (!Objects.equals(currImage, lastImage)) {
-//            this.getChildren().clear();
-//            Image image = getImage(currImage);
-//            ImageView imageView = new ImageView(image);
-//            imageView.setFitWidth(IMAGE_WIDTH);
-//            imageView.setFitHeight(IMAGE_HEIGHT);
-//            this.getChildren().add(imageView);
-//
-//            lastImage = currImage;
-//        }
-//    }
-//
-//    public void updateImageTrackedDown(Animal element) {
-//        String currImage = element.getTrackedDownAnimalImageResource();
-//        if (!Objects.equals(currImage, lastImage)) {
-//            this.getChildren().clear();
-//            Image image = getImage(currImage);
-//            ImageView imageView = new ImageView(image);
-//            imageView.setFitWidth(IMAGE_WIDTH);
-//            imageView.setFitHeight(IMAGE_HEIGHT);
-//            this.getChildren().add(imageView);
-//            lastImage = currImage;
-//        }
-//    }
-    private String lastTrackedDownImage; // for tracked down animals
-
-    public void fix(WorldElement element) {
+    public void updateImageGenotype(popGenotypeCell element)
+    {
         String currImage = element.getImageResource();
         this.getChildren().clear();
         Image image = getImage(currImage);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(IMAGE_WIDTH);
-        imageView.setFitHeight(IMAGE_HEIGHT);
-//        this.getChildren().add(imageView);
+        imageView.setFitWidth(GENOME_IMAGE_WIDTH);
+        imageView.setFitHeight(GENOME_IMAGE_HEIGHT);
+        this.getChildren().add(imageView);
     }
+
+    public void updateImage(PrefferdCell element)
+    {
+        String currImage = element.getImageResource();
+        Image image = getImage(currImage);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(PREF_CELL_IMAGE_WIDTH);
+        imageView.setFitHeight(PREF_CELL_IMAGE_HEIGHT);
+
+        imageView.setOpacity(0.5);
+        this.getChildren().add(imageView);
+    }
+
 
     public void updateImage(WorldElement element) {
         String currImage = element.getImageResource();
@@ -71,6 +63,7 @@ public class WorldElementBox extends VBox {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(IMAGE_WIDTH);
             imageView.setFitHeight(IMAGE_HEIGHT);
+
             this.getChildren().add(imageView);
             if (element instanceof Animal)
             {
@@ -87,8 +80,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(IMAGE_WIDTH + 15);
-            imageView.setFitHeight(IMAGE_HEIGHT + 15);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setFitHeight(IMAGE_HEIGHT);
             this.getChildren().add(imageView);
             addEnergyLevel(element);
             lastImage = currImage;
@@ -112,8 +105,26 @@ public class WorldElementBox extends VBox {
         updateImage(element);
         this.setAlignment(Pos.CENTER);
     }
+    public WorldElementBox(PrefferdCell element) {
+        updateImage(element);
+        this.setAlignment(Pos.CENTER);
+    }
     public WorldElementBox(Animal animal) {
         updateImage(animal);
         this.setAlignment(Pos.CENTER);
+    }
+    public WorldElementBox(popGenotypeCell cell) {
+        updateImageGenotype(cell);
+        this.setAlignment(Pos.CENTER);
+    }
+    private boolean isPreferred = false;
+
+    public void setPreferred(boolean preferred) {
+        this.isPreferred = preferred;
+        if (preferred) {
+            this.setStyle("-fx-border-color: yellow; -fx-border-width: 2; -fx-border-radius: 5;");
+        } else {
+            this.setStyle("");
+        }
     }
 }

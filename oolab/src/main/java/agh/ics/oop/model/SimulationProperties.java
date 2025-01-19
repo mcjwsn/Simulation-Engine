@@ -25,14 +25,15 @@ public class SimulationProperties {
     private int moveEnergy;
     private int daysElapsed;
     private MovinType movingType;
+    private int CSV;
 
     // dodac wpisywanie do CSV
 
     public  SimulationProperties(int width_, int height_, int equatorHeight_, int animalNumber_, int grassNumber_,
-                                int dailySpawningGrass_, int startEnergy_, int grassEnergy_, int maxEnergy_,
-                                MovinType movingType_, MutationType mutationType_, MapType mapType_, int genesCount_,
-                                int energyLevelNeededToReproduce_, int energyLevelToPassToChild_, int moveEnergy_,
-                                int minMutation_, int maxMutation_) {
+                                 int dailySpawningGrass_, int startEnergy_, int grassEnergy_, int maxEnergy_,
+                                 MovinType movingType_, MutationType mutationType_, MapType mapType_, int genesCount_,
+                                 int energyLevelNeededToReproduce_, int energyLevelToPassToChild_, int moveEnergy_,
+                                 int minMutation_, int maxMutation_, int CSV_) {
         width = width_;
         height = height_;
         equatorHeight = equatorHeight_;
@@ -52,6 +53,7 @@ public class SimulationProperties {
         daysElapsed = 0;
         minMutation = minMutation_;
         maxMutation = maxMutation_;
+        CSV = CSV_;
     }
 
     public synchronized void incrementDaysElapsed() {
@@ -119,6 +121,7 @@ public class SimulationProperties {
     public int getEnergyLevelToPassToChild() {
         return energyLevelToPassToChild;
     }
+
     public int getMoveEnergy() {
         return moveEnergy;
     }
@@ -135,7 +138,5 @@ public class SimulationProperties {
         return maxMutation;
     }
 
-    public void resetDaysElapsed() {
-        daysElapsed = 0;
-    }
+    public int isCSV() {return CSV;}
 }
