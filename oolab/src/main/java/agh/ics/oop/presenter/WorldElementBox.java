@@ -25,8 +25,8 @@ public class WorldElementBox extends VBox {
         this.getChildren().clear();
         Image image = getImage(currImage);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(size*1.1);
-        imageView.setFitHeight(size*1.1);
+        imageView.setFitWidth(size*0.9);
+        imageView.setFitHeight(size*0.9);
         this.getChildren().add(imageView);
     }
 
@@ -45,8 +45,8 @@ public class WorldElementBox extends VBox {
         String currImage = element.getImageResource();
         Image image = getImage(currImage);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth((int)size);
-        imageView.setFitHeight((int)size);
+        imageView.setFitWidth((int)(size/1.5));
+        imageView.setFitHeight((int)(size/1.5));
 
         imageView.setOpacity(0.5);
         this.getChildren().add(imageView);
@@ -59,8 +59,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth((int)size);
-            imageView.setFitHeight((int)size);
+            imageView.setFitWidth((int)(size/2));
+            imageView.setFitHeight((int)(size/2));
             imageView.setStyle("-fx-border-width: 2;");
 
             this.getChildren().add(imageView);
@@ -79,8 +79,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth((int)(size));
-            imageView.setFitHeight((int)(size));
+            imageView.setFitWidth((int)(size/2));
+            imageView.setFitHeight((int)(size/2));
             imageView.setStyle("-fx-border-width: 2;");
 
             this.getChildren().add(imageView);
@@ -98,8 +98,8 @@ public class WorldElementBox extends VBox {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(size);
-            imageView.setFitHeight(size);
+            imageView.setFitWidth((size/2));
+            imageView.setFitHeight((size/2));
             imageView.setStyle("-fx-border-width: 2;");
             this.getChildren().add(imageView);
             addEnergyLevel(element,size);
@@ -146,7 +146,7 @@ public class WorldElementBox extends VBox {
     public void setPreferred(boolean preferred) {
         this.isPreferred = preferred;
         if (preferred) {
-            this.setStyle("-fx-border-color: yellow; -fx-border-width: 1; -fx-border-radius: 4;");
+            this.setStyle("-fx-border-color: yellow; -fx-border-width: 2; -fx-border-radius: 4;");
         } else {
             this.setStyle("");
         }
