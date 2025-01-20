@@ -8,14 +8,12 @@ import agh.ics.oop.model.enums.MapType;
 import agh.ics.oop.model.enums.MovinType;
 import agh.ics.oop.model.maps.AbstractWorldMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static agh.ics.oop.model.util.Genes.getStartingGenes;
 
 public class Animal implements WorldElement {
+    private UUID id = UUID.randomUUID();
     // glowne atrybuty animala
     private MapDirection orientation;
     private Vector2d position;
@@ -33,6 +31,7 @@ public class Animal implements WorldElement {
     private int deathDate = -1;
 
     private final List<Animal> children = new ArrayList<Animal>();
+    private final Set<UUID> descendants = new HashSet<>();
     private static final Random random = new Random();
 
     public Animal(Vector2d position, SimulationProperties simulationProperties) {
@@ -63,10 +62,54 @@ public class Animal implements WorldElement {
         this.childrenNumber = 0;
         this.birthdate = simulationProperties.getDaysElapsed();
     }
-    
+
     public List<Animal> getChildren() {
         return children;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public int getDescendantsCount() {
+        Set<UUID> desc = getDescendants(this);
+        return desc.size();
+    }
+
+    public Set<UUID> getDescendants(Animal animal) {
+        Set<UUID> desc = new HashSet<>();
+        if (animal.getChildren().isEmpty()) {
+            return desc;
+        }
+        for (Animal child : animal.getChildren()) {
+            desc.add(child.getId());
+            if(child.getChildrenMade()>0) {
+                desc.addAll(getDescendants(child));
+            }
+        }
+        return desc;
+    }
+
+//    public int getDescendantsCount() {
+//        descendants.clear();
+//        for (Animal child : this.getChildren()) {
+//            descendants.add(child.getId());
+//        }
+//        getDescendants(this);
+//        return descendants.size();
+//    }
+//
+//    public void getDescendants(Animal animal) {
+//        if (animal.getChildren().isEmpty()) {
+//            return;
+//        }
+//        for (Animal child : animal.getChildren()) {
+//            if (descendants.add(child.getId())) {
+//                getDescendants(child);
+//            }
+//        }
+//    }
+
 
     @Override
     public String toString() {
