@@ -5,22 +5,19 @@ import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.Enums.MovinType;
 import agh.ics.oop.model.Enums.MutationType;
 import agh.ics.oop.model.SimulationProperties;
+import agh.ics.oop.model.util.CSV;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.Button;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.*;
-import java.util.HashMap;
 
 public class SettingsScreenControler {
     private SimulationApp mainApp;
-    @FXML
-    private Button startSimulationButton;
 
     @FXML
     private Spinner<Integer> widthSpinner;
@@ -58,7 +55,7 @@ public class SettingsScreenControler {
     @FXML
     private Spinner<Integer> moveEnergySpinner;
     @FXML
-    private Spinner<Integer> CSVSpinner;
+    private Spinner<String> CSVSpinner;
 
     @FXML
     public void onStartSimulationClicked() throws Exception {
@@ -82,7 +79,7 @@ public class SettingsScreenControler {
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
         int maxMutation = maxGenMutationsSpinner.getValue();
-        int CSV = CSVSpinner.getValue();
+        String CSV = CSVSpinner.getValue();
         initialize();
 
         SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
@@ -238,7 +235,7 @@ public class SettingsScreenControler {
                                 moveEnergySpinner.getValueFactory().setValue(Integer.parseInt(value));
                                 break;
                             case "CSVSaveStats":
-                                CSVSpinner.getValueFactory().setValue(Integer.parseInt(value));
+                                CSVSpinner.getValueFactory().setValue(String.valueOf(Integer.parseInt(value)));
                                 break;
                             default:
                                 break;
@@ -254,9 +251,6 @@ public class SettingsScreenControler {
             e.printStackTrace();
         }
     }
-
-
-
 
     public void setMainApp(SimulationApp mainApp) {
         this.mainApp = mainApp;
@@ -292,6 +286,13 @@ public class SettingsScreenControler {
                 return MutationType.valueOf(string.trim());
             }
         };
+
+
+        SpinnerValueFactory<String> optionsCSV = new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                javafx.collections.FXCollections.observableArrayList("Yes", "No"));
+        CSVSpinner.setValueFactory(optionsCSV);
+        optionsCSV.setValue("Yes");
+
 
         // Initialize MapType spinner
         SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(

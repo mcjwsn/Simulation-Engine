@@ -25,10 +25,7 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationController implements MapChangeListener {
     private SimulationProperties simulationProperties;
@@ -398,7 +395,7 @@ public class SimulationController implements MapChangeListener {
         showGeneralStatistics();
         prefPos = simulation.getPreferedPositions();
 
-        if (simulationProperties.getCSV() == 1)
+        if (Objects.equals(simulationProperties.getCSV(), "Yes"))
         {
             exportDailyStatisticsBool = true;
         }

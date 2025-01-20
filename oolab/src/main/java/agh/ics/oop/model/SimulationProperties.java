@@ -25,7 +25,7 @@ public class SimulationProperties {
     private int moveEnergy;
     private int daysElapsed;
     private MovinType movingType;
-    private int CSV;
+    private String CSV;
 
     // dodac wpisywanie do CSV
 
@@ -33,7 +33,7 @@ public class SimulationProperties {
                                  int dailySpawningGrass_, int startEnergy_, int grassEnergy_, int maxEnergy_,
                                  MovinType movingType_, MutationType mutationType_, MapType mapType_, int genesCount_,
                                  int energyLevelNeededToReproduce_, int energyLevelToPassToChild_, int moveEnergy_,
-                                 int minMutation_, int maxMutation_, int CSV_) {
+                                 int minMutation_, int maxMutation_, String CSV_) {
         width = width_;
         height = height_;
         equatorHeight = equatorHeight_;
@@ -138,5 +138,5 @@ public class SimulationProperties {
         return maxMutation;
     }
 
-    public int getCSV() {return CSV;}
+    public String getCSV() {return CSV;}
 }
