@@ -4,8 +4,6 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.Enums.MovinType;
-import agh.ics.oop.model.Enums.MutationType;
 import agh.ics.oop.model.util.CSV;
 import agh.ics.oop.model.util.ConvertUtils;
 import javafx.application.Platform;
@@ -16,7 +14,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SpinnerValueFactory;
@@ -24,7 +21,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -57,8 +53,6 @@ public class SimulationController implements MapChangeListener {
     private Label generalDaysPassed;
     @FXML
     private Label animalInfoLabel;
-    @FXML
-    private Label genotypeInfoLabel;
     @FXML
     private Button pauseButton;
     @FXML
@@ -302,8 +296,6 @@ public class SimulationController implements MapChangeListener {
                 exportCsvStatistics(worldMap, statistics);
             }
         });
-
-
     }
 
     private void updateCharts(Statistics statistics) {
@@ -432,7 +424,7 @@ public class SimulationController implements MapChangeListener {
             return;
         }
 
-        String projectPath = System.getProperty("user.dir") + "/PO_2024_PN1830_ARNAUTOV_WISNIEWSKI";
+        String projectPath = System.getProperty("user.dir");
         String filename = "General_Statistics_" + worldMap.getId() + ".csv";
         String filePath = projectPath + "/CSV/GeneralStatistics/" + filename;
 
@@ -445,15 +437,12 @@ public class SimulationController implements MapChangeListener {
         boolean fileExist = csvFile.exists();
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
-//            System.out.println("Writing to CSV: " + filePath);
             if (!fileExist) {
                 CSV.writeCSVHeader(writer);
             }
             CSV.fillStatisticsDay(writer, worldMap.getId(), statistics);
-//            System.out.println("Finished writing to CSV.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

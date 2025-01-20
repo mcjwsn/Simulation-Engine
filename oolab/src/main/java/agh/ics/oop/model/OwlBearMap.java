@@ -69,26 +69,6 @@ public class OwlBearMap extends AbstractWorldMap{
         return owlBear.getPosition();
     }
 
-//    public Set<Animal> eatAnimals()
-//    {
-//        Set<Animal> deletedAnimals = new HashSet<>();
-//        Set<Vector2d> keys = new HashSet<>(this.getAnimals().keySet());
-//        for (Vector2d position : keys) {
-//            if (owlBear.getPosition().equals(position)) {
-//                List<Animal> animalList = this.getAnimals().get(position);
-//                if (!animalList.isEmpty() && animalList != null) {
-//                    for(Animal animal : animalList){
-//                        deletedAnimals.add(animal);
-//                        this.removeAnimal(animal);
-//                    }
-//
-//                }
-//                animals.remove(position);
-//                break;
-//            }
-//        }
-//        return deletedAnimals;
-//    }
     @Override
     protected int getNumberOfFreeFields() {
         Set<Vector2d> usedPositions = new HashSet<>();
@@ -98,17 +78,6 @@ public class OwlBearMap extends AbstractWorldMap{
         return (width+1) * (height+1) - usedPositions.size();
     }
 
-
-    public static int integerPart(double number) {
-        return (int) number ;
-    }
-
-//    public int findCoordinates(int mapWidth, int mapHeight) {
-//        int value = integerPart(Math.sqrt(mapWidth * mapHeight * 0.2)) + 1;
-//        int possibleIndex = Math.min(mapWidth,mapHeight) - value;
-//        Random random = new Random();
-//        return random.nextInt(possibleIndex+1);
-//    }
     public void findSubmapBounds(int mapWidth, int mapHeight) {
         double submapArea = mapWidth * mapHeight * 0.2;
         int sideLength = (int) Math.sqrt(submapArea);
@@ -130,14 +99,6 @@ public class OwlBearMap extends AbstractWorldMap{
         upperRightBoundary = new Vector2d(endX, endY);
         lowerLeftBoundary = new Vector2d(startX, startY);
     }
-
-
-//    private void generateGrass(int grassNumber){
-//        RandomPointsGenerator randomPositionGenerator = new RandomPointsGenerator((int) Math.sqrt(10 * grassNumber), (int) Math.sqrt(10 * grassNumber), 2 * grassNumber);
-//        for (Vector2d grassPosition : randomPositionGenerator) {
-//            mapOfGrass.put(grassPosition, new Grass(grassPosition));
-//        }
-//    }
 
     @Override
     public MapType getMapType() {

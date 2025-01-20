@@ -4,7 +4,6 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.*;
-import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -13,7 +12,6 @@ import java.util.UUID;
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
     protected List<Animal> deadAnimals = new CopyOnWriteArrayList<>();
-    protected final MapVisualizer visualizer = new MapVisualizer(this);
     protected List<MapChangeListener> observers = new CopyOnWriteArrayList<>();
     protected String id;
     protected HashMap<Vector2d, Grass> grass;
@@ -113,12 +111,6 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public abstract Boundary getCurrentBounds();
-
-    @Override
-    public String toString() {
-        Boundary currentBounds = getCurrentBounds();
-        return visualizer.draw(currentBounds.lowerLeft(), currentBounds.upperRight());
-    }
 
     public void addObserver(MapChangeListener observer) {
         observers.add(observer);
