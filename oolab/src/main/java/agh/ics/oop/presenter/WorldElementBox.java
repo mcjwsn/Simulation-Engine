@@ -19,7 +19,7 @@ public class WorldElementBox extends VBox {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-    public void updateImageGenotype(popGenotypeCell element, Integer size)
+    public void updateImageGenotype(GenotypeCell element, Integer size)
     {
         String currImage = element.getImageResource();
         this.getChildren().clear();
@@ -137,7 +137,7 @@ public class WorldElementBox extends VBox {
         updateImage(animal,size);
         this.setAlignment(Pos.CENTER);
     }
-    public WorldElementBox(popGenotypeCell cell, Integer size) {
+    public WorldElementBox(GenotypeCell cell, Integer size) {
         updateImageGenotype(cell,size);
         this.setAlignment(Pos.CENTER);
     }

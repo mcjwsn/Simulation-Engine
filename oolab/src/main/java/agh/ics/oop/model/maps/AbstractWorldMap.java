@@ -27,14 +27,6 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     protected List<Vector2d> freePositionsForPlants = new ArrayList<>();
 
-    public AbstractWorldMap() {
-        this.id = UUID.randomUUID().toString();
-        this.animals = new ConcurrentHashMap<>();
-        this.grass = new HashMap<>();
-        this.observers = new CopyOnWriteArrayList<>();
-        this.freePositionsForPlants = new ArrayList<>();
-    }
-
     public AbstractWorldMap(SimulationProperties simulationProperties){
         this.id = UUID.randomUUID().toString();
         animals = new HashMap<>();
@@ -277,4 +269,5 @@ public abstract class AbstractWorldMap implements WorldMap {
     public int getHeight(){
         return height;
     }
+
 }

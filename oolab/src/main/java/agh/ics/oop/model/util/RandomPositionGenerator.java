@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private List<Vector2d> positions = new ArrayList<>();
-    private final int size;
+    final int size;
     public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
         size = grassCount;
 

@@ -22,7 +22,7 @@ public class CSV {
         );
     }
 
-    private static String formatPopularGenotype(List<Integer> genotypes) {
+    static String formatPopularGenotype(List<Integer> genotypes) {
         if (genotypes == null || genotypes.isEmpty()) {
             return "Null";
         }

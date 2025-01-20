@@ -108,4 +108,12 @@ public class Genes {
         }
         return genes;
     }
+
+    public int getCurrentGeneIndex() {
+        return currentGeneIndex;
+    }
+
+    public List<MoveDirection> getGenes() {
+        return genes;
+    }
 }

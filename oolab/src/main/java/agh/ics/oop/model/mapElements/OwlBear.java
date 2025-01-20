@@ -25,6 +25,10 @@ public class OwlBear implements WorldElement {
         return position;
     }
 
+    public MapDirection getOrientation() {
+        return orientation;
+    }
+
     public boolean isAt(Vector2d position){
         return this.position.equals(position);
     }

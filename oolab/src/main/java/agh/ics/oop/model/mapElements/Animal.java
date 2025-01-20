@@ -130,6 +130,7 @@ public class Animal implements WorldElement {
         this.age+=1;
     }
 
+
     public void setDeathDate(int deathDate){
         this.deathDate = deathDate;
     }
@@ -197,6 +198,7 @@ public class Animal implements WorldElement {
     }
 
     public void removeEnergy(int energy) { this.energy -= energy; }
+
 
     // dodac funckje do liczenia dzieci/przodkow
 }

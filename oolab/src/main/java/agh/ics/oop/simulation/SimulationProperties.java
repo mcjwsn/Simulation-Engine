@@ -137,4 +137,14 @@ public class SimulationProperties {
     }
 
     public String getCSV() {return CSV;}
+
+    public void setMapWidth(int width){
+        this.width = width;
+    }
+    public void setMapHeight(int height){
+        this.height = height;
+    }
+    public void setGrassNumber(int grassNumber){
+        this.grassNumber = grassNumber;
+    }
 }
