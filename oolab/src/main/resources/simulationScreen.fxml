@@ -91,7 +91,17 @@
 
             <!-- Right section - Map Grid -->
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                <GridPane fx:id="mapGrid"  minHeight="600" minWidth="600" alignment="CENTER" styleClass="mapGrid" gridLinesVisible="true" VBox.vgrow="ALWAYS">
+                <GridPane fx:id="mapGrid"
+                          minHeight="600"
+                          minWidth="600"
+                          maxHeight="600"
+                          maxWidth="600"
+                          prefHeight="600"
+                          prefWidth="600"
+                          alignment="CENTER"
+                          styleClass="mapGrid"
+                          gridLinesVisible="true"
+                          VBox.vgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints />
                     </columnConstraints>

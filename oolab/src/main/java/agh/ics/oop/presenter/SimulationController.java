@@ -17,7 +17,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
@@ -119,6 +121,24 @@ public class SimulationController implements MapChangeListener {
 
     private void drawMap() {
         updateBounds();
+
+        // Oblicz rozmiar pojedynczej komórki na podstawie dostępnej przestrzeni
+        double availableWidth = mapGrid.getPrefWidth();
+        double availableHeight = mapGrid.getPrefHeight();
+
+        int cellSize = (int) Math.min(
+                (availableWidth - 2) / currentMapWidth,
+                (availableHeight - 2) / currentMapHeight
+        );
+
+        // Ustaw stały rozmiar dla każdej komórki w siatce
+        for (int i = 0; i < currentMapWidth; i++) {
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
+        }
+        for (int i = 0; i < currentMapHeight; i++) {
+            mapGrid.getRowConstraints().add(new RowConstraints(cellSize));
+        }
+
         addElements();
     }
     private void showGeneralStatistics()
@@ -152,7 +172,9 @@ public class SimulationController implements MapChangeListener {
                 {
                     PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
                     WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell,size);
-                    mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
+                    GridPane.setHalignment(elementBoxPreferredField, javafx.geometry.HPos.CENTER);
+                    GridPane.setValignment(elementBoxPreferredField, javafx.geometry.VPos.CENTER);
+                    mapGrid.add(elementBoxPreferredField, i - xMin , yMax - j );
                 }
                 if (optionalElement.isPresent()) {
                     WorldElement worldElement = optionalElement.get();
@@ -165,14 +187,16 @@ public class SimulationController implements MapChangeListener {
                             if (prefPos.contains(position) && showFieldsBool) {
                                 elementBoxPopularGenome.setPreferred(true);
                             }
-                            mapGrid.add(elementBoxPopularGenome, i - xMin + 1, yMax - j + 1);
+                            GridPane.setHalignment(elementBoxPopularGenome, javafx.geometry.HPos.CENTER);
+                            GridPane.setValignment(elementBoxPopularGenome, javafx.geometry.VPos.CENTER);
+                            mapGrid.add(elementBoxPopularGenome, i - xMin, yMax - j );
                         }
                     }
 
                     if (lastClickedAnimal != null && lastClickedAnimal.getPosition().equals(worldElement.getPosition())) {
                         if (lastClickedAnimal.getDeathDate() == -1) {
                             elementBox = new WorldElementBox(lastClickedAnimal,size);
-                            elementBox.updateImageTrackedDown(lastClickedAnimal,size);
+                            elementBox.updateImageTrackedDown(lastClickedAnimal);
                             lastElementBox = elementBox;
                         } else {
                             elementBox = new WorldElementBox(worldElement,size);
@@ -193,28 +217,29 @@ public class SimulationController implements MapChangeListener {
 
                             if (lastClickedAnimal == clickedAnimal) {
                                 clearAnimalInfo();
-                                elementBox.updateImage(clickedAnimal,size);
+                                elementBox.updateImage(clickedAnimal);
                                 lastClickedAnimal = null;
 
                                 //selectedAnimalStats.setVisible(false);
                             } else if (lastClickedAnimal != null) {
 
-                                lastElementBox.updateImage(lastClickedAnimal,size);
+                                lastElementBox.updateImage(lastClickedAnimal);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal,size);
+                                elementBox.updateImageTrackedDown(clickedAnimal);
 
                                 showAnimalInfo(clickedAnimal);
                             } else {
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal,size);
+                                elementBox.updateImageTrackedDown(clickedAnimal);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
                     });
-
-                    mapGrid.add(elementBox, i - xMin + 1, yMax - j + 1);
+                    GridPane.setHalignment(elementBox, javafx.geometry.HPos.CENTER);
+                    GridPane.setValignment(elementBox, javafx.geometry.VPos.CENTER);
+                    mapGrid.add(elementBox, i - xMin, yMax - j);
 
                 }
                 else {
@@ -222,11 +247,15 @@ public class SimulationController implements MapChangeListener {
                     if (prefPos.contains(position) && showFieldsBool) {
                         WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position),size);
                         emptyPreferredBox.setPreferred(true);
-                        mapGrid.add(emptyPreferredBox, i - xMin + 1, yMax - j + 1);
+                        GridPane.setHalignment(emptyPreferredBox, javafx.geometry.HPos.CENTER);
+                        GridPane.setValignment(emptyPreferredBox, javafx.geometry.VPos.CENTER);
+                        mapGrid.add(emptyPreferredBox, i - xMin, yMax - j);
                     } else {
                         EmptyCell back = new EmptyCell(position);
                         WorldElementBox emptyBox = new WorldElementBox(back,size);
-                        mapGrid.add(emptyBox, i - xMin + 1, yMax - j + 1);
+                        GridPane.setHalignment(emptyBox, javafx.geometry.HPos.CENTER);
+                        GridPane.setValignment(emptyBox, javafx.geometry.VPos.CENTER);
+                        mapGrid.add(emptyBox, i - xMin , yMax - j );
                     }
                 }
             }
