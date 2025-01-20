@@ -1,6 +1,7 @@
 package agh.ics.oop.model.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Statistics {
@@ -61,4 +62,5 @@ public class Statistics {
     public int getDaysPassed() {
         return daysPassed;
     }
+
 }
