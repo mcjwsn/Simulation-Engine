@@ -93,14 +93,13 @@ public class SimulationController implements MapChangeListener {
     @FXML
     private VBox statsBox;
 
+    private final Object simulationLock = new Object();
+    private volatile boolean uiUpdated = false;
+
 
     private void drawMap() {
         updateBounds();
-        //xyLabel();
-        //columnsFunction();
-        //rowsFunction();
         addElements();
-        //mapGrid.setGridLinesVisible(true);
     }
     private void showGeneralStatistics()
     {
@@ -114,14 +113,6 @@ public class SimulationController implements MapChangeListener {
         showGenotype.setManaged(true);
     }
 
-
-    public void xyLabel(){
-        mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-        mapGrid.getRowConstraints().add(new RowConstraints(height));
-        Label label = new Label("y/x");
-        mapGrid.add(label, 0, 0);
-        GridPane.setHalignment(label, HPos.CENTER);
-    }
     public void updateBounds(){
         xMin = worldMap.getCurrentBounds().lowerLeft().getX();
         yMin = worldMap.getCurrentBounds().lowerLeft().getY();
@@ -129,22 +120,6 @@ public class SimulationController implements MapChangeListener {
         yMax = worldMap.getCurrentBounds().upperRight().getY();
         currentMapWidth = xMax - xMin + 1;
         currentMapHeight = yMax - yMin + 1;
-    }
-    public void columnsFunction(){
-        for(int i = 0; i< currentMapWidth; i++){
-            Label label = new Label(Integer.toString(i+xMin));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-            mapGrid.add(label, i+1, 0);
-        }
-    }
-    public void rowsFunction(){
-        for(int i=0; i<currentMapHeight; i++){
-            Label label = new Label(Integer.toString(yMax-i));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getRowConstraints().add(new RowConstraints(height));
-            mapGrid.add(label, 0, i+1);
-        }
     }
 
     public void addElements() {
@@ -307,23 +282,43 @@ public class SimulationController implements MapChangeListener {
     }
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
-        setWorldMap(worldMap);
-        popularGenotype = worldMap.getMostPopularGenotype();
-        this.displayGeneralStatistics(statistics);
+        synchronized (simulationLock) {
+            setWorldMap(worldMap);
+            popularGenotype = worldMap.getMostPopularGenotype();
 
-        if (lastClickedAnimal != null) {
-            showAnimalInfo(lastClickedAnimal);
-        }
+            Platform.runLater(() -> {
+                try {
+                    clearGrid();
+                    drawMap();
+                    this.displayGeneralStatistics(statistics);
+                    updateCharts(statistics);
+                    if (exportDailyStatisticsBool) {
+                        exportCsvStatistics(worldMap, statistics);
+                    }
+                    if (lastClickedAnimal != null) {
+                        showAnimalInfo(lastClickedAnimal);
+                    }
+                } finally {
+                    synchronized (simulationLock) {
+                        uiUpdated = true;
+                        simulationLock.notify();
+                    }
+                }
+            });
 
-        Platform.runLater(() -> {
-            clearGrid();
-            drawMap();
-            updateCharts(statistics);
-            if (exportDailyStatisticsBool) {
-                exportCsvStatistics(worldMap, statistics);
+            // Czekaj na zakończenie aktualizacji UI
+            while (!uiUpdated) {
+                try {
+                    simulationLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
-        });
+            uiUpdated = false;
+        }
     }
+
 
     private void updateCharts(Statistics statistics) {
         // Pobieramy aktualny dzień i wartości z `Statistics`
@@ -385,18 +380,26 @@ public class SimulationController implements MapChangeListener {
     @FXML
     public void onPauseClicked(ActionEvent actionEvent) {
         if (simulation != null) {
-            simulation.pause();
-            Platform.runLater(() -> pauseButton.setDisable(true));
-            Platform.runLater(() -> continueButton.setDisable(false));
+            synchronized (simulationLock) {
+                simulation.pause();
+                Platform.runLater(() -> {
+                    pauseButton.setDisable(true);
+                    continueButton.setDisable(false);
+                });
+            }
         }
     }
 
     @FXML
     public void onContinueClicked(ActionEvent actionEvent) {
         if (simulation != null) {
-            simulation.start();
-            Platform.runLater(() -> pauseButton.setDisable(false));
-            Platform.runLater(() -> continueButton.setDisable(true));
+            synchronized (simulationLock) {
+                simulation.start();
+                Platform.runLater(() -> {
+                    pauseButton.setDisable(false);
+                    continueButton.setDisable(true);
+                });
+            }
         }
     }
     public void initializeSimulation() {
@@ -447,14 +450,6 @@ public class SimulationController implements MapChangeListener {
         continueButton.setDisable(true);
         initializeCharts();
         showGeneralStatistics();
-    }
-
-    public int getWidth() {
-        return simulationProperties.getMapWidth();
-    }
-
-    public int setHeight() {
-        return simulationProperties.getMapHeight();
     }
 
     @FXML

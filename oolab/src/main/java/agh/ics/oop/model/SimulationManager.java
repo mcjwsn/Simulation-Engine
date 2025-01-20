@@ -13,6 +13,7 @@ public class SimulationManager {
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
     private Set<Vector2d> equatorField = new HashSet<>();
+    private final Object updateLock = new Object();
 
     private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
@@ -57,24 +58,24 @@ public class SimulationManager {
 
     // operacja podczas nowego dnia
     public void Update() {
-        deleteDeadAnimals();
-        moveALlAnimals();
-        if(map.getMapType()== MapType.OWLBEAR)
-        {
-            owlBearEat();
-        }
-        eat();
-        if(map.getMapType()== MapType.OWLBEAR)
-        {
-            moveOwlBear();
-            owlBearEat();
-        }
-        reproduceAnimals();
-        growGrass();
-        addAge();
+        synchronized (updateLock) {
+            deleteDeadAnimals();
+            moveALlAnimals();
+            if(map.getMapType() == MapType.OWLBEAR) {
+                owlBearEat();
+            }
+            eat();
+            if(map.getMapType() == MapType.OWLBEAR) {
+                moveOwlBear();
+                owlBearEat();
+            }
+            reproduceAnimals();
+            growGrass();
+            addAge();
 
-        map.setStatistics(statistics, simulation.getDays());
-        map.mapChanged(statistics, "Dzien sie zakonczyl");
+            map.setStatistics(statistics, simulation.getDays());
+            map.mapChanged(statistics, "Dzien sie zakonczyl");
+        }
     }
 
     protected void restoreEatenPlantPosition(Grass eatenGrass) {
