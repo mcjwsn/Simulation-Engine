@@ -78,6 +78,8 @@
                     <Label fx:id="animalInfoLabelGrassEaten" styleClass="single-animal-stats-label"/>
                     <Label text="ChildrenAmount" styleClass="single-animal-stats-values"/>
                     <Label fx:id="animalInfoLabelChildrenAmount" styleClass="single-animal-stats-label"/>
+                    <Label text="DescendantsCount" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelDescendantsCount" styleClass="single-animal-stats-label"/>
                     <Label text="Position" styleClass="single-animal-stats-values"/>
                     <Label fx:id="animalInfoLabelPosition" styleClass="single-animal-stats-label"/>
                     <Label text="Age" styleClass="single-animal-stats-values"/>

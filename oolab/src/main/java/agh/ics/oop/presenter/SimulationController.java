@@ -106,6 +106,8 @@ public class SimulationController implements MapChangeListener {
     @FXML
     private Label animalInfoLabelChildrenAmount;
     @FXML
+    private Label animalInfoLabelDescendantsCount;
+    @FXML
     private Label animalInfoLabelPosition;
     @FXML
     private Label animalInfoLabelAge;
@@ -272,6 +274,7 @@ public class SimulationController implements MapChangeListener {
                 animalInfoLabelEnergy.setText(String.valueOf(animal.getEnergy()));
                 animalInfoLabelGrassEaten.setText(String.valueOf(animal.getPlantsEaten()));
                 animalInfoLabelChildrenAmount.setText(String.valueOf(animal.getChildrenMade()));
+                animalInfoLabelDescendantsCount.setText(String.valueOf(animal.getDescendantsCount()));
                 animalInfoLabelPosition.setText(String.valueOf(animal.getPosition()));
                 animalInfoLabelAge.setText(String.valueOf(animal.getAge()));
                 animalInfoLabelDeathDate.setText(String.valueOf(animal.getDeathDate()));
@@ -285,6 +288,7 @@ public class SimulationController implements MapChangeListener {
             animalInfoLabelEnergy.setText("");
             animalInfoLabelGrassEaten.setText("");
             animalInfoLabelChildrenAmount.setText("");
+            animalInfoLabelDescendantsCount.setText("");
             animalInfoLabelPosition.setText("");
             animalInfoLabelAge.setText("");
             animalInfoLabelDeathDate.setText("");
