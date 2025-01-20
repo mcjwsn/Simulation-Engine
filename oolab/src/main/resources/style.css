@@ -52,6 +52,18 @@ HBox {
     -fx-translate-y: 3px; /* Wciśnięcie w dół */
 }
 
+.pixel-start-button:pressed {
+    -fx-background-color: #366836; /* Jeszcze ciemniejszy zielony */
+    -fx-effect: none; /* Brak cienia */
+    -fx-translate-x: 3px; /* Wciśnięcie w prawo */
+    -fx-translate-y: 3px; /* Wciśnięcie w dół */
+}
+
+.pixel-start-button:hover {
+    -fx-background-color: #3e8e41; /* Ciemniejszy zielony */
+    -fx-effect: dropshadow(gaussian, #2d6a35, 1, 0.5, 1, 1); /* Subtelne zmniejszenie cienia */
+}
+
 .pixel-spinner {
     -fx-background-color: #af4c81;
     -fx-max-width: 550px;
@@ -70,11 +82,11 @@ HBox {
 .stats-label{
     -fx-background-color: #c62606;
     -fx-max-width: 380px;
-    -fx-max-height: 8px;
+    -fx-max-height: 7px;
     -fx-text-fill: #ccbdbd; /* Biały tekst */
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 8px; /* Wielkość tekstu */
-    -fx-padding: 4 4; /* Wewnątrz przycisku */
+    -fx-padding: 3 3; /* Wewnątrz przycisku */
     -fx-border-color: #b6570f; /* Obrys */
     -fx-border-radius: 4px; /* Delikatne zaokrąglenie */
     -fx-effect: dropshadow(gaussian, #914913, 3, 0.5, 3, 3); /* Pikselowy cień */
@@ -85,11 +97,11 @@ HBox {
 .stats-values{
     -fx-background-color: #e31a3e;
     -fx-max-width: 400px;
-    -fx-max-height: 8px;
-    -fx-text-fill: #0e0d0d; /* Biały tekst */
+    -fx-max-height: 7px;
+    -fx-text-fill: #0e0d0d;
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 9px; /* Wielkość tekstu */
-    -fx-padding: 4 4; /* Wewnątrz przycisku */
+    -fx-padding: 3 3; /* Wewnątrz przycisku */
     -fx-border-color: #b6570f; /* Obrys */
     -fx-border-radius: 4px; /* Delikatne zaokrąglenie */
     -fx-effect: dropshadow(gaussian, #914913, 3, 0.5, 3, 3); /* Pikselowy cień */
@@ -99,11 +111,11 @@ HBox {
 .single-animal-stats-label{
     -fx-background-color: #efe20e;
     -fx-max-width: 380px;
-    -fx-max-height: 8px;
-    -fx-text-fill: #0e0d0d; /* Biały tekst */
+    -fx-max-height: 7px;
+    -fx-text-fill: #0e0d0d;
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 8px; /* Wielkość tekstu */
-    -fx-padding: 4 4; /* Wewnątrz przycisku */
+    -fx-padding: 3 3; /* Wewnątrz przycisku */
     -fx-border-color: #b6570f; /* Obrys */
     -fx-border-radius: 4px; /* Delikatne zaokrąglenie */
     -fx-effect: dropshadow(gaussian, #914913, 3, 0.5, 3, 3); /* Pikselowy cień */
@@ -114,11 +126,11 @@ HBox {
 .single-animal-stats-values{
     -fx-background-color: #e1661a;
     -fx-max-width: 380px;
-    -fx-max-height: 8px;
-    -fx-text-fill: #1c1919; /* Biały tekst */
+    -fx-max-height: 7px;
+    -fx-text-fill: #1c1919;
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 8px; /* Wielkość tekstu */
-    -fx-padding: 4 4; /* Wewnątrz przycisku */
+    -fx-padding: 3 3; /* Wewnątrz przycisku */
     -fx-border-color: #b6570f; /* Obrys */
     -fx-border-radius: 4px; /* Delikatne zaokrąglenie */
     -fx-effect: dropshadow(gaussian, #914913, 3, 0.5, 3, 3); /* Pikselowy cień */
@@ -187,7 +199,7 @@ HBox {
     -fx-background-color: #efe20e;
     -fx-max-width: 380px;
     -fx-max-height: 12px;
-    -fx-text-fill: #0e0d0d; /* Biały tekst */
+    -fx-text-fill: #0e0d0d;
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 10px; /* Wielkość tekstu */
     -fx-padding: 4 4; /* Wewnątrz przycisku */
@@ -214,7 +226,7 @@ HBox {
 
 .chart-details{
     -fx-max-height: 3px;
-    -fx-text-fill: #1c1919; /* Biały tekst */
+    -fx-text-fill: #1c1919;
     -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
     -fx-font-size: 8px; /* Wielkość tekstu */
     -fx-border-radius: 4px; /* Delikatne zaokrąglenie */

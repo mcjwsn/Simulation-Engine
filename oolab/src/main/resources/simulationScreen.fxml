@@ -13,7 +13,7 @@
         <HBox spacing="20" styleClass="main-container" style="-fx-background-color: #55a855">
             <!-- Left section - Charts -->
             <VBox fx:id="Charts" spacing="10">
-                <Label text="Number of Animals" styleClass="chart-title"/>
+                <Label text="Number of Animals" styleClass="chart-title" style="-fx-text-fill: red"/>
                 <LineChart fx:id="animalChart" prefHeight="200" prefWidth="400" styleClass="animal-chart" legendVisible="false">
                     <xAxis>
                         <NumberAxis label="Day" styleClass="chart-details" />
@@ -22,7 +22,7 @@
                         <NumberAxis label="Animals number" styleClass="chart-details"/>
                     </yAxis>
                 </LineChart>
-                <Label text="Number of Grasses" styleClass="chart-title"/>
+                <Label text="Number of Grasses" styleClass="chart-title" style="-fx-text-fill: #37ff00"/>
                 <LineChart fx:id="grassChart" prefHeight="200" prefWidth="400" styleClass="grass-chart" legendVisible="false">
                     <xAxis >
                         <NumberAxis label="Day" styleClass="chart-details"/>
@@ -31,7 +31,7 @@
                         <NumberAxis label="Number of grass" styleClass="chart-details" />
                     </yAxis>
                 </LineChart>
-                <Label text="Number of Average Energy Level" styleClass="chart-title"/>
+                <Label text="Number of Average Energy Level" styleClass="chart-title" style="-fx-text-fill: #cfcf34"/>
                 <LineChart fx:id="energyChart" prefHeight="200" prefWidth="400" styleClass="energy-chart" legendVisible="false">
                     <xAxis>
                         <NumberAxis label="Day" styleClass="chart-details"/>
@@ -84,6 +84,8 @@
                     <Label fx:id="animalInfoLabelAge" styleClass="single-animal-stats-label"/>
                     <Label text="DeathDate" styleClass="single-animal-stats-values"/>
                     <Label fx:id="animalInfoLabelDeathDate" styleClass="single-animal-stats-label"/>
+                    <Label text="Number of ancestors" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalAncestors" styleClass="single-animal-stats-label"/>
                 </VBox>
             </VBox>
 

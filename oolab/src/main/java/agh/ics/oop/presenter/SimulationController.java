@@ -111,6 +111,8 @@ public class SimulationController implements MapChangeListener {
     private Label animalInfoLabelDeathDate;
     @FXML
     private VBox selectedAnimalStats;
+    @FXML
+    private Label animalAncestors;
     private final Object simulationLock = new Object();
     private volatile boolean uiUpdated = false;
 
