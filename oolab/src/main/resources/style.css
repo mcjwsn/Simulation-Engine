@@ -214,7 +214,7 @@ HBox {
 }
 
 .axis {
-    -fx-tick-label-font-size: 12px;
+    -fx-tick-label-font-size: 7px;
     -fx-tick-label-fill: #333333;
 }
 
@@ -229,4 +229,3 @@ HBox {
 .animal-chart, .grass-chart, .energy-chart {
     -fx-background-color: #f0f0f0; /* Kolor tła wykresu na szary */
 }
-

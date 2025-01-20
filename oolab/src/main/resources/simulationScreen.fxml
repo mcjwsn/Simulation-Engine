@@ -16,28 +16,28 @@
                 <Label text="Number of Animals" styleClass="chart-title"/>
                 <LineChart fx:id="animalChart" prefHeight="200" prefWidth="400" styleClass="animal-chart" legendVisible="false">
                     <xAxis>
-                        <NumberAxis label="Dzień" styleClass="chart-details" />
+                        <NumberAxis label="Day" styleClass="chart-details" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Liczba zwierząt" styleClass="chart-details"/>
+                        <NumberAxis label="Animals number" styleClass="chart-details"/>
                     </yAxis>
                 </LineChart>
                 <Label text="Number of Grasses" styleClass="chart-title"/>
                 <LineChart fx:id="grassChart" prefHeight="200" prefWidth="400" styleClass="grass-chart" legendVisible="false">
                     <xAxis >
-                        <NumberAxis label="Dzień" styleClass="chart-details"/>
+                        <NumberAxis label="Day" styleClass="chart-details"/>
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Liczba traw" styleClass="chart-details" />
+                        <NumberAxis label="Number of grass" styleClass="chart-details" />
                     </yAxis>
                 </LineChart>
                 <Label text="Number of Average Energy Level" styleClass="chart-title"/>
                 <LineChart fx:id="energyChart" prefHeight="200" prefWidth="400" styleClass="energy-chart" legendVisible="false">
                     <xAxis>
-                        <NumberAxis label="Dzień" styleClass="chart-details"/>
+                        <NumberAxis label="Day" styleClass="chart-details"/>
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Srednia energia" styleClass="chart-details" />
+                        <NumberAxis label="Average energy" styleClass="chart-details" />
                     </yAxis>
                 </LineChart>
             </VBox>
@@ -89,7 +89,7 @@
 
             <!-- Right section - Map Grid -->
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: #00FF01;" VBox.vgrow="ALWAYS">
+                <GridPane fx:id="mapGrid"  minHeight="500" minWidth="500" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: #00FF01;" VBox.vgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints />
                     </columnConstraints>

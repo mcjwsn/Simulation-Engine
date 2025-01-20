@@ -314,5 +314,4 @@ public class SettingsScreenControler {
         mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
     }
-
 }

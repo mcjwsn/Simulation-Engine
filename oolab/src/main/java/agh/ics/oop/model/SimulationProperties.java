@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.Enums.MovinType;
 import agh.ics.oop.model.Enums.MutationType;
+import agh.ics.oop.presenter.WorldElementBox;
 
 public class SimulationProperties {
     private int width;
@@ -26,8 +27,6 @@ public class SimulationProperties {
     private int daysElapsed;
     private MovinType movingType;
     private String CSV;
-
-    // dodac wpisywanie do CSV
 
     public  SimulationProperties(int width_, int height_, int equatorHeight_, int animalNumber_, int grassNumber_,
                                  int dailySpawningGrass_, int startEnergy_, int grassEnergy_, int maxEnergy_,

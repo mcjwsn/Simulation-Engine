@@ -7,16 +7,13 @@ import agh.ics.oop.model.Enums.MapType;
 import agh.ics.oop.model.util.CSV;
 import agh.ics.oop.model.util.ConvertUtils;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -99,11 +96,11 @@ public class SimulationController implements MapChangeListener {
 
     private void drawMap() {
         updateBounds();
-        xyLabel();
-        columnsFunction();
-        rowsFunction();
+        //xyLabel();
+        //columnsFunction();
+        //rowsFunction();
         addElements();
-        mapGrid.setGridLinesVisible(true);
+        //mapGrid.setGridLinesVisible(true);
     }
     private void showGeneralStatistics()
     {
@@ -151,6 +148,7 @@ public class SimulationController implements MapChangeListener {
     }
 
     public void addElements() {
+        Integer size = (int) (500/Math.max(simulationProperties.getMapHeight(),simulationProperties.getMapWidth()))+1;
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d position = new Vector2d(i, j);
@@ -158,7 +156,7 @@ public class SimulationController implements MapChangeListener {
                 if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
                 {
                     PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
-                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell,size);
                     mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
                 }
                 if (optionalElement.isPresent()) {
@@ -168,7 +166,7 @@ public class SimulationController implements MapChangeListener {
                     if (worldElement instanceof Animal) {
                         if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool) {
                             popGenotypeCell popGenomeCell = new popGenotypeCell(position);
-                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell);
+                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell,size);
                             if (prefPos.contains(position) && showFieldsBool) {
                                 elementBoxPopularGenome.setPreferred(true);
                             }
@@ -178,15 +176,15 @@ public class SimulationController implements MapChangeListener {
 
                     if (lastClickedAnimal != null && lastClickedAnimal.getPosition().equals(worldElement.getPosition())) {
                         if (lastClickedAnimal.getDeathDate() == -1) {
-                            elementBox = new WorldElementBox(lastClickedAnimal);
-                            elementBox.updateImageTrackedDown(lastClickedAnimal);
+                            elementBox = new WorldElementBox(lastClickedAnimal,size);
+                            elementBox.updateImageTrackedDown(lastClickedAnimal,size);
                             lastElementBox = elementBox;
                         } else {
-                            elementBox = new WorldElementBox(worldElement);
+                            elementBox = new WorldElementBox(worldElement,size);
                             lastClickedAnimal = null;
                         }
                     } else {
-                        elementBox = new WorldElementBox(worldElement);
+                        elementBox = new WorldElementBox(worldElement,size);
                     }
 
                     // Dodaj otoczkę jeśli pozycja jest preferowana
@@ -200,21 +198,22 @@ public class SimulationController implements MapChangeListener {
 
                             if (lastClickedAnimal == clickedAnimal) {
                                 clearAnimalInfo();
-                                elementBox.updateImage(clickedAnimal);
+                                elementBox.updateImage(clickedAnimal,size);
                                 lastClickedAnimal = null;
+
                                 //selectedAnimalStats.setVisible(false);
                             } else if (lastClickedAnimal != null) {
 
-                                lastElementBox.updateImage(lastClickedAnimal);
+                                lastElementBox.updateImage(lastClickedAnimal,size);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                elementBox.updateImageTrackedDown(clickedAnimal,size);
 
                                 showAnimalInfo(clickedAnimal);
                             } else {
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                elementBox.updateImageTrackedDown(clickedAnimal,size);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
@@ -226,7 +225,7 @@ public class SimulationController implements MapChangeListener {
                 else {
                     // Dla pustych preferowanych pól dodaj pusty WorldElementBox z otoczką
                     if (prefPos.contains(position) && showFieldsBool) {
-                        WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position));
+                        WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position),size);
                         emptyPreferredBox.setPreferred(true);
                         mapGrid.add(emptyPreferredBox, i - xMin + 1, yMax - j + 1);
                     } else {
@@ -273,7 +272,14 @@ public class SimulationController implements MapChangeListener {
     }
     private void clearAnimalInfo() {
         Platform.runLater(() -> {
-            animalInfoLabel.setText("");  // Clear the information label
+            animalInfoLabelGenome.setText("");
+            animalInfoLabelGenomeIndex.setText("");
+            animalInfoLabelEnergy.setText("");
+            animalInfoLabelGrassEaten.setText("");
+            animalInfoLabelChildrenAmount.setText("");
+            animalInfoLabelPosition.setText("");
+            animalInfoLabelAge.setText("");
+            animalInfoLabelDeathDate.setText("");
         });
     }
     @FXML
@@ -441,6 +447,14 @@ public class SimulationController implements MapChangeListener {
         continueButton.setDisable(true);
         initializeCharts();
         showGeneralStatistics();
+    }
+
+    public int getWidth() {
+        return simulationProperties.getMapWidth();
+    }
+
+    public int setHeight() {
+        return simulationProperties.getMapHeight();
     }
 
     @FXML

@@ -13,6 +13,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WorldElementBox extends VBox {
+
+
+    private static int mapHeight;
+    private static int mapWidth;
+
     private static final int IMAGE_HEIGHT = 18;
     private static final int IMAGE_WIDTH = 18;
     private static final int ENERGY_IMAGE_HEIGHT = 3;
@@ -25,96 +30,96 @@ public class WorldElementBox extends VBox {
     private String lastEnergyLevel;
     private static final Map<String, Image> imageCache = new HashMap<>();
 
+
     // Cache'ujemy Image zamiast ImageView
     public static Image getImage(String imagePath) {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-    public void updateImageGenotype(popGenotypeCell element)
+    public void updateImageGenotype(popGenotypeCell element, Integer size)
     {
         String currImage = element.getImageResource();
         this.getChildren().clear();
         Image image = getImage(currImage);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(GENOME_IMAGE_WIDTH);
-        imageView.setFitHeight(GENOME_IMAGE_HEIGHT);
+        imageView.setFitWidth(size+2);
+        imageView.setFitHeight(size+2);
         this.getChildren().add(imageView);
     }
 
-    public void updateImage(PrefferdCell element)
+    public void updateImage(PrefferdCell element, Integer size)
     {
         String currImage = element.getImageResource();
         Image image = getImage(currImage);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(PREF_CELL_IMAGE_WIDTH);
-        imageView.setFitHeight(PREF_CELL_IMAGE_HEIGHT);
+        imageView.setFitWidth((int)(size*0.9));
+        imageView.setFitHeight((int)(size*0.9));
 
         imageView.setOpacity(0.5);
         this.getChildren().add(imageView);
     }
 
 
-    public void updateImage(WorldElement element) {
+    public void updateImage(WorldElement element, Integer size) {
         String currImage = element.getImageResource();
 
         if (!Objects.equals(currImage, lastImage)) {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(IMAGE_WIDTH);
-            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth((int)(size*0.9));
+            imageView.setFitHeight((int)(size*0.9));
 
             this.getChildren().add(imageView);
             if (element instanceof Animal)
             {
-                addEnergyLevel((Animal) element);
+                addEnergyLevel((Animal) element,size);
             }
             lastImage = currImage; // Update the last image
         }
     }
 
-    public void updateImageTrackedDown(Animal element) {
+    public void updateImageTrackedDown(Animal element,Integer size) {
         String currImage = element.getTrackedDownAnimalImageResource();
-
         if (!Objects.equals(currImage, lastImage)) {
             this.getChildren().clear();
             Image image = getImage(currImage);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(IMAGE_WIDTH);
-            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(size);
+            imageView.setFitHeight(size);
             this.getChildren().add(imageView);
-            addEnergyLevel(element);
+            addEnergyLevel(element,size);
             lastImage = currImage;
         }
     }
 
-    private void addEnergyLevel(Animal animal) {
+    private void addEnergyLevel(Animal animal,Integer size) {
         String energyLevel = animal.getEnergyLevelResource();
 
         if (!Objects.equals(energyLevel, lastEnergyLevel)) {
             Image image = getImage(energyLevel);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(ENERGY_IMAGE_WIDTH);
-            imageView.setFitHeight(ENERGY_IMAGE_HEIGHT);
+            imageView.setFitWidth((int)(0.7*size)+1);
+            imageView.setFitHeight((int)(0.15*size)+1);
             this.getChildren().add(imageView);
             lastImage = energyLevel; // Update the last image
         }
     }
 
-    public WorldElementBox(WorldElement element) {
-        updateImage(element);
+    public WorldElementBox(WorldElement element, Integer size) {
+        updateImage(element,size);
         this.setAlignment(Pos.CENTER);
     }
-    public WorldElementBox(PrefferdCell element) {
-        updateImage(element);
+    public WorldElementBox(PrefferdCell element, Integer size) {
+        updateImage(element,size);
         this.setAlignment(Pos.CENTER);
     }
-    public WorldElementBox(Animal animal) {
-        updateImage(animal);
+    public WorldElementBox(Animal animal, Integer size) {
+        updateImage(animal,size);
         this.setAlignment(Pos.CENTER);
     }
-    public WorldElementBox(popGenotypeCell cell) {
-        updateImageGenotype(cell);
+    public WorldElementBox(popGenotypeCell cell, Integer size) {
+        updateImageGenotype(cell,size);
         this.setAlignment(Pos.CENTER);
     }
     private boolean isPreferred = false;
@@ -127,4 +132,5 @@ public class WorldElementBox extends VBox {
             this.setStyle("");
         }
     }
+
 }
