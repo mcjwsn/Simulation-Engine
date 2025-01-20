@@ -86,6 +86,8 @@ public class SimulationController implements MapChangeListener {
     @FXML
     private LineChart<Number, Number> grassChart;
     @FXML
+    private LineChart<Number,Number> energyChart;
+    @FXML
     private VBox Charts;
     @FXML
     private Button showGenotype;
@@ -200,11 +202,14 @@ public class SimulationController implements MapChangeListener {
                                 clearAnimalInfo();
                                 elementBox.updateImage(clickedAnimal);
                                 lastClickedAnimal = null;
+                                //selectedAnimalStats.setVisible(false);
                             } else if (lastClickedAnimal != null) {
+
                                 lastElementBox.updateImage(lastClickedAnimal);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
                                 elementBox.updateImageTrackedDown(clickedAnimal);
+
                                 showAnimalInfo(clickedAnimal);
                             } else {
                                 lastElementBox = elementBox;
@@ -231,19 +236,38 @@ public class SimulationController implements MapChangeListener {
             }
         }
     }
+    @FXML
+    private Label animalInfoLabelGenome;
+    @FXML
+    private Label animalInfoLabelGenomeIndex;
+    @FXML
+    private Label animalInfoLabelEnergy;
+    @FXML
+    private Label animalInfoLabelGrassEaten;
+    @FXML
+    private Label animalInfoLabelChildrenAmount;
+    @FXML
+    private Label animalInfoLabelPosition;
+    @FXML
+    private Label animalInfoLabelAge;
+    @FXML
+    private Label animalInfoLabelDeathDate;
+    @FXML
+    private VBox selectedAnimalStats;
+
     private void showAnimalInfo(WorldElement worldElement) {
+        selectedAnimalStats.setVisible(true);
         if (worldElement instanceof Animal) {
             Animal animal = (Animal) worldElement;
             Platform.runLater(() -> {
-                animalInfoLabel.setText("Animal Info:\n" +
-                        "Genome: " +  Arrays.toString(animal.getGenome()) + "\n" +
-                        "Genome Index: " + animal.getGeneIndex() + "\n" +
-                        "Energy: " + animal.getEnergy() + "\n" +
-                        "Grasses eaten: " + animal.getPlantsEaten() + "\n" +
-                        "Children amount: " + animal.getChildrenMade() + "\n" +
-                        "Position: " + animal.getPosition() + "\n" +
-                        "Age: " + animal.getAge() + "\n" +
-                        "Death date: " + animal.getDeathDate() + "\n");
+                animalInfoLabelGenome.setText(Arrays.toString(animal.getGenome()));
+                animalInfoLabelGenomeIndex.setText(String.valueOf(animal.getGeneIndex()));
+                animalInfoLabelEnergy.setText(String.valueOf(animal.getEnergy()));
+                animalInfoLabelGrassEaten.setText(String.valueOf(animal.getPlantsEaten()));
+                animalInfoLabelChildrenAmount.setText(String.valueOf(animal.getChildrenMade()));
+                animalInfoLabelPosition.setText(String.valueOf(animal.getPosition()));
+                animalInfoLabelAge.setText(String.valueOf(animal.getAge()));
+                animalInfoLabelDeathDate.setText(String.valueOf(animal.getDeathDate()));
             });
         }
     }
@@ -306,18 +330,22 @@ public class SimulationController implements MapChangeListener {
 
         // Aktualizujemy dane na wykresie dla traw
         grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+
+        energyChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, statistics.getAverageAnimalsEnergy()));
     }
 
     private void initializeCharts() {
         // Create series for animals
         XYChart.Series<Number, Number> animalSeries = new XYChart.Series<>();
-        animalSeries.setName("Animals");
         animalChart.getData().add(animalSeries);
 
         // Create series for grass
         XYChart.Series<Number, Number> grassSeries = new XYChart.Series<>();
-        grassSeries.setName("Grass");
         grassChart.getData().add(grassSeries);
+
+        // energy
+        XYChart.Series<Number, Number> energySeries = new XYChart.Series<>();
+        energyChart.getData().add(energySeries);
     }
 
     public void displayGeneralStatistics(Statistics statistics) {

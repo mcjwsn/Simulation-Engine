@@ -37,6 +37,7 @@ public class SimulationApp extends Application {
         controller.setMainApp(this);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Settings");
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
@@ -50,6 +51,7 @@ public class SimulationApp extends Application {
         controller.setSimulationProperties(properties);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simulation");
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 }

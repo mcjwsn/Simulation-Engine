@@ -1,87 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.LineChart?>
-<BorderPane minHeight="750.0" minWidth="1050.0" xmlns="http://javafx.com/javafx/17.0.12"
+
+<BorderPane minHeight="750.0" minWidth="1050.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="agh.ics.oop.presenter.SimulationController"
-            >
-    <top>
-        <HBox>
-            <!-- Left section for statistics -->
-            <VBox fx:id="statsBox" alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 ; " visible="false">
-                <Label text="Animals amount:" />
-                <Label fx:id="generalAllAnimalsLabel" text="0" />
-                <Label text="Total number of grasses:" />
-                <Label fx:id="generalAllGrassesLabel" text="0" />
-                <Label text="Number of free fields:" />
-                <Label fx:id="generalFreeFieldsLabel" text="0" />
-                <Label text="Most popular genotype:" />
-                <Label fx:id="generalPopularGenotypeLabel" text="-" />
-                <Label text="Average energy level (living):" />
-                <Label fx:id="generalAvgEnergyLivingLabel" text="0" />
-                <Label text="Average lifespan (dead):" />
-                <Label fx:id="generalAvgLifeSpanDeadLabel" text="0" />
-                <Label text="Average number of children (living):" />
-                <Label fx:id="generalAvgChildrenLabel" text="0" />
-                <Label text="Days passed:" />
-                <Label fx:id="generalDaysPassed" text="0" />
+            stylesheets="@style.css">
+    <center>
+        <HBox spacing="20" styleClass="main-container" style="-fx-background-color: #55a855">
+            <!-- Left section - Charts -->
+            <VBox fx:id="Charts" spacing="10">
+                <Label text="Number of Animals" styleClass="chart-title"/>
+                <LineChart fx:id="animalChart" prefHeight="200" prefWidth="400" styleClass="animal-chart" legendVisible="false">
+                    <xAxis>
+                        <NumberAxis label="Dzień" styleClass="chart-details" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Liczba zwierząt" styleClass="chart-details"/>
+                    </yAxis>
+                </LineChart>
+                <Label text="Number of Grasses" styleClass="chart-title"/>
+                <LineChart fx:id="grassChart" prefHeight="200" prefWidth="400" styleClass="grass-chart" legendVisible="false">
+                    <xAxis >
+                        <NumberAxis label="Dzień" styleClass="chart-details"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Liczba traw" styleClass="chart-details" />
+                    </yAxis>
+                </LineChart>
+                <Label text="Number of Average Energy Level" styleClass="chart-title"/>
+                <LineChart fx:id="energyChart" prefHeight="200" prefWidth="400" styleClass="energy-chart" legendVisible="false">
+                    <xAxis>
+                        <NumberAxis label="Dzień" styleClass="chart-details"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Srednia energia" styleClass="chart-details" />
+                    </yAxis>
+                </LineChart>
             </VBox>
 
-            <!-- Center section for grid and charts -->
-            <HBox spacing="20">
-                <!-- Grid section -->
-                <VBox>
-                    <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true"
-                              style="-fx-background-color: #00FF01;">
-                        <columnConstraints>
-                            <ColumnConstraints />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints />
-                        </rowConstraints>
-                    </GridPane>
+            <!-- Middle section - Statistics -->
+            <VBox spacing="10" style="-fx-background-color: #55a855">
+                <!-- General Stats -->
+                <VBox fx:id="statsBox" alignment="TOP_LEFT">
+                    <Label text="Statistics" styleClass="stats-buton"/>
+                    <Label text="Animals amount:" styleClass="stats-label"/>
+                    <Label fx:id="generalAllAnimalsLabel" text="0" styleClass="stats-values" />
+                    <Label text="Total number of grasses:" styleClass="stats-label"/>
+                    <Label fx:id="generalAllGrassesLabel" text="0" styleClass="stats-values"/>
+                    <Label text="Number of free fields:" styleClass="stats-label"/>
+                    <Label fx:id="generalFreeFieldsLabel" text="0" styleClass="stats-values"/>
+                    <Label text="Most popular genotype:" styleClass="stats-label"/>
+                    <Label fx:id="generalPopularGenotypeLabel" text="-" styleClass="stats-values"/>
+                    <Label text="Average energy level (living):" styleClass="stats-label"/>
+                    <Label fx:id="generalAvgEnergyLivingLabel" text="0" styleClass="stats-values"/>
+                    <Label text="Average lifespan (dead):" styleClass="stats-label"/>
+                    <Label fx:id="generalAvgLifeSpanDeadLabel" text="0" styleClass="stats-values"/>
+                    <Label text="Average number of children (living):" styleClass="stats-label"/>
+                    <Label fx:id="generalAvgChildrenLabel" text="0" styleClass="stats-values"/>
+                    <Label text="Days passed:" styleClass="stats-label"/>
+                    <Label fx:id="generalDaysPassed" text="0" styleClass="stats-values"/>
                 </VBox>
 
-                <!-- Charts section -->
-                <VBox fx:id = 'Charts' visible="false" spacing="10">
-                    <LineChart fx:id="animalChart" prefHeight="200" prefWidth="400">
-                        <xAxis>
-                            <NumberAxis label="Dzień" />
-                        </xAxis>
-                        <yAxis>
-                            <NumberAxis label="Liczba zwierząt" />
-                        </yAxis>
-                    </LineChart>
-                    <LineChart fx:id="grassChart" prefHeight="200" prefWidth="400">
-                        <xAxis>
-                            <NumberAxis label="Dzień" />
-                        </xAxis>
-                        <yAxis>
-                            <NumberAxis label="Liczba traw" />
-                        </yAxis>
-                    </LineChart>
+                <!-- Selected Animal Stats -->
+                <VBox fx:id="selectedAnimalStats" alignment="TOP_LEFT">
+                    <Label text="Selected Animal Statistics" styleClass="animal-stats-buton"/>
+                    <Label text="Genome" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelGenome" styleClass="single-animal-stats-label"/>
+                    <Label text="GenomeIndex" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelGenomeIndex" styleClass="single-animal-stats-label"/>
+                    <Label text="Energy" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelEnergy" styleClass="single-animal-stats-label"/>
+                    <Label text="GrassEaten" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelGrassEaten" styleClass="single-animal-stats-label"/>
+                    <Label text="ChildrenAmount" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelChildrenAmount" styleClass="single-animal-stats-label"/>
+                    <Label text="Position" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelPosition" styleClass="single-animal-stats-label"/>
+                    <Label text="Age" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelAge" styleClass="single-animal-stats-label"/>
+                    <Label text="DeathDate" styleClass="single-animal-stats-values"/>
+                    <Label fx:id="animalInfoLabelDeathDate" styleClass="single-animal-stats-label"/>
                 </VBox>
-            </HBox>
+            </VBox>
 
-            <HBox>
-                <Label fx:id="animalInfoLabel" text="" visible="true" style="-fx-padding: 0 0 0 20;" />
-            </HBox>
-            <HBox>
-                <Label fx:id="genotypeInfoLabel" text="" visible="true" />
-            </HBox>
+            <!-- Right section - Map Grid -->
+            <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: #00FF01;" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+            </VBox>
         </HBox>
-    </top>
+    </center>
+
     <bottom>
-        <HBox>
-            <HBox alignment="CENTER" spacing="10">
-                <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" visible="false" />
-                <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" visible="false" />
-                <Button fx:id="showFields" managed="true" onAction="#onShowFields" text="Preferred fields" visible="false" />
-                <Button fx:id="showGenotype" managed="true" onAction="#onShowGenotype" text="The most popular genotype" visible="false" />
-            </HBox>
+        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: green">
+            <Button fx:id="pauseButton" managed="true" onAction="#onPauseClicked" text="Pause" styleClass="pixel-button" />
+            <Button fx:id="continueButton" managed="true" onAction="#onContinueClicked" text="Continue" styleClass="pixel-button" />
+            <Button fx:id="showFields" managed="true" onAction="#onShowFields" text="Preferred fields" styleClass="pixel-button" />
+            <Button fx:id="showGenotype" managed="true" onAction="#onShowGenotype" text="The most popular genotype" styleClass="pixel-button" />
         </HBox>
     </bottom>
 </BorderPane>
