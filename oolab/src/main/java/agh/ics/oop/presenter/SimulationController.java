@@ -158,7 +158,7 @@ public class SimulationController implements MapChangeListener {
 
                     if (worldElement instanceof Animal) {
                         if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool) {
-                            popGenotypeCell popGenomeCell = new popGenotypeCell(position);
+                            GenotypeCell popGenomeCell = new GenotypeCell(position);
                             WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell,size);
                             if (prefPos.contains(position) && showFieldsBool) {
                                 elementBoxPopularGenome.setPreferred(true);
