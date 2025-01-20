@@ -1,38 +1,29 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.Simulation;
-import agh.ics.oop.Statistics;
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.Enums.MovinType;
-import agh.ics.oop.model.Enums.MutationType;
-import agh.ics.oop.model.util.CSV;
-import agh.ics.oop.model.util.ConvertUtils;
+import agh.ics.oop.model.mapElements.*;
+import agh.ics.oop.model.util.*;
+import agh.ics.oop.simulation.Simulation;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.maps.AbstractWorldMap;
+import agh.ics.oop.model.maps.GrassField;
+import agh.ics.oop.model.maps.OwlBearMap;
+import agh.ics.oop.model.maps.WorldMap;
+import agh.ics.oop.simulation.SimulationEngine;
+import agh.ics.oop.simulation.SimulationProperties;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SimulationController implements MapChangeListener {
     private SimulationProperties simulationProperties;
@@ -57,8 +48,6 @@ public class SimulationController implements MapChangeListener {
     private Label generalDaysPassed;
     @FXML
     private Label animalInfoLabel;
-    @FXML
-    private Label genotypeInfoLabel;
     @FXML
     private Button pauseButton;
     @FXML
@@ -95,6 +84,8 @@ public class SimulationController implements MapChangeListener {
     @FXML
     private LineChart<Number, Number> grassChart;
     @FXML
+    private LineChart<Number,Number> energyChart;
+    @FXML
     private VBox Charts;
     @FXML
     private Button showGenotype;
@@ -102,15 +93,31 @@ public class SimulationController implements MapChangeListener {
     private Button showFields;
     @FXML
     private VBox statsBox;
+    @FXML
+    private Label animalInfoLabelGenome;
+    @FXML
+    private Label animalInfoLabelGenomeIndex;
+    @FXML
+    private Label animalInfoLabelEnergy;
+    @FXML
+    private Label animalInfoLabelGrassEaten;
+    @FXML
+    private Label animalInfoLabelChildrenAmount;
+    @FXML
+    private Label animalInfoLabelPosition;
+    @FXML
+    private Label animalInfoLabelAge;
+    @FXML
+    private Label animalInfoLabelDeathDate;
+    @FXML
+    private VBox selectedAnimalStats;
+    private final Object simulationLock = new Object();
+    private volatile boolean uiUpdated = false;
 
 
     private void drawMap() {
         updateBounds();
-        xyLabel();
-        columnsFunction();
-        rowsFunction();
         addElements();
-        mapGrid.setGridLinesVisible(true);
     }
     private void showGeneralStatistics()
     {
@@ -124,14 +131,6 @@ public class SimulationController implements MapChangeListener {
         showGenotype.setManaged(true);
     }
 
-
-    public void xyLabel(){
-        mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-        mapGrid.getRowConstraints().add(new RowConstraints(height));
-        Label label = new Label("y/x");
-        mapGrid.add(label, 0, 0);
-        GridPane.setHalignment(label, HPos.CENTER);
-    }
     public void updateBounds(){
         xMin = worldMap.getCurrentBounds().lowerLeft().getX();
         yMin = worldMap.getCurrentBounds().lowerLeft().getY();
@@ -140,24 +139,9 @@ public class SimulationController implements MapChangeListener {
         currentMapWidth = xMax - xMin + 1;
         currentMapHeight = yMax - yMin + 1;
     }
-    public void columnsFunction(){
-        for(int i = 0; i< currentMapWidth; i++){
-            Label label = new Label(Integer.toString(i+xMin));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
-            mapGrid.add(label, i+1, 0);
-        }
-    }
-    public void rowsFunction(){
-        for(int i=0; i<currentMapHeight; i++){
-            Label label = new Label(Integer.toString(yMax-i));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.getRowConstraints().add(new RowConstraints(height));
-            mapGrid.add(label, 0, i+1);
-        }
-    }
 
     public void addElements() {
+        Integer size = (int) (500/Math.max(simulationProperties.getMapHeight(),simulationProperties.getMapWidth()))-2;
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d position = new Vector2d(i, j);
@@ -165,7 +149,7 @@ public class SimulationController implements MapChangeListener {
                 if (prefPos.contains(new Vector2d(i, j)) && showFieldsBool)
                 {
                     PrefferdCell prefCell = new PrefferdCell(new Vector2d(i, j));
-                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell);
+                    WorldElementBox elementBoxPreferredField = new WorldElementBox(prefCell,size);
                     mapGrid.add(elementBoxPreferredField, i - xMin + 1, yMax - j + 1);
                 }
                 if (optionalElement.isPresent()) {
@@ -175,7 +159,7 @@ public class SimulationController implements MapChangeListener {
                     if (worldElement instanceof Animal) {
                         if (popularGenotype.equals(((Animal)worldElement).getGenotype()) && showGenotypeBool) {
                             popGenotypeCell popGenomeCell = new popGenotypeCell(position);
-                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell);
+                            WorldElementBox elementBoxPopularGenome = new WorldElementBox(popGenomeCell,size);
                             if (prefPos.contains(position) && showFieldsBool) {
                                 elementBoxPopularGenome.setPreferred(true);
                             }
@@ -185,15 +169,15 @@ public class SimulationController implements MapChangeListener {
 
                     if (lastClickedAnimal != null && lastClickedAnimal.getPosition().equals(worldElement.getPosition())) {
                         if (lastClickedAnimal.getDeathDate() == -1) {
-                            elementBox = new WorldElementBox(lastClickedAnimal);
-                            elementBox.updateImageTrackedDown(lastClickedAnimal);
+                            elementBox = new WorldElementBox(lastClickedAnimal,size);
+                            elementBox.updateImageTrackedDown(lastClickedAnimal,size);
                             lastElementBox = elementBox;
                         } else {
-                            elementBox = new WorldElementBox(worldElement);
+                            elementBox = new WorldElementBox(worldElement,size);
                             lastClickedAnimal = null;
                         }
                     } else {
-                        elementBox = new WorldElementBox(worldElement);
+                        elementBox = new WorldElementBox(worldElement,size);
                     }
 
                     // Dodaj otoczkę jeśli pozycja jest preferowana
@@ -207,18 +191,22 @@ public class SimulationController implements MapChangeListener {
 
                             if (lastClickedAnimal == clickedAnimal) {
                                 clearAnimalInfo();
-                                elementBox.updateImage(clickedAnimal);
+                                elementBox.updateImage(clickedAnimal,size);
                                 lastClickedAnimal = null;
+
+                                //selectedAnimalStats.setVisible(false);
                             } else if (lastClickedAnimal != null) {
-                                lastElementBox.updateImage(lastClickedAnimal);
+
+                                lastElementBox.updateImage(lastClickedAnimal,size);
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                elementBox.updateImageTrackedDown(clickedAnimal,size);
+
                                 showAnimalInfo(clickedAnimal);
                             } else {
                                 lastElementBox = elementBox;
                                 lastClickedAnimal = clickedAnimal;
-                                elementBox.updateImageTrackedDown(clickedAnimal);
+                                elementBox.updateImageTrackedDown(clickedAnimal,size);
                                 showAnimalInfo(clickedAnimal);
                             }
                         }
@@ -230,35 +218,45 @@ public class SimulationController implements MapChangeListener {
                 else {
                     // Dla pustych preferowanych pól dodaj pusty WorldElementBox z otoczką
                     if (prefPos.contains(position) && showFieldsBool) {
-                        WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position));
+                        WorldElementBox emptyPreferredBox = new WorldElementBox(new PrefferdCell(position),size);
                         emptyPreferredBox.setPreferred(true);
                         mapGrid.add(emptyPreferredBox, i - xMin + 1, yMax - j + 1);
                     } else {
-                        mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                        EmptyCell back = new EmptyCell(position);
+                        WorldElementBox emptyBox = new WorldElementBox(back,size);
+                        mapGrid.add(emptyBox, i - xMin + 1, yMax - j + 1);
                     }
                 }
             }
         }
     }
+
     private void showAnimalInfo(WorldElement worldElement) {
+        selectedAnimalStats.setVisible(true);
         if (worldElement instanceof Animal) {
             Animal animal = (Animal) worldElement;
             Platform.runLater(() -> {
-                animalInfoLabel.setText("Animal Info:\n" +
-                        "Genome: " +  Arrays.toString(animal.getGenome()) + "\n" +
-                        "Genome Index: " + animal.getGeneIndex() + "\n" +
-                        "Energy: " + animal.getEnergy() + "\n" +
-                        "Grasses eaten: " + animal.getPlantsEaten() + "\n" +
-                        "Children amount: " + animal.getChildrenMade() + "\n" +
-                        "Position: " + animal.getPosition() + "\n" +
-                        "Age: " + animal.getAge() + "\n" +
-                        "Death date: " + animal.getDeathDate() + "\n");
+                animalInfoLabelGenome.setText(Arrays.toString(animal.getGenome()));
+                animalInfoLabelGenomeIndex.setText(String.valueOf(animal.getGeneIndex()));
+                animalInfoLabelEnergy.setText(String.valueOf(animal.getEnergy()));
+                animalInfoLabelGrassEaten.setText(String.valueOf(animal.getPlantsEaten()));
+                animalInfoLabelChildrenAmount.setText(String.valueOf(animal.getChildrenMade()));
+                animalInfoLabelPosition.setText(String.valueOf(animal.getPosition()));
+                animalInfoLabelAge.setText(String.valueOf(animal.getAge()));
+                animalInfoLabelDeathDate.setText(String.valueOf(animal.getDeathDate()));
             });
         }
     }
     private void clearAnimalInfo() {
         Platform.runLater(() -> {
-            animalInfoLabel.setText("");  // Clear the information label
+            animalInfoLabelGenome.setText("");
+            animalInfoLabelGenomeIndex.setText("");
+            animalInfoLabelEnergy.setText("");
+            animalInfoLabelGrassEaten.setText("");
+            animalInfoLabelChildrenAmount.setText("");
+            animalInfoLabelPosition.setText("");
+            animalInfoLabelAge.setText("");
+            animalInfoLabelDeathDate.setText("");
         });
     }
     @FXML
@@ -286,25 +284,43 @@ public class SimulationController implements MapChangeListener {
     }
     @Override
     public void mapChanged(WorldMap worldMap, String message, Statistics statistics) {
-        setWorldMap(worldMap);
-        popularGenotype = worldMap.getMostPopularGenotype();
-        this.displayGeneralStatistics(statistics);
+        synchronized (simulationLock) {
+            setWorldMap(worldMap);
+            popularGenotype = worldMap.getMostPopularGenotype();
 
-        if (lastClickedAnimal != null) {
-            showAnimalInfo(lastClickedAnimal);
-        }
+            Platform.runLater(() -> {
+                try {
+                    clearGrid();
+                    drawMap();
+                    this.displayGeneralStatistics(statistics);
+                    updateCharts(statistics);
+                    if (exportDailyStatisticsBool) {
+                        exportCsvStatistics(worldMap, statistics);
+                    }
+                    if (lastClickedAnimal != null) {
+                        showAnimalInfo(lastClickedAnimal);
+                    }
+                } finally {
+                    synchronized (simulationLock) {
+                        uiUpdated = true;
+                        simulationLock.notify();
+                    }
+                }
+            });
 
-        Platform.runLater(() -> {
-            clearGrid();
-            drawMap();
-            updateCharts(statistics);
-            if (exportDailyStatisticsBool) {
-                exportCsvStatistics(worldMap, statistics);
+            // Czekaj na zakończenie aktualizacji UI
+            while (!uiUpdated) {
+                try {
+                    simulationLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
-        });
-
-
+            uiUpdated = false;
+        }
     }
+
 
     private void updateCharts(Statistics statistics) {
         // Pobieramy aktualny dzień i wartości z `Statistics`
@@ -317,18 +333,22 @@ public class SimulationController implements MapChangeListener {
 
         // Aktualizujemy dane na wykresie dla traw
         grassChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, grassCount));
+
+        energyChart.getData().get(0).getData().add(new XYChart.Data<>(currentDay, statistics.getAverageAnimalsEnergy()));
     }
 
     private void initializeCharts() {
         // Create series for animals
         XYChart.Series<Number, Number> animalSeries = new XYChart.Series<>();
-        animalSeries.setName("Animals");
         animalChart.getData().add(animalSeries);
 
         // Create series for grass
         XYChart.Series<Number, Number> grassSeries = new XYChart.Series<>();
-        grassSeries.setName("Grass");
         grassChart.getData().add(grassSeries);
+
+        // energy
+        XYChart.Series<Number, Number> energySeries = new XYChart.Series<>();
+        energyChart.getData().add(energySeries);
     }
 
     public void displayGeneralStatistics(Statistics statistics) {
@@ -362,18 +382,26 @@ public class SimulationController implements MapChangeListener {
     @FXML
     public void onPauseClicked(ActionEvent actionEvent) {
         if (simulation != null) {
-            simulation.pause();
-            Platform.runLater(() -> pauseButton.setDisable(true));
-            Platform.runLater(() -> continueButton.setDisable(false));
+            synchronized (simulationLock) {
+                simulation.pause();
+                Platform.runLater(() -> {
+                    pauseButton.setDisable(true);
+                    continueButton.setDisable(false);
+                });
+            }
         }
     }
 
     @FXML
     public void onContinueClicked(ActionEvent actionEvent) {
         if (simulation != null) {
-            simulation.start();
-            Platform.runLater(() -> pauseButton.setDisable(false));
-            Platform.runLater(() -> continueButton.setDisable(true));
+            synchronized (simulationLock) {
+                simulation.start();
+                Platform.runLater(() -> {
+                    pauseButton.setDisable(false);
+                    continueButton.setDisable(true);
+                });
+            }
         }
     }
     public void initializeSimulation() {
@@ -406,7 +434,7 @@ public class SimulationController implements MapChangeListener {
         showGeneralStatistics();
         prefPos = simulation.getPreferedPositions();
 
-        if (simulationProperties.getCSV() == 1)
+        if (Objects.equals(simulationProperties.getCSV(), "Yes"))
         {
             exportDailyStatisticsBool = true;
         }
@@ -432,7 +460,7 @@ public class SimulationController implements MapChangeListener {
             return;
         }
 
-        String projectPath = System.getProperty("user.dir") + "/PO_2024_PN1830_ARNAUTOV_WISNIEWSKI";
+        String projectPath = System.getProperty("user.dir");
         String filename = "General_Statistics_" + worldMap.getId() + ".csv";
         String filePath = projectPath + "/CSV/GeneralStatistics/" + filename;
 
@@ -445,15 +473,12 @@ public class SimulationController implements MapChangeListener {
         boolean fileExist = csvFile.exists();
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
-//            System.out.println("Writing to CSV: " + filePath);
             if (!fileExist) {
                 CSV.writeCSVHeader(writer);
             }
             CSV.fillStatisticsDay(writer, worldMap.getId(), statistics);
-//            System.out.println("Finished writing to CSV.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

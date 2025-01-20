@@ -19,45 +19,45 @@
                 <!-- Parameter Inputs -->
                 <VBox >
                     <Label text="Set width of the map" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="widthSpinner" editable="True" initialValue="10" max="25" min="8" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="widthSpinner"  initialValue="10" max="25" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set height of the map" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="heightSpinner" editable="True" initialValue="10" max="25" min="8" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="heightSpinner" initialValue="10" max="25" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set starting number of plants" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="grassNumberSpinner" editable="True" initialValue="50" max="500" min="10" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="grassNumberSpinner"  initialValue="20" max="200" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set number of energy added with eating single plant" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="energyAdditionSpinner" editable="True" initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="energyAdditionSpinner"  initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
                     <Label text="Set number of plants which grew every day" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="plantRegenerationSpinner" editable="True" initialValue="10" max="25" min="1" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="plantRegenerationSpinner" initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
                     <Label text="Set the height of the equator" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="equatorHeightSpinner" editable="True" initialValue="2" max="5" min="1" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="equatorHeightSpinner"  initialValue="2" max="8" min="1" styleClass="pixel-spinner"/>
                     <Label text="Set maximal energy" styleClass="pixel-spinner" />
-                    <Spinner fx:id="maxEnergySpinner" editable="True" initialValue="10" max="100" min="5" styleClass="pixel-spinner" />
+                    <Spinner fx:id="maxEnergySpinner" initialValue="50" max="500" min="5" styleClass="pixel-spinner" />
                     <Label text="Set energy used for single move" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="moveEnergySpinner" editable="True" initialValue="2" max="10" min="1" styleClass="pixel-spinner" />
+                    <Spinner fx:id="moveEnergySpinner" initialValue="2" max="10" min="1" styleClass="pixel-spinner" />
                     <Label text="Save simulation statistics to CSV?" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="CSVSpinner" initialValue="0" min="0" max="1" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="CSVSpinner" styleClass="pixel-spinner"/>
                 </VBox>
             </VBox>
 
             <VBox>
                 <Label text="Set number of Animals" styleClass="pixel-spinner"/>
-                <Spinner fx:id="numberOfAnimalsSpinner" editable="True" initialValue="25" max="50" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="numberOfAnimalsSpinner" initialValue="15" max="100" min="1" styleClass="pixel-spinner"/>
                 <Label text="Set number of starting energy for Animals" styleClass="pixel-spinner" />
-                <Spinner fx:id="startingAnimalEnergySpinner" editable="True" initialValue="50" max="500" min="10" styleClass="pixel-spinner"/>
+                <Spinner fx:id="startingAnimalEnergySpinner" initialValue="50" max="500" min="10" styleClass="pixel-spinner"/>
                 <Label text="Set number of energy needed for reproduction" styleClass="pixel-spinner"/>
-                <Spinner fx:id="energuNeededForReproductionSpinner" editable="True" initialValue="25" max="50" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="energuNeededForReproductionSpinner" initialValue="25" max="150" min="2" styleClass="pixel-spinner"/>
                 <Label text="Set the energy that animals lose by reproduction" styleClass="pixel-spinner"/>
-                <Spinner fx:id="energyLosingWithReproductionSpinner" editable="True" initialValue="25" max="50" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="energyLosingWithReproductionSpinner" initialValue="25" max="50" min="2" styleClass="pixel-spinner"/>
                 <Label text="Set minimal number of mutations with reproduction" styleClass="pixel-spinner" />
-                <Spinner fx:id="minGenMutationsSpinner" editable="True" initialValue="3" max="10" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="minGenMutationsSpinner" initialValue="3" max="10" min="1" styleClass="pixel-spinner"/>
                 <Label text="Set maximal number of mutations with reproduction" styleClass="pixel-spinner"/>
-                <Spinner fx:id="maxGenMutationsSpinner" editable="True" initialValue="7" max="10" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="maxGenMutationsSpinner" initialValue="7" max="10" min="1" styleClass="pixel-spinner"/>
                 <Label text="Set variant of the mutation" styleClass="pixel-spinner"/>
-                <Spinner fx:id="mutationTypeSpinner" editable="True" styleClass="pixel-spinner"/>
+                <Spinner fx:id="mutationTypeSpinner" styleClass="pixel-spinner"/>
                 <Label text="Set variant of the map" styleClass="pixel-spinner"/>
-                <Spinner fx:id="mapTypeSpinner" editable="True" styleClass="pixel-spinner"/>
+                <Spinner fx:id="mapTypeSpinner" styleClass="pixel-spinner"/>
                 <Label text="Set length of the genome" styleClass="pixel-spinner"/>
-                <Spinner fx:id="genomLengthSpinner" editable="True" initialValue="8" max="10" min="2" styleClass="pixel-spinner"/>
+                <Spinner fx:id="genomLengthSpinner" initialValue="5" max="10" min="2" styleClass="pixel-spinner"/>
             </VBox>
         </HBox>
     </top>
