@@ -3,14 +3,9 @@ package agh.ics.oop.model.mapElements;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.model.enums.ElementType;
 
-public class EmptyCell implements WorldElement {
-    private final Vector2d position;
-    public EmptyCell(Vector2d position) {
-        this.position = position;
-    }
-    @Override
-    public Vector2d getPosition() {
-        return position;
+public class EmptyCell extends WorldElementAbstract {
+    public EmptyCell(Vector2d pos) {
+        super(pos);
     }
     @Override
     public String toString() {
@@ -20,6 +15,7 @@ public class EmptyCell implements WorldElement {
     public String getImageResource() {
         return "empty.png";
     }
+    @Override
     public ElementType getType() {
         return ElementType.EMPTY_CELL;
     }

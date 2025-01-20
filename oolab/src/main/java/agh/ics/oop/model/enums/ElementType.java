@@ -5,5 +5,6 @@ public enum ElementType {
     ANIMAL,
     OWLBEAR,
     PREFERRED_CELL,
+    GENOTYPE_CELL,
     EMPTY_CELL
 }

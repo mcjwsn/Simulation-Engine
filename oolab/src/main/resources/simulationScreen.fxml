@@ -86,8 +86,6 @@
                     <Label fx:id="animalInfoLabelAge" styleClass="single-animal-stats-label"/>
                     <Label text="DeathDate" styleClass="single-animal-stats-values"/>
                     <Label fx:id="animalInfoLabelDeathDate" styleClass="single-animal-stats-label"/>
-                    <Label text="Number of ancestors" styleClass="single-animal-stats-values"/>
-                    <Label fx:id="animalAncestors" styleClass="single-animal-stats-label"/>
                 </VBox>
             </VBox>
 

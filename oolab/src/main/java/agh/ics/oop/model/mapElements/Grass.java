@@ -3,29 +3,15 @@ package agh.ics.oop.model.mapElements;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.model.enums.ElementType;
 
-public class Grass implements WorldElement {
-    private Vector2d position;
 
-    public Grass(Vector2d position) {
-        this.position = position;
+public class Grass extends WorldElementAbstract {
+    public Grass(Vector2d pos) {
+        super(pos);
     }
-
     @Override
-    public Vector2d getPosition() {
-        return position;
-    }
-
+    public String toString() {return "*";}
     @Override
-    public String toString() {
-        return "*";
-    }
-
+    public String getImageResource() {return "grassmix.jpg";}
     @Override
-    public String getImageResource() {
-        return "grassmix.jpg";
-    }
-
-    public ElementType getType() {
-        return ElementType.GRASS;
-    }
+    public ElementType getType() {return ElementType.GRASS;}
 }
