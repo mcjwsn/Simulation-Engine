@@ -1,8 +1,12 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.model.Enums.ElementType;
-import agh.ics.oop.model.Enums.MapDirection;
-import agh.ics.oop.model.Enums.MoveDirection;
+import agh.ics.oop.model.util.Genes;
+import agh.ics.oop.simulation.SimulationProperties;
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.enums.ElementType;
+import agh.ics.oop.model.enums.MapDirection;
+import agh.ics.oop.model.enums.MoveDirection;
+import agh.ics.oop.model.maps.OwlBearMap;
 
 public class OwlBear implements WorldElement {
     private Vector2d position;

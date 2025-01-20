@@ -1,6 +1,9 @@
-package agh.ics.oop;
+package agh.ics.oop.simulation;
 
-import agh.ics.oop.model.*;
+import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.maps.AbstractWorldMap;
+import agh.ics.oop.model.util.RandomPositionGenerator;
+import agh.ics.oop.model.util.Vector2d;
 
 import java.util.*;
 

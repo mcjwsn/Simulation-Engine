@@ -1,11 +1,10 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.SimulationApp;
-import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.Enums.MovinType;
-import agh.ics.oop.model.Enums.MutationType;
-import agh.ics.oop.model.SimulationProperties;
-import agh.ics.oop.model.util.CSV;
+import agh.ics.oop.simulation.SimulationApp;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.enums.MovinType;
+import agh.ics.oop.model.enums.MutationType;
+import agh.ics.oop.simulation.SimulationProperties;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;

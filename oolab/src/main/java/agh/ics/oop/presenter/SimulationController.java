@@ -1,22 +1,23 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.Simulation;
-import agh.ics.oop.Statistics;
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.util.CSV;
-import agh.ics.oop.model.util.ConvertUtils;
+import agh.ics.oop.model.mapElements.*;
+import agh.ics.oop.model.util.*;
+import agh.ics.oop.simulation.Simulation;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.maps.AbstractWorldMap;
+import agh.ics.oop.model.maps.GrassField;
+import agh.ics.oop.model.maps.OwlBearMap;
+import agh.ics.oop.model.maps.WorldMap;
+import agh.ics.oop.simulation.SimulationEngine;
+import agh.ics.oop.simulation.SimulationProperties;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 import java.io.File;

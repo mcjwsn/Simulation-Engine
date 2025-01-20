@@ -1,6 +1,5 @@
 package agh.ics.oop.model.util;
 
-import agh.ics.oop.Statistics;
 import java.io.PrintWriter;
 import java.util.List;
 

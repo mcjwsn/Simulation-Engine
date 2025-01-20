@@ -1,9 +1,14 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.maps;
 
-import agh.ics.oop.Simulation;
-import agh.ics.oop.Statistics;
-import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.simulation.Simulation;
+import agh.ics.oop.model.util.Statistics;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.mapElements.Grass;
+import agh.ics.oop.model.mapElements.WorldElement;
 import agh.ics.oop.model.util.*;
+import agh.ics.oop.simulation.SimulationProperties;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;

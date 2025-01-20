@@ -1,10 +1,14 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.maps;
 
-import agh.ics.oop.model.Enums.MapType;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.mapElements.Grass;
+import agh.ics.oop.simulation.SimulationProperties;
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.mapElements.WorldElement;
 import agh.ics.oop.model.util.*;
 import java.util.*;
 
-public class GrassField extends AbstractWorldMap{
+public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Grass> mapOfGrass = grass;
 
     public GrassField(SimulationProperties simulationProperties) {

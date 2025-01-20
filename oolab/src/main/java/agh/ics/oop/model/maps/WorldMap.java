@@ -1,5 +1,8 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.maps;
 
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.mapElements.WorldElement;
+import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.util.*;
 
 import java.util.List;

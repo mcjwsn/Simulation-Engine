@@ -1,6 +1,5 @@
-package agh.ics.oop;
+package agh.ics.oop.simulation;
 
-import agh.ics.oop.model.*;
 import agh.ics.oop.presenter.SettingsScreenControler;
 import agh.ics.oop.presenter.SimulationController;
 import agh.ics.oop.presenter.StartScreenController;

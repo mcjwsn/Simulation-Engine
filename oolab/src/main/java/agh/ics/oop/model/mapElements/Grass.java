@@ -1,8 +1,9 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.model.Enums.ElementType;
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.enums.ElementType;
 
-public class Grass implements WorldElement{
+public class Grass implements WorldElement {
     private Vector2d position;
 
     public Grass(Vector2d position) {

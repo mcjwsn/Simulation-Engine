@@ -1,6 +1,8 @@
-package agh.ics.oop.model;
-import agh.ics.oop.model.Enums.ElementType;
-public class popGenotypeCell implements WorldElement{
+package agh.ics.oop.model.mapElements;
+import agh.ics.oop.model.enums.ElementType;
+import agh.ics.oop.model.util.Vector2d;
+
+public class popGenotypeCell implements WorldElement {
     private Vector2d position;
     public popGenotypeCell(Vector2d position) {
         this.position = position;

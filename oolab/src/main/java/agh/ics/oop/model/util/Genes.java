@@ -1,7 +1,9 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.util;
 
-import agh.ics.oop.model.Enums.MoveDirection;
-import agh.ics.oop.model.Enums.MutationType;
+import agh.ics.oop.model.enums.MoveDirection;
+import agh.ics.oop.model.enums.MutationType;
+import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.simulation.SimulationProperties;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,15 @@
-package agh.ics.oop.model;
-import agh.ics.oop.model.Enums.MapType;
+package agh.ics.oop.model.maps;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.mapElements.Grass;
+import agh.ics.oop.model.mapElements.OwlBear;
+import agh.ics.oop.model.mapElements.WorldElement;
 import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.simulation.SimulationProperties;
 
 import java.util.*;
 
-public class OwlBearMap extends AbstractWorldMap{
+public class OwlBearMap extends AbstractWorldMap {
     private final Map<Vector2d, Grass> mapOfGrass = grass;
     private OwlBear owlBear;
     private Vector2d lowerLeftBoundary;

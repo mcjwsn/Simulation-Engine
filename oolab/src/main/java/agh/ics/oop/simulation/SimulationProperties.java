@@ -1,9 +1,8 @@
-package agh.ics.oop.model;
+package agh.ics.oop.simulation;
 
-import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.Enums.MovinType;
-import agh.ics.oop.model.Enums.MutationType;
-import agh.ics.oop.presenter.WorldElementBox;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.enums.MovinType;
+import agh.ics.oop.model.enums.MutationType;
 
 public class SimulationProperties {
     private int width;

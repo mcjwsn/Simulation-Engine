@@ -1,16 +1,19 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.model.Enums.ElementType;
-import agh.ics.oop.model.Enums.MapDirection;
-import agh.ics.oop.model.Enums.MapType;
-import agh.ics.oop.model.Enums.MovinType;
+import agh.ics.oop.simulation.SimulationProperties;
+import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.enums.ElementType;
+import agh.ics.oop.model.enums.MapDirection;
+import agh.ics.oop.model.enums.MapType;
+import agh.ics.oop.model.enums.MovinType;
+import agh.ics.oop.model.maps.AbstractWorldMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static agh.ics.oop.model.Genes.getStartingGenes;
+import static agh.ics.oop.model.util.Genes.getStartingGenes;
 
 public class Animal implements WorldElement {
     // glowne atrybuty animala
