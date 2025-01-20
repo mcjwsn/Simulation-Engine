@@ -30,20 +30,6 @@ public class Statistics {
         this.averageChildAmount = averageChildAmount;
         this.freeFieldsAmount = freeFieldsAmount;
     }
-
-//    public void setStatisticsParameters(int animalCount, int plantsCount, int freeFieldsCount,
-//                                       List<List<Integer>> mostPopularGenotype, double averageAnimalEnergy,
-//                                       double lifeExpectancy, double averageChildCount, int dayCount) {
-//        this.animalAmount = animalAmount;
-//        this.plantsAmount = plantsAmount;
-//        this.freeFieldsAmount = freeFieldsAmount;
-//        this.theMostPopularGenotypes = theMostPopularGenotypes;
-//        this.averageAnimalsEnergy = averageAnimalsEnergy;
-//        this.averageLifespan = averageLifespan;
-//        this.averageChildAmount = averageChildAmount;
-//        this.daysPassed = daysPassed;
-//    }
-
     public int getAnimalAmount() {
         return animalAmount;
     }

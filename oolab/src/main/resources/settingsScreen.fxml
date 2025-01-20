@@ -23,7 +23,7 @@
                     <Label text="Set height of the map" styleClass="pixel-spinner"/>
                     <Spinner fx:id="heightSpinner" initialValue="10" max="25" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set starting number of plants" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="grassNumberSpinner"  initialValue="50" max="200" min="5" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="grassNumberSpinner"  initialValue="20" max="200" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set number of energy added with eating single plant" styleClass="pixel-spinner"/>
                     <Spinner fx:id="energyAdditionSpinner"  initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
                     <Label text="Set number of plants which grew every day" styleClass="pixel-spinner"/>

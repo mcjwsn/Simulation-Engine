@@ -4,5 +4,6 @@ public enum ElementType {
     GRASS,
     ANIMAL,
     OWLBEAR,
-    PREFERRED_CELL
+    PREFERRED_CELL,
+    EMPTY_CELL
 }

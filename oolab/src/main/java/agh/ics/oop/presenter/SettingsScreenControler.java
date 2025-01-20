@@ -291,7 +291,7 @@ public class SettingsScreenControler {
         SpinnerValueFactory<String> optionsCSV = new SpinnerValueFactory.ListSpinnerValueFactory<>(
                 javafx.collections.FXCollections.observableArrayList("Yes", "No"));
         CSVSpinner.setValueFactory(optionsCSV);
-        optionsCSV.setValue("Yes");
+        optionsCSV.setValue("No");
 
 
         // Initialize MapType spinner

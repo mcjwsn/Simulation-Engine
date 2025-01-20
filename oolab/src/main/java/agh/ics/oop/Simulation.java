@@ -27,8 +27,8 @@ public class Simulation implements Runnable {
         simulationManager = new SimulationManager(map, simulationProperties, this);
 
         RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(
-                simulationProperties.getMapWidth(),
                 simulationProperties.getMapHeight(),
+                simulationProperties.getMapWidth(),
                 simulationProperties.getStartAnimalNumber()
         );
         for (Vector2d animalPosition : randomPositionGeneratorAnimals) {
@@ -65,7 +65,7 @@ public class Simulation implements Runnable {
                     simulationManager.Update();
                 }
                 try {
-                    Thread.sleep(500); // Simulation update delay
+                    Thread.sleep(200); // Simulation update delay
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

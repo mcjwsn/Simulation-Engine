@@ -92,7 +92,24 @@ public class SimulationController implements MapChangeListener {
     private Button showFields;
     @FXML
     private VBox statsBox;
-
+    @FXML
+    private Label animalInfoLabelGenome;
+    @FXML
+    private Label animalInfoLabelGenomeIndex;
+    @FXML
+    private Label animalInfoLabelEnergy;
+    @FXML
+    private Label animalInfoLabelGrassEaten;
+    @FXML
+    private Label animalInfoLabelChildrenAmount;
+    @FXML
+    private Label animalInfoLabelPosition;
+    @FXML
+    private Label animalInfoLabelAge;
+    @FXML
+    private Label animalInfoLabelDeathDate;
+    @FXML
+    private VBox selectedAnimalStats;
     private final Object simulationLock = new Object();
     private volatile boolean uiUpdated = false;
 
@@ -123,7 +140,7 @@ public class SimulationController implements MapChangeListener {
     }
 
     public void addElements() {
-        Integer size = (int) (500/Math.max(simulationProperties.getMapHeight(),simulationProperties.getMapWidth()))+1;
+        Integer size = (int) (500/Math.max(simulationProperties.getMapHeight(),simulationProperties.getMapWidth()))-2;
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d position = new Vector2d(i, j);
@@ -204,30 +221,14 @@ public class SimulationController implements MapChangeListener {
                         emptyPreferredBox.setPreferred(true);
                         mapGrid.add(emptyPreferredBox, i - xMin + 1, yMax - j + 1);
                     } else {
-                        mapGrid.add(new Label(" "), i - xMin + 1, yMax - j + 1);
+                        EmptyCell back = new EmptyCell(position);
+                        WorldElementBox emptyBox = new WorldElementBox(back,size);
+                        mapGrid.add(emptyBox, i - xMin + 1, yMax - j + 1);
                     }
                 }
             }
         }
     }
-    @FXML
-    private Label animalInfoLabelGenome;
-    @FXML
-    private Label animalInfoLabelGenomeIndex;
-    @FXML
-    private Label animalInfoLabelEnergy;
-    @FXML
-    private Label animalInfoLabelGrassEaten;
-    @FXML
-    private Label animalInfoLabelChildrenAmount;
-    @FXML
-    private Label animalInfoLabelPosition;
-    @FXML
-    private Label animalInfoLabelAge;
-    @FXML
-    private Label animalInfoLabelDeathDate;
-    @FXML
-    private VBox selectedAnimalStats;
 
     private void showAnimalInfo(WorldElement worldElement) {
         selectedAnimalStats.setVisible(true);

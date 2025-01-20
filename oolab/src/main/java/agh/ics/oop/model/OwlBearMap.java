@@ -82,8 +82,8 @@ public class OwlBearMap extends AbstractWorldMap{
         double submapArea = mapWidth * mapHeight * 0.2;
         int sideLength = (int) Math.sqrt(submapArea);
 
-        int maxX = mapWidth - sideLength;
-        int maxY = mapHeight - sideLength;
+        int maxX = mapHeight - sideLength;
+        int maxY = mapWidth - sideLength;
 
         if (maxX < 0 || maxY < 0) {
             throw new IllegalArgumentException("Map too small for 20% submap");

@@ -23,6 +23,22 @@ HBox {
     -fx-cursor: hand; /* Zmiana kursora na rękę */
     -fx-alignment: center; /* Wyśrodkowanie tekstu */
 }
+.pixel-start-button{
+    -fx-background-color: #4caf50; /* Zielony kolor */
+    -fx-text-fill: white; /* Biały tekst */
+    -fx-font-family: 'Press Start 2P', monospace; /* Pikselowy styl */
+    -fx-font-size: 17px; /* Wielkość tekstu */
+    -fx-padding: 10 20; /* Wewnątrz przycisku */
+    -fx-border-color: #2d6a35; /* Obrys */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px; /* Delikatne zaokrąglenie */
+    -fx-effect: dropshadow(gaussian, #2d6a35, 3, 0.5, 3, 3); /* Pikselowy cień */
+    -fx-background-radius: 5px; /* Dopasowanie zaokrąglenia */
+    -fx-cursor: hand; /* Zmiana kursora na rękę */
+    -fx-alignment: center; /* Wyśrodkowanie tekstu */
+    -fx-pref-width: 130;
+    -fx-pref-height: 60;
+}
 
 .pixel-button:hover {
     -fx-background-color: #3e8e41; /* Ciemniejszy zielony */
@@ -228,4 +244,10 @@ HBox {
 }
 .animal-chart, .grass-chart, .energy-chart {
     -fx-background-color: #f0f0f0; /* Kolor tła wykresu na szary */
+}
+
+.mapGrid{
+    -fx-background-color: #00FF01;
+    -fx-border-color: black;
+    -fx-border-width: 7;
 }

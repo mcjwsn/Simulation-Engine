@@ -46,7 +46,7 @@
             <VBox spacing="10" style="-fx-background-color: #55a855">
                 <!-- General Stats -->
                 <VBox fx:id="statsBox" alignment="TOP_LEFT">
-                    <Label text="Statistics" styleClass="stats-buton"/>
+                    <Label text="All Animals Statistics" styleClass="stats-buton"/>
                     <Label text="Animals amount:" styleClass="stats-label"/>
                     <Label fx:id="generalAllAnimalsLabel" text="0" styleClass="stats-values" />
                     <Label text="Total number of grasses:" styleClass="stats-label"/>
@@ -89,7 +89,7 @@
 
             <!-- Right section - Map Grid -->
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                <GridPane fx:id="mapGrid"  minHeight="500" minWidth="500" alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: #00FF01;" VBox.vgrow="ALWAYS">
+                <GridPane fx:id="mapGrid"  minHeight="600" minWidth="600" alignment="CENTER" styleClass="mapGrid" gridLinesVisible="true" VBox.vgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints />
                     </columnConstraints>

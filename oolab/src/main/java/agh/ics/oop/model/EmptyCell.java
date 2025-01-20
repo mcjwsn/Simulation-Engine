@@ -1,8 +1,10 @@
 package agh.ics.oop.model;
+
 import agh.ics.oop.model.Enums.ElementType;
-public class popGenotypeCell implements WorldElement{
-    private Vector2d position;
-    public popGenotypeCell(Vector2d position) {
+
+public class EmptyCell implements WorldElement {
+    private final Vector2d position;
+    public EmptyCell(Vector2d position) {
         this.position = position;
     }
     @Override
@@ -11,13 +13,13 @@ public class popGenotypeCell implements WorldElement{
     }
     @Override
     public String toString() {
-        return "+";
+        return " ";
     }
     @Override
     public String getImageResource() {
-        return "try.png";
+        return "empty.png";
     }
     public ElementType getType() {
-        return ElementType.PREFERRED_CELL;
+        return ElementType.EMPTY_CELL;
     }
 }

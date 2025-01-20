@@ -13,6 +13,6 @@
             style="-fx-background-image: url('icon.jpg');
                    -fx-background-repeat: no-repeat;
                    -fx-background-size: cover;">
-    <Button fx:id="startButton" text="Start" onAction="#onStartClicked" styleClass="pixel-button"
+    <Button fx:id="startButton" text="Start" onAction="#onStartClicked" styleClass="pixel-start-button"
             layoutX="338.0" layoutY="320.0" />
 </AnchorPane>
