@@ -73,7 +73,7 @@ public class Simulation implements Runnable {
                     Thread.currentThread().interrupt();
                 }
             } else {
-                stop(); // Stop the simulation if there are no animals left
+                stop();
             }
         }
     }
@@ -86,16 +86,16 @@ public class Simulation implements Runnable {
             simulationThread.start();
         } else if (isPaused) {
             isPaused = false;
-            notify(); // Resume the simulation thread
+            notify();
         }
     }
 
     public synchronized void pause() {
-        isPaused = true; // Pause the simulation
+        isPaused = true;
     }
 
     public synchronized void stop() {
-        isRunning = false; // Stop the simulation
+        isRunning = false;
         if (simulationThread != null && simulationThread.isAlive()) {
             simulationThread.interrupt();
         }
@@ -105,14 +105,6 @@ public class Simulation implements Runnable {
         animals.add(animal);
         int[] genome = animal.getGenome();
         genesCount.merge(genome, 1, Integer::sum);
-    }
-
-    public Map<int[], Integer> getGenomeNumber() {
-        return genesCount;
-    }
-
-    public Integer getAliveAnimalsNumber() {
-        return animals.size();
     }
 
     public int getDays() {

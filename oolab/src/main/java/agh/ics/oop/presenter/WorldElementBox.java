@@ -21,37 +21,20 @@ public class WorldElementBox extends VBox {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-    public WorldElementBox(WorldElement element, int size) {
+    public WorldElementBox(Object element, int size) {
         this.cellSize = size;
         initializeBox();
-        updateImage(element);
+
+        switch (element) {
+            case GenotypeCell genotypeCell -> updateGenotypeCell(genotypeCell);
+            case PrefferdCell prefferdCell -> updatePreferredCell(prefferdCell);
+            case EmptyCell emptyCell -> updateEmptyCell(emptyCell);
+            case Animal animal -> updateAnimal(animal, false);
+            case WorldElement worldElement -> updateImage(worldElement);
+            case null, default -> throw new IllegalArgumentException("Unsupported element type: " + element.getClass());
+        }
     }
 
-    public WorldElementBox(PrefferdCell element, int size) {
-        this.cellSize = size;
-        initializeBox();
-        updatePreferredCell(element);
-    }
-
-    public WorldElementBox(EmptyCell element, int size) {
-        this.cellSize = size;
-        initializeBox();
-        updateEmptyCell(element);
-    }
-
-    public WorldElementBox(Animal animal, int size) {
-        this.cellSize = size;
-        initializeBox();
-        updateAnimal(animal, false);
-    }
-
-    public WorldElementBox(GenotypeCell cell, int size) {
-        this.cellSize = size;
-        initializeBox();
-        updateGenotypeCell(cell);
-    }
-
-    // Inicjalizacja podstawowych właściwości boxa
     private void initializeBox() {
         this.setMinSize(cellSize, cellSize);
         this.setMaxSize(cellSize, cellSize);
@@ -60,35 +43,28 @@ public class WorldElementBox extends VBox {
         this.setSpacing(2);
     }
 
-    // Metody aktualizacji obrazów
     public void updateImage(WorldElement element) {
         this.getChildren().clear();
-        if (element instanceof Animal) {
-            updateAnimal((Animal) element, false);
-        } else if (element instanceof Grass) {
-            updateGrass((Grass) element);
-        } else if (element instanceof OwlBear) {
-            updateOwlBear((OwlBear) element);
-        } else if (element instanceof EmptyCell) {
-            updateEmptyCell((EmptyCell) element);
-        } else if (element instanceof PrefferdCell) {
-            updatePreferredCell((PrefferdCell) element);
+        switch (element) {
+            case Animal animal -> updateAnimal(animal, false);
+            case Grass grass -> updateGrass(grass);
+            case OwlBear owlBear -> updateOwlBear(owlBear);
+            case EmptyCell emptyCell -> updateEmptyCell(emptyCell);
+            case PrefferdCell prefferdCell -> updatePreferredCell(prefferdCell);
+            default -> throw new IllegalArgumentException("Unsupported element type: " + element.getClass());
         }
     }
 
     public void updateAnimal(Animal animal, boolean isTracked) {
         this.getChildren().clear();
 
-        // Kontener dla obrazu zwierzęcia i paska energii
         VBox container = new VBox(2);
         container.setAlignment(Pos.CENTER);
 
-        // Główny obraz zwierzęcia
         String imageResource = isTracked ? animal.getTrackedDownAnimalImageResource() : animal.getImageResource();
         ImageView mainImage = createImageView(imageResource, cellSize * MAIN_IMAGE_SCALE);
         container.getChildren().add(mainImage);
 
-        // Dodaj pasek energii tylko jeśli to nie jest OwlBear
             ImageView energyBar = createImageView(animal.getEnergyLevelResource(), cellSize * ENERGY_BAR_SCALE);
             energyBar.setPreserveRatio(false);
             energyBar.setFitHeight(cellSize * ENERGY_BAR_SCALE * 0.3);
@@ -134,7 +110,6 @@ public class WorldElementBox extends VBox {
         this.getChildren().add(imageView);
     }
 
-    // Metoda pomocnicza do tworzenia ImageView
     private ImageView createImageView(String resourcePath, double size) {
         Image image = getImage(resourcePath);
         ImageView imageView = new ImageView(image);
@@ -144,7 +119,6 @@ public class WorldElementBox extends VBox {
         return imageView;
     }
 
-    // Obsługa preferowanych pól
     private boolean isPreferred = false;
 
     public void setPreferred(boolean preferred) {
