@@ -29,7 +29,6 @@ public class SettingsScreenControler {
     @FXML
     private Spinner<Integer> energyAdditionSpinner;
     @FXML
-    // uzależnić od liczby zwierzakow i mapy
     private Spinner<Integer> plantRegenerationSpinner;
     @FXML
     private Spinner<Integer> numberOfAnimalsSpinner;
@@ -61,14 +60,13 @@ public class SettingsScreenControler {
 
         int mapWidth = widthSpinner.getValue()-1;
         int mapHeight = heightSpinner.getValue()-1;
-        int equatorHeight = equatorHeightSpinner.getValue();
-        equatorHeight = Math.min(equatorHeight, mapWidth);
+        int equatorHeight = Math.min(equatorHeightSpinner.getValue(), mapWidth);
         int animalNumber = numberOfAnimalsSpinner.getValue();
-        int grassNumber = grassNumberSpinner.getValue();
+        int grassNumber = Math.min(grassNumberSpinner.getValue(),mapHeight*mapWidth);
         int grassEnergy = energyAdditionSpinner.getValue();
-        int dailySpawningGrass = plantRegenerationSpinner.getValue();
-        int startEnergy = startingAnimalEnergySpinner.getValue();
+        int dailySpawningGrass = Math.min(plantRegenerationSpinner.getValue(),mapHeight*mapWidth);
         int maxEnergy = maxEnergySpinner.getValue();
+        int startEnergy = Math.min(startingAnimalEnergySpinner.getValue(), maxEnergy);
         MovinType movingType = MovinType.DEFAULT;
         MutationType mutationType = mutationTypeSpinner.getValue();
         MapType mapType = mapTypeSpinner.getValue();
@@ -77,7 +75,7 @@ public class SettingsScreenControler {
         int energyLevelToPassToChild = energyLosingWithReproductionSpinner.getValue();
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
-        int maxMutation = maxGenMutationsSpinner.getValue();
+        int maxMutation = Math.max(maxGenMutationsSpinner.getValue(),minMutation);
         String CSV = CSVSpinner.getValue();
         initialize();
 
@@ -140,7 +138,7 @@ public class SettingsScreenControler {
             writer.println("EnergyLosingWithReproduction," + energyLosingWithReproductionSpinner.getValue());
             writer.println("MinGenMutations," + minGenMutationsSpinner.getValue());
             writer.println("MaxGenMutations," + maxGenMutationsSpinner.getValue());
-            writer.println("GenomLength," + genomLengthSpinner.getValue());
+            writer.println("GenomeLength," + genomLengthSpinner.getValue());
             writer.println("MutationType," + mutationTypeSpinner.getValue());
             writer.println("MaxEnergy," + maxEnergySpinner.getValue());
             writer.println("MapType," + mapTypeSpinner.getValue());
@@ -256,7 +254,6 @@ public class SettingsScreenControler {
     }
     @FXML
     public void initialize() {
-        // Create StringConverter for MapType
         StringConverter<MapType> mapTypeConverter = new StringConverter<>() {
             @Override
             public String toString(MapType mapType) {
@@ -271,7 +268,6 @@ public class SettingsScreenControler {
             }
         };
 
-        // Create StringConverter for MutationType
         StringConverter<MutationType> mutationTypeConverter = new StringConverter<>() {
             @Override
             public String toString(MutationType mutationType) {
@@ -286,30 +282,23 @@ public class SettingsScreenControler {
             }
         };
 
-
         SpinnerValueFactory<String> optionsCSV = new SpinnerValueFactory.ListSpinnerValueFactory<>(
                 javafx.collections.FXCollections.observableArrayList("Yes", "No"));
         CSVSpinner.setValueFactory(optionsCSV);
         optionsCSV.setValue("No");
 
-
-        // Initialize MapType spinner
         SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE)
-        );
+                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE));
         mapTypeFactory.setConverter(mapTypeConverter);
         mapTypeSpinner.setValueFactory(mapTypeFactory);
-        mapTypeFactory.setValue(MapType.OWLBEAR); // Set default value
+        mapTypeFactory.setValue(MapType.OWLBEAR);
 
-        // Initialize MutationType spinner
         SpinnerValueFactory<MutationType> mutationTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                FXCollections.observableArrayList(MutationType.values())
-        );
+                FXCollections.observableArrayList(MutationType.values()));
         mutationTypeFactory.setConverter(mutationTypeConverter);
         mutationTypeSpinner.setValueFactory(mutationTypeFactory);
-        mutationTypeFactory.setValue(MutationType.values()[0]); // Set default value
+        mutationTypeFactory.setValue(MutationType.LITLLECHANGE);
 
-        // Disable editing to prevent invalid input
         mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
     }

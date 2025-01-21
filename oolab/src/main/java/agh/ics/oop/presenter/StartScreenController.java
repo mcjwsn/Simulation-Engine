@@ -20,12 +20,8 @@ public class StartScreenController implements MapChangeListener {
 
     @FXML
     public void onStartClicked() throws Exception {
-        // Pobierz aktualne okno z przycisku
         Stage currentStage = (Stage) startButton.getScene().getWindow();
-        // Zamknij aktualne okno
         currentStage.close();
-
-        // Otwórz nowe okno
         Stage newStage = new Stage();
         mainApp.showSettingsScreen(newStage);
     }

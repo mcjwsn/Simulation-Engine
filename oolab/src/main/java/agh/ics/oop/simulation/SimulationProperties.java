@@ -5,17 +5,19 @@ import agh.ics.oop.model.enums.MovinType;
 import agh.ics.oop.model.enums.MutationType;
 
 public class SimulationProperties {
+    // nie uzywamy final poniewaz teoretycznie kazdy element simulationProperties moglbym byc zadawany seterem
+    // np przy pozniejszym pisaniu testow
     private int width;
     private int height;
     private int animalNumber;
-    private int grassNumber; // poczatkowa liczba traw
+    private int grassNumber;
     private int dailySpawningGrass;
     private int startEnergy;
     private int maxEnergy;
     private int grassEnergy;
     private MapType mapType;
+    // zamiast equatora stale = 20%, w naszej impelementacji mozna go ustawiac
     private int equatorHeight;
-    private int plantType; // zalesione rowniki
     private MutationType mutationType;
     private int minMutation;
     private int maxMutation;
@@ -64,10 +66,6 @@ public class SimulationProperties {
 
     public Integer getMapHeight(){
         return height;
-    }
-
-    public void setMaxEnergy(int maxEnergy_){
-        maxEnergy = maxEnergy_;
     }
 
     public int getMaxEnergy(){
@@ -141,9 +139,11 @@ public class SimulationProperties {
     public void setMapWidth(int width){
         this.width = width;
     }
+
     public void setMapHeight(int height){
         this.height = height;
     }
+
     public void setGrassNumber(int grassNumber){
         this.grassNumber = grassNumber;
     }

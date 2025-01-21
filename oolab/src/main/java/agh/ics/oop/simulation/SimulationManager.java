@@ -11,25 +11,23 @@ import agh.ics.oop.model.maps.OwlBearMap;
 
 import java.util.*;
 
-
 public class SimulationManager {
     private final AbstractWorldMap map;
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
-    private Set<Vector2d> equatorField = new HashSet<>();
     private final Object updateLock = new Object();
 
-    private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
+    private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
     private static int DAILY_GRASS_NUMBER = 0;
 
     protected static final Random random = new Random();
 
-    public SimulationManager (AbstractWorldMap map_, SimulationProperties simulationProperties_, Simulation simulation_) {
+    public SimulationManager(AbstractWorldMap map_, SimulationProperties simulationProperties_, Simulation simulation_) {
         map = map_;
-        simulationProperties= simulationProperties_;
+        simulationProperties = simulationProperties_;
         simulation = simulation_;
         DAILY_GRASS_NUMBER = simulationProperties.getDailySpawningGrass();
         initializePositions(map);
@@ -61,16 +59,15 @@ public class SimulationManager {
         return preferred;
     }
 
-    // operacja podczas nowego dnia
     public void Update() {
         synchronized (updateLock) {
             deleteDeadAnimals();
             moveALlAnimals();
-            if(map.getMapType() == MapType.OWLBEAR) {
+            if (map.getMapType() == MapType.OWLBEAR) {
                 owlBearEat();
             }
             eat();
-            if(map.getMapType() == MapType.OWLBEAR) {
+            if (map.getMapType() == MapType.OWLBEAR) {
                 moveOwlBear();
                 owlBearEat();
             }
@@ -103,48 +100,46 @@ public class SimulationManager {
     private void deleteDeadAnimals() {
         Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
 
-        for(Animal animal : animalsToRemove) {
+        for (Animal animal : animalsToRemove) {
             if (animal.getEnergy() <= 0) {
-                animal.setDeathDate(simulationProperties.getDaysElapsed());
+                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
                 map.removeAnimal(animal);
                 simulation.getAnimals().remove(animal);
+                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
             }
         }
     }
 
     private void addAge() {
         simulationProperties.incrementDaysElapsed();
-        for(Animal animal : simulation.getAnimals()){
+        for (Animal animal : simulation.getAnimals()) {
             animal.addAge();
         }
     }
 
     private void moveALlAnimals() {
-        for(Animal animal : simulation.getAnimals()) {
+        for (Animal animal : simulation.getAnimals()) {
             map.move(animal);
             animal.removeEnergy(simulationProperties.getMoveEnergy());
         }
     }
 
-    private void moveOwlBear()
-    {
-        ((OwlBearMap)map).moveOwlBear();
+    private void moveOwlBear() {
+        ((OwlBearMap) map).moveOwlBear();
     }
 
-    private void owlBearEat()
-    {
+    private void owlBearEat() {
         Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
 
-        for(Animal animal : animalsToRemove) {
-            if (animal.getPosition().equals(((OwlBearMap)map).getOwlBearPosition()))
-            {
+        for (Animal animal : animalsToRemove) {
+            if (animal.getPosition().equals(((OwlBearMap) map).getOwlBearPosition())) {
                 animal.setDeathDate(simulationProperties.getDaysElapsed());
-                simulation.getAnimals().remove(animal);
+                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
                 map.removeAnimal(animal);
+                simulation.getAnimals().remove(animal);
             }
         }
     }
-
 
     public void reproduceAnimals() {
         for (Vector2d position : map.getAnimals().keySet()) {
@@ -154,8 +149,8 @@ public class SimulationManager {
                 Animal a2 = animalList.get(1);
                 if (a1.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce() &&
                         a2.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce()) {
-                    int[] getGenome = Genes.mixGenesFromParents(a1,a2,simulationProperties);
-                    Animal child = new Animal(position, simulationProperties,getGenome);
+                    int[] getGenome = Genes.mixGenesFromParents(a1, a2, simulationProperties);
+                    Animal child = new Animal(position, simulationProperties, getGenome);
                     synchronized (this) {
 
                         map.getAnimals().get(position).add(child);
@@ -168,9 +163,7 @@ public class SimulationManager {
                         a2.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
                         a2.increaseChildrenNumber();
                     }
-                } else {
                 }
-            } else {
             }
         }
     }
@@ -193,47 +186,42 @@ public class SimulationManager {
             }
         }
     }
-public void initializePositions(AbstractWorldMap map) {
-    int equatorHeight = simulationProperties.getEquatorHeight(); // The height of the equator
-    int width = map.getWidth();
-    int height = map.getHeight();
 
-    Set<Vector2d> preferred = new HashSet<>();
-    Set<Vector2d> lessPreferred = new HashSet<>();
+    public void initializePositions(AbstractWorldMap map) {
+        int equatorHeight = simulationProperties.getEquatorHeight(); // The height of the equator
+        int width = map.getWidth();
+        int height = map.getHeight();
 
-    // Calculate the start and end rows for the equator based on equatorHeight
-    int centerRow = width / 2; // The central row of the map
-    int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
-    int endEquatorRow = startEquatorRow + equatorHeight - 1;
+        Set<Vector2d> preferred = new HashSet<>();
+        Set<Vector2d> lessPreferred = new HashSet<>();
+        int centerRow = width / 2; // The central row of the map
+        int startEquatorRow = centerRow - ((equatorHeight - 1) / 2);
+        int endEquatorRow = startEquatorRow + equatorHeight - 1;
 
-    startEquatorRow = Math.max(startEquatorRow, 0);
-    endEquatorRow = Math.min(endEquatorRow, height - 1);
+        startEquatorRow = Math.max(startEquatorRow, 0);
+        endEquatorRow = Math.min(endEquatorRow, height - 1);
 
-    // Loop through all positions on the map
-    for (int x = 0; x <= height; x++) {
-        for (int y = 0; y <= width; y++) {
-            Vector2d position = new Vector2d(x, y);
-            if (y >= startEquatorRow && y <= endEquatorRow) {
-                preferred.add(position); // Positions within the equator
-            } else {
-                lessPreferred.add(position); // Positions outside the equator
+        for (int x = 0; x <= height; x++) {
+            for (int y = 0; y <= width; y++) {
+                Vector2d position = new Vector2d(x, y);
+                if (y >= startEquatorRow && y <= endEquatorRow) {
+                    preferred.add(position); // Positions within the equator
+                } else {
+                    lessPreferred.add(position); // Positions outside the equator
+                }
             }
         }
+        preferredPositions.clear();
+        preferredPositions.addAll(preferred);
+        lessPreferredPositions.clear();
+        lessPreferredPositions.addAll(lessPreferred);
     }
-
-    // Update the position sets
-    preferredPositions.clear();
-    preferredPositions.addAll(preferred);
-    lessPreferredPositions.clear();
-    lessPreferredPositions.addAll(lessPreferred);
-}
-
 
     public void generateGrass(int numberOfPlants) {
         for (int i = 0; i < numberOfPlants; i++) {
             double probability = random.nextDouble();
             Vector2d plantPosition;
-            if ((probability < PREFERRED_POSITION_PROBABILITY && !preferredPositions.isEmpty()) || (lessPreferredPositions.isEmpty()&& !preferredPositions.isEmpty())) {
+            if ((probability < PREFERRED_POSITION_PROBABILITY && !preferredPositions.isEmpty()) || (lessPreferredPositions.isEmpty() && !preferredPositions.isEmpty())) {
                 List<Vector2d> preferredList = new ArrayList<>(preferredPositions);
                 plantPosition = preferredList.get(random.nextInt(preferredList.size()));
                 preferredPositions.remove(plantPosition);
@@ -246,6 +234,7 @@ public void initializePositions(AbstractWorldMap map) {
             }
         }
     }
+
     public void growGrass() {
         generateGrass(DAILY_GRASS_NUMBER);
     }

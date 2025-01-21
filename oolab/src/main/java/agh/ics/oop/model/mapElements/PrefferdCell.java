@@ -4,7 +4,7 @@ import agh.ics.oop.model.enums.ElementType;
 import agh.ics.oop.model.util.Vector2d;
 
 
-public class PrefferdCell extends WorldElementAbstract {
+public class PrefferdCell extends AbstractWorldElement {
     public PrefferdCell(Vector2d pos) {
         super(pos);
     }

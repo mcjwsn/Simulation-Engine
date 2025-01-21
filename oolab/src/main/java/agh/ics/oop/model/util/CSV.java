@@ -28,5 +28,4 @@ public class CSV {
         }
         return ConvertUtils.convertGenotypeToString(genotypes);
     }
-
 }

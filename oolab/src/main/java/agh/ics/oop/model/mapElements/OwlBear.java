@@ -59,6 +59,7 @@ public class OwlBear implements WorldElement {
         return position.getX() >= lowerLeftBoundary.getX() && position.getX() <= upperRightBoundary.getX() &&
                 position.getY() >= lowerLeftBoundary.getY() && position.getY() <= upperRightBoundary.getY();
     }
+
     @Override
     public String getImageResource(){
         return "owlbear.png";

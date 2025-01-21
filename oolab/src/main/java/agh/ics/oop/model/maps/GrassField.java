@@ -32,9 +32,7 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public Boundary getCurrentBounds() {
-        Vector2d bottom = new Vector2d(0,0);
-        Vector2d top = new Vector2d(height,width);
-        return new Boundary(bottom, top);
+        return new Boundary(new Vector2d(0,0), new Vector2d(height,width));
     }
 
     @Override
