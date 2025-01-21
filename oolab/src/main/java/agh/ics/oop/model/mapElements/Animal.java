@@ -90,27 +90,6 @@ public class Animal implements WorldElement {
         return desc;
     }
 
-//    public int getDescendantsCount() {
-//        descendants.clear();
-//        for (Animal child : this.getChildren()) {
-//            descendants.add(child.getId());
-//        }
-//        getDescendants(this);
-//        return descendants.size();
-//    }
-//
-//    public void getDescendants(Animal animal) {
-//        if (animal.getChildren().isEmpty()) {
-//            return;
-//        }
-//        for (Animal child : animal.getChildren()) {
-//            if (descendants.add(child.getId())) {
-//                getDescendants(child);
-//            }
-//        }
-//    }
-
-
     @Override
     public String toString() {
         return String.valueOf(orientation);
@@ -166,7 +145,6 @@ public class Animal implements WorldElement {
         {
             this.energy = simulationProperties.getMaxEnergy();
         }
-
     }
 
     public void addAge(){
@@ -221,7 +199,16 @@ public class Animal implements WorldElement {
 
     @Override
     public String getImageResource() {
-        return "animal.png";
+        return switch (orientation) {
+            case NORTH -> "N.png";
+            case NORTHEAST -> "NE.png";
+            case EAST -> "E.png";
+            case SOUTHEAST -> "SE.png";
+            case SOUTH -> "S.png";
+            case SOUTHWEST -> "SW.png";
+            case WEST -> "W.png";
+            case NORTHWEST -> "NW.png";
+        };
     }
 
     public String getTrackedDownAnimalImageResource() {
