@@ -102,10 +102,9 @@ public class SimulationManager {
 
         for (Animal animal : animalsToRemove) {
             if (animal.getEnergy() <= 0) {
-                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
+                animal.setDeathDate(simulationProperties.getDaysElapsed());
                 map.removeAnimal(animal);
                 simulation.getAnimals().remove(animal);
-                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
             }
         }
     }
@@ -134,7 +133,6 @@ public class SimulationManager {
         for (Animal animal : animalsToRemove) {
             if (animal.getPosition().equals(((OwlBearMap) map).getOwlBearPosition())) {
                 animal.setDeathDate(simulationProperties.getDaysElapsed());
-                animal.setDeathDate(animal.getBirthDate() + animal.getAge());
                 map.removeAnimal(animal);
                 simulation.getAnimals().remove(animal);
             }
