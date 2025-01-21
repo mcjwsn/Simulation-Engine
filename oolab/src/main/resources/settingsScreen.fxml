@@ -19,9 +19,9 @@
                 <!-- Parameter Inputs -->
                 <VBox >
                     <Label text="Set width of the map" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="widthSpinner"  initialValue="10" max="25" min="5" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="widthSpinner"  initialValue="10" max="30" min="6" styleClass="pixel-spinner"/>
                     <Label text="Set height of the map" styleClass="pixel-spinner"/>
-                    <Spinner fx:id="heightSpinner" initialValue="10" max="25" min="5" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="heightSpinner" initialValue="10" max="30" min="6" styleClass="pixel-spinner"/>
                     <Label text="Set starting number of plants" styleClass="pixel-spinner"/>
                     <Spinner fx:id="grassNumberSpinner"  initialValue="20" max="200" min="5" styleClass="pixel-spinner"/>
                     <Label text="Set number of energy added with eating single plant" styleClass="pixel-spinner"/>
@@ -49,7 +49,7 @@
                 <Label text="Set the energy that animals lose by reproduction" styleClass="pixel-spinner"/>
                 <Spinner fx:id="energyLosingWithReproductionSpinner" initialValue="25" max="50" min="2" styleClass="pixel-spinner"/>
                 <Label text="Set minimal number of mutations with reproduction" styleClass="pixel-spinner" />
-                <Spinner fx:id="minGenMutationsSpinner" initialValue="3" max="10" min="1" styleClass="pixel-spinner"/>
+                <Spinner fx:id="minGenMutationsSpinner" initialValue="3" max="10" min="0" styleClass="pixel-spinner"/>
                 <Label text="Set maximal number of mutations with reproduction" styleClass="pixel-spinner"/>
                 <Spinner fx:id="maxGenMutationsSpinner" initialValue="7" max="10" min="1" styleClass="pixel-spinner"/>
                 <Label text="Set variant of the mutation" styleClass="pixel-spinner"/>

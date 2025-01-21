@@ -5,24 +5,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private List<Vector2d> positions = new ArrayList<>();
     final int size;
     public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
         size = grassCount;
-
         int[] indices = new int[maxHeight*maxWidth];
 
         for (int i = 0; i < maxHeight * maxWidth; i++)
             indices[i] = i;
-
-        Random r = new Random();
+        Random random = new Random();
 
         for (int i = maxHeight*maxWidth-1; i > maxHeight*maxWidth-size-2; i--) {
-
-            int j = r.nextInt(i);
-
+            int j = random.nextInt(i);
             int temp = indices[i];
             indices[i] = indices[j];
             indices[j] = temp;
@@ -37,11 +32,11 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     }
 
     public Vector2d getHead() {
-        return positions.get(0);
+        return positions.getFirst();
     }
 
     public Vector2d getTail() {
-        return positions.get(positions.size() - 1);
+        return positions.getLast();
     }
 
     public int getIndex(Vector2d pos) {

@@ -46,8 +46,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
      public void place(Vector2d animalPosition,Animal animal) {
-        //animals.computeIfAbsent(animal.getPosition(), pos -> new CopyOnWriteArrayList<>()).add(animal);
-        //notifyObservers("Animal placed at " + animal.getPosition());
         if (animals.containsKey(animalPosition)) {
             synchronized (this) {
                 animals.get(animalPosition).add(animal);
@@ -92,7 +90,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public Optional<WorldElement> objectAt(Vector2d position) {
         List<Animal> positionAnimals = animals.get(position);
         if (positionAnimals != null && !positionAnimals.isEmpty()) {
-            return Optional.ofNullable(positionAnimals.get(0));
+            return Optional.ofNullable(positionAnimals.getFirst());
         }
         return null;
     }
@@ -137,14 +135,12 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int getNumberOfGrasses() {
         return grass.size();}
 
-
     protected int getNumberOfFreeFields() {
         Set<Vector2d> usedPositions = new HashSet<>();
         usedPositions.addAll(animals.keySet());
         usedPositions.addAll(grass.keySet());
         return (width+1) * (height+1) - usedPositions.size();
     }
-
 
     @Override
     public List<Integer> getMostPopularGenotype() {
@@ -185,7 +181,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         {
             return 0;
         }
-
         int meanAge = 0;
         for(Animal animal : deadAnimals)
         {
@@ -207,18 +202,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         return (double)avgChildrenAmount/animalsList.size();
     }
-
-
-
-    public void removeObserver(MapChangeListener observer) {
-        observers.remove(observer);
-    }
-
-//    protected void notifyObservers(String message) {
-//        for (MapChangeListener observer : observers) {
-//            observer.mapChanged(this, message);
-//        }
-//    }
 
     @Override
     public String getId() {
@@ -260,7 +243,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     public HashMap<Vector2d, Grass> getPlants() { return grass; }
 
     public List<Vector2d> getFreePositionsForPlants() { return freePositionsForPlants; }
-
 
     public int getWidth() {
         return width;

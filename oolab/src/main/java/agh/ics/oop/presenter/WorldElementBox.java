@@ -15,14 +15,12 @@ public class WorldElementBox extends VBox {
     private static final Map<String, Image> imageCache = new HashMap<>();
     private static final double MAIN_IMAGE_SCALE = 0.8;
     private static final double ENERGY_BAR_SCALE = 0.3;
-    private static final double PREFERRED_FIELD_OPACITY = 0.4;
+    private static final double PREFERRED_FIELD_OPACITY = 0.1;
 
-    // Cache dla obrazów
     private static Image getImage(String imagePath) {
         return imageCache.computeIfAbsent(imagePath, Image::new);
     }
 
-    // Konstruktory
     public WorldElementBox(WorldElement element, int size) {
         this.cellSize = size;
         initializeBox();

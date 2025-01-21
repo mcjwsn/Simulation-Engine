@@ -32,10 +32,10 @@ public class Genes {
         currentGeneIndex++;
         currentGeneIndex%=genes.size();
     }
-    public static int[] getStartingGenes(int genNumb) {
+    public static int[] getStartingGenes(int number) {
         Random random = new Random();
-        int[] genes = new int[genNumb];
-        for (int i = 0; i < genNumb; i++){
+        int[] genes = new int[number];
+        for (int i = 0; i < number; i++){
             genes[i] = random.nextInt(0, 7);
         }
         return genes;
@@ -55,24 +55,15 @@ public class Genes {
 
         int splitPoint = (int) (((double) parent1Energy / (double)(parent1Energy + parent2Energy))*genesCount);
 
-        // wybor strony
         if (random.nextBoolean()){
-            for (int i = 0; i < splitPoint; i++){
-                genes[i] = parent1Genes[i];
-            }
-            for (int i = splitPoint; i < genesCount; i++){
-                genes[i] = parent2Genes[i];
-            }
+            if (splitPoint >= 0) System.arraycopy(parent1Genes, 0, genes, 0, splitPoint);
+            if (genesCount - splitPoint >= 0)
+                System.arraycopy(parent2Genes, splitPoint, genes, splitPoint, genesCount - splitPoint);
         } else {
-            for (int i = 0; i < splitPoint; i++){
-                genes[i] = parent2Genes[i];
-            }
-            for (int i = splitPoint; i < genesCount; i++){
-                genes[i] = parent1Genes[i];
-            }
+            if (splitPoint >= 0) System.arraycopy(parent2Genes, 0, genes, 0, splitPoint);
+            if (genesCount - splitPoint >= 0)
+                System.arraycopy(parent1Genes, splitPoint, genes, splitPoint, genesCount - splitPoint);
         }
-
-        // mutacje
 
         ArrayList<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < genes.length; i++) {indexes.add(i);}
@@ -84,7 +75,7 @@ public class Genes {
         if (minMutation == 0 && maxMutation == 0) {return genes;}
 
         if (mutationStyle == MutationType.FULLRANDOM) {
-            int numberOfMutations = 0;
+            int numberOfMutations;
             if (minMutation == maxMutation){numberOfMutations = minMutation;}
             else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;} // randnextint doesnt work for value 0
             for (int counter = 0; counter < numberOfMutations; counter++) {
@@ -92,9 +83,9 @@ public class Genes {
                 genes[i] = random.nextInt(8);
             }
         }
-        // dwa sie zamieniaja miejscami
+
         if (mutationStyle == MutationType.LITLLECHANGE) {
-            int numberOfMutations = 0;
+            int numberOfMutations;
             if (minMutation == maxMutation){numberOfMutations = minMutation;}
             else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;}
 

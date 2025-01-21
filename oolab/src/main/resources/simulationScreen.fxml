@@ -31,7 +31,7 @@
                         <NumberAxis label="Number of grass" styleClass="chart-details" />
                     </yAxis>
                 </LineChart>
-                <Label text="Number of Average Energy Level" styleClass="chart-title" style="-fx-text-fill: #cfcf34"/>
+                <Label text="Average Energy Level" styleClass="chart-title" style="-fx-text-fill: #cfcf34"/>
                 <LineChart fx:id="energyChart" prefHeight="200" prefWidth="400" styleClass="energy-chart" legendVisible="false">
                     <xAxis>
                         <NumberAxis label="Day" styleClass="chart-details"/>

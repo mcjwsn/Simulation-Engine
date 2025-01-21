@@ -2,7 +2,7 @@ package agh.ics.oop.model.util;
 
 import java.util.Objects;
 
-public class Vector2d { // mozna zmienic na rekord i bedzie git, bez getterow
+public class Vector2d {
     private final int x,y;
 
     public Vector2d(int x, int y) {
@@ -13,11 +13,11 @@ public class Vector2d { // mozna zmienic na rekord i bedzie git, bez getterow
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }
-    // uzywam getterow tak jak bylo na przykladzie na tablicy na laborce, ale w tak prostym programie to
-    // raczej tylko obniza sprawnosc/efektywnosc programu, szczegolnie ze gettery tutaj nie sa niezbedne
+
     public String toString ()
     {
         return "(" + this.x + ", " + this.y + ")";
@@ -50,12 +50,6 @@ public class Vector2d { // mozna zmienic na rekord i bedzie git, bez getterow
     public Vector2d opposite(){
         return new Vector2d(-this.x, -this.y);
     }
-
-    //public int hashCode() {
-    //    return 31 * x + y;
-    //}
-
-
 
     @Override
     public boolean equals(Object o) {

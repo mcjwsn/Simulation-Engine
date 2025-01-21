@@ -17,10 +17,9 @@ public class SimulationManager {
     private final SimulationProperties simulationProperties;
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
-    private Set<Vector2d> equatorField = new HashSet<>();
     private final Object updateLock = new Object();
 
-    private static final double PREFERRED_POSITION_PROBABILITY = 0.9; // Pareto rule
+    private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
     private static int DAILY_GRASS_NUMBER = 0;
@@ -61,7 +60,6 @@ public class SimulationManager {
         return preferred;
     }
 
-    // operacja podczas nowego dnia
     public void Update() {
         synchronized (updateLock) {
             deleteDeadAnimals();
@@ -138,6 +136,7 @@ public class SimulationManager {
         for(Animal animal : animalsToRemove) {
             if (animal.getPosition().equals(((OwlBearMap)map).getOwlBearPosition()))
             {
+                animal.setEnergy(0);
                 animal.setDeathDate(simulationProperties.getDaysElapsed());
                 simulation.getAnimals().remove(animal);
                 map.removeAnimal(animal);

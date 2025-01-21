@@ -1,4 +1,5 @@
 package agh.ics.oop.model.maps;
+
 import agh.ics.oop.model.enums.MapType;
 import agh.ics.oop.model.mapElements.Grass;
 import agh.ics.oop.model.mapElements.OwlBear;
@@ -6,7 +7,6 @@ import agh.ics.oop.model.mapElements.WorldElement;
 import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.simulation.SimulationProperties;
-
 import java.util.*;
 
 public class OwlBearMap extends AbstractWorldMap {
@@ -52,9 +52,7 @@ public class OwlBearMap extends AbstractWorldMap {
 
     @Override
     public Boundary getCurrentBounds() {
-        Vector2d bottom = new Vector2d(0,0);
-        Vector2d top = new Vector2d(height, width);
-        return new Boundary(bottom, top);
+        return new Boundary(new Vector2d(0,0), new Vector2d(height, width));
     }
 
     @Override

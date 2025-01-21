@@ -1,7 +1,8 @@
 package agh.ics.oop.model.util;
+
 import java.math.BigDecimal;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class ConvertUtils {
 
@@ -15,12 +16,8 @@ public class ConvertUtils {
     }
 
     public static String convertGenotypeToString(List<Integer> genotype) {
-        StringBuilder convertedString = new StringBuilder("(");
-
-        for (Integer integer : genotype) {
-            convertedString.append(integer).append(" ");
-        }
-
-        return convertedString.deleteCharAt(convertedString.length() - 1).append(")").toString();
+        return "(" + genotype.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" ")) + ")";
     }
 }
