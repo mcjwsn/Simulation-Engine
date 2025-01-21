@@ -147,4 +147,6 @@ public class SimulationProperties {
     public void setGrassNumber(int grassNumber){
         this.grassNumber = grassNumber;
     }
+
+
 }
