@@ -172,7 +172,7 @@ public class SimulationManager {
             if (map.getAnimals().containsKey(position)) {
                 List<Animal> animalList = map.getAnimals().get(position);
                 if (!animalList.isEmpty()) {
-                    Animal animal = animalList.get(0);
+                    Animal animal = animalList.getFirst();
                     synchronized (this) {
                         animal.eat(simulationProperties.getGrassEnergy());
                         Grass eatenGrass = map.getPlants().get(position);

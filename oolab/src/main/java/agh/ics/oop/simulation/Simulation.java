@@ -48,7 +48,7 @@ public class Simulation implements Runnable {
     public void run() {
         simulationManager.Init();
         try {
-            Thread.sleep(1000); // initialization
+            Thread.sleep(800); // initialization
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

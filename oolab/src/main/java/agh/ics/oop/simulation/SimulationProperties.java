@@ -5,8 +5,6 @@ import agh.ics.oop.model.enums.MovinType;
 import agh.ics.oop.model.enums.MutationType;
 
 public class SimulationProperties {
-    // nie uzywamy final poniewaz teoretycznie kazdy element simulationProperties moglbym byc zadawany seterem
-    // np przy pozniejszym pisaniu testow
     private int width;
     private int height;
     private int animalNumber;

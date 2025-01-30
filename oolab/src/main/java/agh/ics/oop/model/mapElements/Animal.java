@@ -21,23 +21,24 @@ public class Animal implements WorldElement {
 
     // dodawane przez symulacje
     private int energy;
-    private int[] genome;
+    private final int[] genome;
     private int geneIndex;
-    private int birthdate; // zmienic na final po poprawce
+    private final int birthdate;
     private int grassEaten;
     private int childrenNumber;
-    private SimulationProperties simulationProperties;
-    int age;
+    private final SimulationProperties simulationProperties;
+    private int age;
     private int deathDate = -1;
+    private final int ORIENTATIONNUMBER = 8;
 
     private final List<Animal> children = new ArrayList<Animal>();
     private final Set<UUID> descendants = new HashSet<>();
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
     public Animal(Vector2d position, SimulationProperties simulationProperties) {
         this.geneIndex = 0;
         this.genome = getStartingGenes(simulationProperties.getGenesCount());
-        this.orientation = MapDirection.values()[random.nextInt(8)]; // losowa orientaja na poczatku
+        this.orientation = MapDirection.values()[RANDOM.nextInt(ORIENTATIONNUMBER)]; // losowa orientaja na poczatku
         this.position = position;
         this.energy = simulationProperties.getStartEnergy();
         this.movinType = simulationProperties.getMovingType();
@@ -52,7 +53,7 @@ public class Animal implements WorldElement {
         // konstruktor dla dzieci
         this.geneIndex = 0;
         this.genome = gotGenome;
-        this.orientation = MapDirection.values()[random.nextInt(8)]; // losowa orientaja na poczatku
+        this.orientation = MapDirection.values()[RANDOM.nextInt(ORIENTATIONNUMBER)]; // losowa orientaja na poczatku
         this.position = position;
         this.energy = 2*simulationProperties.getEnergyLevelToPassToChild();;
         this.movinType = simulationProperties.getMovingType();
@@ -100,6 +101,7 @@ public class Animal implements WorldElement {
                 .boxed()
                 .toList();
         return genotype;
+        //return Arrays.asList(getGenome()); nie mozna uzyc z powodu ze geter zwraca tablice intow
     }
 
     @Override
@@ -117,7 +119,6 @@ public class Animal implements WorldElement {
         return ElementType.ANIMAL;
     }
 
-    public MovinType getMoveType() { return movinType; }
     public Integer getAge() { return age; }
     public Integer getBirthDate() { return birthdate; }
     public int[] getGenome() { return genome; }
@@ -178,15 +179,14 @@ public class Animal implements WorldElement {
         }
         else
         {
-            if (movinType == MovinType.DEFAULT) {
+            if (movinType == MovinType.DEFAULT) { // if potrzebny w ramach przyszlego rozwoju aplikacji
                 this.geneIndex = (this.geneIndex + 1) % this.genome.length;
             }
 
             MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
             Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
             this.orientation = newOrientation;
-            Vector2d wrappedPosition = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-            this.position = wrappedPosition;
+            this.position = wrapPosition(newPosition, map.getWidth(), map.getHeight());
         }
 
     }
