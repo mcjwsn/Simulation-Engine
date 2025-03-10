@@ -26,7 +26,8 @@
 - **Statistics & Data Logging**: Key metrics (population size, mutation rates, survival rates) are tracked.
 
 ### 📷 **Screenshots**
-<img src="data/start.jpg" width="400" height = "400"><img src="data/settings.jpg" height="400" width="600">
+<img src="data/start.jpg" width="350" height = "350"><img src="data/settings.jpg" height="350" width="500">
 
 ### 🎥 **Video**
-[🎥 Watch the Simulation](data/JavaSim_video.mp4)
+https://github.com/user-attachments/assets/00d52393-7825-4a42-bf6c-89c4a52a93f7
+
