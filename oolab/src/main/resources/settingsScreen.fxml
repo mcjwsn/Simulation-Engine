@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane minHeight="750.0" minWidth="750.0" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="agh.ics.oop.presenter.SettingsScreenControler"
+            stylesheets="@style.css"
+            style="-fx-background-repeat: no-repeat;
+                   -fx-background-size: cover;
+                   -fx-background-color: #25ae3f;">
+    <top>
+        <HBox alignment="CENTER">
+            <Label text="Set variables of simulation" />
+        </HBox>
+        <HBox>
+            <VBox>
+                <!-- Parameter Inputs -->
+                <VBox >
+                    <Label text="Set width of the map" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="widthSpinner"  initialValue="10" max="30" min="6" styleClass="pixel-spinner"/>
+                    <Label text="Set height of the map" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="heightSpinner" initialValue="10" max="30" min="6" styleClass="pixel-spinner"/>
+                    <Label text="Set starting number of plants" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="grassNumberSpinner"  initialValue="20" max="200" min="5" styleClass="pixel-spinner"/>
+                    <Label text="Set number of energy added with eating single plant" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="energyAdditionSpinner"  initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
+                    <Label text="Set number of plants which grew every day" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="plantRegenerationSpinner" initialValue="5" max="25" min="1" styleClass="pixel-spinner"/>
+                    <Label text="Set the height of the equator" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="equatorHeightSpinner"  initialValue="2" max="8" min="1" styleClass="pixel-spinner"/>
+                    <Label text="Set maximal energy" styleClass="pixel-spinner" />
+                    <Spinner fx:id="maxEnergySpinner" initialValue="50" max="500" min="5" styleClass="pixel-spinner" />
+                    <Label text="Set energy used for single move" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="moveEnergySpinner" initialValue="2" max="10" min="1" styleClass="pixel-spinner" />
+                    <Label text="Save simulation statistics to CSV?" styleClass="pixel-spinner"/>
+                    <Spinner fx:id="CSVSpinner" styleClass="pixel-spinner"/>
+                </VBox>
+            </VBox>
+
+            <VBox>
+                <Label text="Set number of Animals" styleClass="pixel-spinner"/>
+                <Spinner fx:id="numberOfAnimalsSpinner" initialValue="15" max="100" min="1" styleClass="pixel-spinner"/>
+                <Label text="Set number of starting energy for Animals" styleClass="pixel-spinner" />
+                <Spinner fx:id="startingAnimalEnergySpinner" initialValue="50" max="500" min="10" styleClass="pixel-spinner"/>
+                <Label text="Set number of energy needed for reproduction" styleClass="pixel-spinner"/>
+                <Spinner fx:id="energuNeededForReproductionSpinner" initialValue="25" max="150" min="2" styleClass="pixel-spinner"/>
+                <Label text="Set the energy that animals lose by reproduction" styleClass="pixel-spinner"/>
+                <Spinner fx:id="energyLosingWithReproductionSpinner" initialValue="25" max="50" min="2" styleClass="pixel-spinner"/>
+                <Label text="Set minimal number of mutations with reproduction" styleClass="pixel-spinner" />
+                <Spinner fx:id="minGenMutationsSpinner" initialValue="3" max="10" min="0" styleClass="pixel-spinner"/>
+                <Label text="Set maximal number of mutations with reproduction" styleClass="pixel-spinner"/>
+                <Spinner fx:id="maxGenMutationsSpinner" initialValue="7" max="10" min="1" styleClass="pixel-spinner"/>
+                <Label text="Set variant of the mutation" styleClass="pixel-spinner"/>
+                <Spinner fx:id="mutationTypeSpinner" styleClass="pixel-spinner"/>
+                <Label text="Set variant of the map" styleClass="pixel-spinner"/>
+                <Spinner fx:id="mapTypeSpinner" styleClass="pixel-spinner"/>
+                <Label text="Set length of the genome" styleClass="pixel-spinner"/>
+                <Spinner fx:id="genomLengthSpinner" initialValue="5" max="10" min="2" styleClass="pixel-spinner"/>
+            </VBox>
+        </HBox>
+    </top>
+    <bottom>
+        <HBox alignment="CENTER">
+            <Button onAction="#onStartSimulationClicked" text="Start" styleClass="pixel-button" />
+            <Button fx:id="exportCsvButton" onAction="#onExportCsvClicked" text="Export CSV" styleClass="pixel-button" />
+            <Button fx:id="importCsvButton" onAction="#onImportCsvClicked" text="Import CSV" styleClass="pixel-button" />
+        </HBox>
+    </bottom>
+</BorderPane>

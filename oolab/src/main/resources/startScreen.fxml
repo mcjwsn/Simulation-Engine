@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="750.0" minWidth="750.0" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="agh.ics.oop.presenter.StartScreenController"
+            stylesheets="@style.css"
+            style="-fx-background-image: url('icon.jpg');
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-size: cover;">
+    <Button fx:id="startButton" text="Start" onAction="#onStartClicked" styleClass="pixel-start-button"
+            layoutX="338.0" layoutY="320.0" />
+</AnchorPane>
