@@ -26,7 +26,7 @@
 - **Statistics & Data Logging**: Key metrics (population size, mutation rates, survival rates) are tracked.
 
 ### 📷 **Screenshots**
-<img src="data/start.jpg" width="390" height = "390"><img src="data/settings.jpg" height="390" width="550">
+<img src="data/start.jpg" width="320" height = "320"><img src="data/settings.jpg" height="320" width="480">
 
 ### 🎥 **Video**
 https://github.com/user-attachments/assets/00d52393-7825-4a42-bf6c-89c4a52a93f7
