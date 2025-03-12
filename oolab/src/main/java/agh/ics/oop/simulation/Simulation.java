@@ -13,11 +13,14 @@ public class Simulation implements Runnable {
     private int days = 0;
     private final List<Animal> animals = new ArrayList<>();
     private boolean isRunning = true;
-    private boolean isPaused = false; // For pausing the simulation
-    private Thread simulationThread; // Thread to run the simulation
+    private boolean isPaused = false;
+    private Thread simulationThread;
     private final SimulationProperties simulationProperties;
     private final SimulationManager simulationManager;
     private final Map<int[], Integer> genesCount = new HashMap<>();
+
+    // New field for GrassManager to initialize grass
+    private final GrassManager grassManager;
 
     public List<Animal> getAnimals() {
         return animals;
@@ -27,31 +30,49 @@ public class Simulation implements Runnable {
         map.setSimulation(this);
         this.map = map;
         this.simulationProperties = simulationProperties;
-        simulationManager = new SimulationManager(map, simulationProperties, this);
 
+        // Create the simulation manager and its components
+        this.simulationManager = new SimulationManager(map, simulationProperties, this);
+
+        // Create a separate grass manager for initial grass placement
+        this.grassManager = new GrassManager(map, simulationProperties);
+
+        // Initialize animals
+        initializeAnimals();
+
+        // Initialize grass using the grass manager
+        grassManager.generateGrass(simulationProperties.getGrassNumber());
+    }
+
+    private void initializeAnimals() {
         RandomPositionGenerator randomPositionGeneratorAnimals = new RandomPositionGenerator(
                 simulationProperties.getMapHeight(),
                 simulationProperties.getMapWidth(),
                 simulationProperties.getStartAnimalNumber()
         );
+
         for (Vector2d animalPosition : randomPositionGeneratorAnimals) {
-            Animal animal = new Animal(animalPosition, simulationProperties);
+            Animal animal = Animal.createParent(animalPosition, simulationProperties);
             animals.add(animal);
-            int[] genome = animal.getGenome();
-            genesCount.merge(genome, 1, Integer::sum);
+            trackGenome(animal);
             map.place(animal.getPosition(), animal);
         }
-        simulationManager.generateGrass(simulationProperties.getGrassNumber());
+    }
+
+    private void trackGenome(Animal animal) {
+        int[] genome = animal.getGenome();
+        genesCount.merge(genome, 1, Integer::sum);
     }
 
     @Override
     public void run() {
         simulationManager.Init();
         try {
-            Thread.sleep(800); // initialization
+            Thread.sleep(800); // initialization delay
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         while (isRunning) {
             synchronized (this) {
                 while (isPaused) {
@@ -62,11 +83,13 @@ public class Simulation implements Runnable {
                     }
                 }
             }
+
             if (!animals.isEmpty()) {
                 synchronized (this) {
                     this.days++;
                     simulationManager.Update();
                 }
+
                 try {
                     Thread.sleep(200); // Simulation update delay
                 } catch (InterruptedException e) {
@@ -103,15 +126,16 @@ public class Simulation implements Runnable {
 
     public synchronized void addAnimal(Animal animal) {
         animals.add(animal);
-        int[] genome = animal.getGenome();
-        genesCount.merge(genome, 1, Integer::sum);
+        trackGenome(animal);
     }
 
     public int getDays() {
         return days;
     }
 
-    public Set<Vector2d> getPreferedPositions() {
+    public Set<Vector2d> getPreferredPositions() {
+        // This method should now delegate to the appropriate component
+        // We'll need to expose this from the SimulationManager
         return simulationManager.getPreferredPositions();
     }
 }

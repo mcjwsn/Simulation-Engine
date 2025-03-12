@@ -35,33 +35,47 @@ public class Animal implements WorldElement {
     private final Set<UUID> descendants = new HashSet<>();
     private static final Random RANDOM = new Random();
 
-    public Animal(Vector2d position, SimulationProperties simulationProperties) {
+    /**
+     * Single constructor for Animal class
+     * @param position The initial position
+     * @param simulationProperties The simulation properties
+     * @param customGenome Optional custom genome, null for randomly generated genome
+     * @param isChild Whether this animal is a child (affects initial energy)
+     */
+    public Animal(Vector2d position, SimulationProperties simulationProperties, int[] customGenome, boolean isChild) {
         this.geneIndex = 0;
-        this.genome = getStartingGenes(simulationProperties.getGenesCount());
+        this.genome = customGenome != null ? customGenome : getStartingGenes(simulationProperties.getGenesCount());
         this.orientation = MapDirection.values()[RANDOM.nextInt(ORIENTATIONNUMBER)]; // losowa orientaja na poczatku
         this.position = position;
-        this.energy = simulationProperties.getStartEnergy();
         this.movinType = simulationProperties.getMovingType();
         this.age = 0;
         this.grassEaten = 0;
         this.simulationProperties = simulationProperties;
         this.childrenNumber = 0;
         this.birthdate = simulationProperties.getDaysElapsed();
+
+        // Set energy based on whether this is a child or not
+        if (isChild) {
+            this.energy = 2 * simulationProperties.getEnergyLevelToPassToChild();
+        } else {
+            this.energy = simulationProperties.getStartEnergy();
+        }
     }
 
-    public Animal(Vector2d position, SimulationProperties simulationProperties, int[] gotGenome) {
-        // konstruktor dla dzieci
-        this.geneIndex = 0;
-        this.genome = gotGenome;
-        this.orientation = MapDirection.values()[RANDOM.nextInt(ORIENTATIONNUMBER)]; // losowa orientaja na poczatku
-        this.position = position;
-        this.energy = 2*simulationProperties.getEnergyLevelToPassToChild();;
-        this.movinType = simulationProperties.getMovingType();
-        this.age = 0;
-        this.grassEaten = 0;
-        this.simulationProperties = simulationProperties;
-        this.childrenNumber = 0;
-        this.birthdate = simulationProperties.getDaysElapsed();
+    // Factory methods to replace the old constructors
+
+    /**
+     * Creates a new parent animal
+     */
+    public static Animal createParent(Vector2d position, SimulationProperties simulationProperties) {
+        return new Animal(position, simulationProperties, null, false);
+    }
+
+    /**
+     * Creates a new child animal
+     */
+    public static Animal createChild(Vector2d position, SimulationProperties simulationProperties, int[] genome) {
+        return new Animal(position, simulationProperties, genome, true);
     }
 
     public List<Animal> getChildren() {
@@ -188,7 +202,6 @@ public class Animal implements WorldElement {
             this.orientation = newOrientation;
             this.position = wrapPosition(newPosition, map.getWidth(), map.getHeight());
         }
-
     }
 
     private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {
