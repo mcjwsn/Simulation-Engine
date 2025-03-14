@@ -45,6 +45,7 @@ public class PositionManager {
         preferredPositions.clear();
         lessPreferredPositions.clear();
 
+        // Add all positions to appropriate sets
         for (int x = 0; x <= height; x++) {
             for (int y = 0; y <= width; y++) {
                 Vector2d position = new Vector2d(x, y);
@@ -54,6 +55,12 @@ public class PositionManager {
                     lessPreferredPositions.add(position); // Positions outside the equator
                 }
             }
+        }
+
+        // Remove positions that already have grass
+        for (Vector2d position : map.getPlants().keySet()) {
+            preferredPositions.remove(position);
+            lessPreferredPositions.remove(position);
         }
     }
 

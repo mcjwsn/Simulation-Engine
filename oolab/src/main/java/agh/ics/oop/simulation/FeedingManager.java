@@ -12,12 +12,12 @@ import java.util.Set;
 public class FeedingManager {
     private final AbstractWorldMap map;
     private final SimulationProperties simulationProperties;
-    private final PositionManager positionManager;
+    private final SimulationManager simulationManager;
 
-    public FeedingManager(AbstractWorldMap map, SimulationProperties simulationProperties, PositionManager positionManager) {
+    public FeedingManager(AbstractWorldMap map, SimulationProperties simulationProperties, SimulationManager simulationManager) {
         this.map = map;
         this.simulationProperties = simulationProperties;
-        this.positionManager = positionManager;
+        this.simulationManager = simulationManager;
     }
 
     public void feedAnimals() {
@@ -34,7 +34,7 @@ public class FeedingManager {
                         Grass eatenGrass = map.getPlants().get(position);
                         map.getPlants().remove(position);
                         map.getFreePositionsForPlants().add(position);
-                        positionManager.restoreEatenPlantPosition(eatenGrass);
+                        simulationManager.restoreEatenPlantPosition(eatenGrass);
                     }
                 }
             }
