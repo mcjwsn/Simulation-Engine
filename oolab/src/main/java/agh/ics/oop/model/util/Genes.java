@@ -44,7 +44,6 @@ public class Genes {
     public static int[] mixGenesFromParents(Animal parent1, Animal parent2, SimulationProperties simulationProperties) {
         Random random = new Random();
         int genesCount = simulationProperties.getGenesCount();
-        MutationType mutationStyle = simulationProperties.getMutationType();
         int[] genes = new int[genesCount];
         int[] parent1Genes = parent1.getGenome();
         int[] parent2Genes = parent2.getGenome();
@@ -65,39 +64,18 @@ public class Genes {
                 System.arraycopy(parent1Genes, splitPoint, genes, splitPoint, genesCount - splitPoint);
         }
 
-        ArrayList<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < genes.length; i++) {indexes.add(i);}
-        if (minMutation > genes.length) {minMutation = genes.length;}
-        if (maxMutation > genes.length) {maxMutation = genes.length;}
-        if (minMutation > maxMutation) {minMutation = maxMutation;}
-        if (minMutation < 0) {minMutation = 0;}
-        if (maxMutation < 0) {maxMutation = 0;}
-        if (minMutation == 0 && maxMutation == 0) {return genes;}
+        // Validate mutation parameters
+        minMutation = Math.min(minMutation, genes.length);
+        maxMutation = Math.min(maxMutation, genes.length);
+        minMutation = Math.max(0, minMutation);
+        maxMutation = Math.max(0, maxMutation);
 
-        if (mutationStyle == MutationType.FULLRANDOM) {
-            int numberOfMutations;
-            if (minMutation == maxMutation){numberOfMutations = minMutation;}
-            else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;} // randnextint doesnt work for value 0
-            for (int counter = 0; counter < numberOfMutations; counter++) {
-                int i = indexes.remove(random.nextInt(indexes.size()));
-                genes[i] = random.nextInt(8);
-            }
-        }
+        if (minMutation > maxMutation) minMutation = maxMutation;
+        if (minMutation == 0 && maxMutation == 0) return genes;
 
-        if (mutationStyle == MutationType.LITLLECHANGE) {
-            int numberOfMutations;
-            if (minMutation == maxMutation){numberOfMutations = minMutation;}
-            else{numberOfMutations = random.nextInt(maxMutation - minMutation) + minMutation;}
-
-            for (int counter = 0; counter < numberOfMutations; counter+=2) {
-                int i = indexes.remove(random.nextInt(indexes.size()));
-                int j = indexes.remove(random.nextInt(indexes.size()));
-                int a = genes[i];
-                genes[i] = genes[j];
-                genes[j] = a;
-            }
-        }
-        return genes;
+        // Use the strategy pattern for mutation
+        MutationStrategy strategy = MutationStrategyFactory.getStrategy(simulationProperties.getMutationType());
+        return strategy.mutate(genes, minMutation, maxMutation);
     }
 
     public int getCurrentGeneIndex() {
