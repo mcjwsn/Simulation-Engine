@@ -14,6 +14,7 @@ public class SimulationManager {
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
     private final Object updateLock = new Object();
+    private final DayCycleStrategy dayCycleStrategy;
 
     // Keep these static fields in SimulationManager as they were in the original
     private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
@@ -43,8 +44,20 @@ public class SimulationManager {
         feedingManager = new FeedingManager(map, simulationProperties, this);
         owlBearManager = new OwlBearManager(map, simulationProperties, simulation);
 
+        // Initialize day cycle strategy based on map type
+        dayCycleStrategy = createDayCycleStrategy(map.getMapType());
+
         // Initialize positions - keep this in SimulationManager as it was in the original
         initializePositions(map);
+    }
+
+    private DayCycleStrategy createDayCycleStrategy(MapType mapType) {
+        switch (mapType) {
+            case OWLBEAR:
+                return new OwlBearDayCycleStrategy();
+            default:
+                return new StandardDayCycleStrategy();
+        }
     }
 
     public void Init() {
@@ -54,26 +67,43 @@ public class SimulationManager {
 
     public void Update() {
         synchronized (updateLock) {
-            animalLifecycleManager.removeDeadAnimals();
-            movementManager.moveAllAnimals(simulation.getAnimals());
-
-            if (map.getMapType() == MapType.OWLBEAR) {
-                owlBearManager.owlBearEat();
-            }
-
-            feedingManager.feedAnimals();
-
-            if (map.getMapType() == MapType.OWLBEAR) {
-                owlBearManager.moveOwlBear();
-                owlBearManager.owlBearEat();
-            }
-
-            reproductionManager.reproduceAnimals();
-            growGrass(); // Keep this method here as in the original
-            animalLifecycleManager.incrementAge();
-
+            dayCycleStrategy.executeDayCycle();
             map.setStatistics(statistics, simulation.getDays());
             map.mapChanged(statistics, "Dzien sie zakonczyl");
+        }
+    }
+
+    // Day cycle strategy interface
+    private interface DayCycleStrategy {
+        void executeDayCycle();
+    }
+
+    // Standard day cycle implementation
+    private class StandardDayCycleStrategy implements DayCycleStrategy {
+        @Override
+        public void executeDayCycle() {
+            animalLifecycleManager.removeDeadAnimals();
+            movementManager.moveAllAnimals(simulation.getAnimals());
+            feedingManager.feedAnimals();
+            reproductionManager.reproduceAnimals();
+            growGrass();
+            animalLifecycleManager.incrementAge();
+        }
+    }
+
+    // OwlBear day cycle implementation
+    private class OwlBearDayCycleStrategy implements DayCycleStrategy {
+        @Override
+        public void executeDayCycle() {
+            animalLifecycleManager.removeDeadAnimals();
+            movementManager.moveAllAnimals(simulation.getAnimals());
+            owlBearManager.owlBearEat();
+            feedingManager.feedAnimals();
+            owlBearManager.moveOwlBear();
+            owlBearManager.owlBearEat();
+            reproductionManager.reproduceAnimals();
+            growGrass();
+            animalLifecycleManager.incrementAge();
         }
     }
 
