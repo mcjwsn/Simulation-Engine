@@ -1,13 +1,10 @@
 package agh.ics.oop.simulation;
 
-import agh.ics.oop.model.util.Genes;
-import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.model.maps.AbstractWorldMap;
 import agh.ics.oop.model.util.Statistics;
 import agh.ics.oop.model.enums.MapType;
-import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.Grass;
-import agh.ics.oop.model.maps.AbstractWorldMap;
-import agh.ics.oop.model.maps.OwlBearMap;
+import agh.ics.oop.model.util.Vector2d;
 
 import java.util.*;
 
@@ -17,7 +14,9 @@ public class SimulationManager {
     private final Simulation simulation;
     private final Statistics statistics = new Statistics();
     private final Object updateLock = new Object();
+    private final DayCycleStrategy dayCycleStrategy;
 
+    // Keep these static fields in SimulationManager as they were in the original
     private static final double PREFERRED_POSITION_PROBABILITY = 0.8; // Pareto rule
     private static final Set<Vector2d> preferredPositions = new HashSet<>();
     private static final Set<Vector2d> lessPreferredPositions = new HashSet<>();
@@ -25,12 +24,40 @@ public class SimulationManager {
 
     protected static final Random random = new Random();
 
+    // Components with single responsibilities
+    private final AnimalLifecycleManager animalLifecycleManager;
+    private final MovementManager movementManager;
+    private final ReproductionManager reproductionManager;
+    private final FeedingManager feedingManager;
+    private final OwlBearManager owlBearManager;
+
     public SimulationManager(AbstractWorldMap map_, SimulationProperties simulationProperties_, Simulation simulation_) {
         map = map_;
         simulationProperties = simulationProperties_;
         simulation = simulation_;
         DAILY_GRASS_NUMBER = simulationProperties.getDailySpawningGrass();
+
+        // Initialize specialized managers
+        animalLifecycleManager = new AnimalLifecycleManager(map, simulationProperties, simulation);
+        movementManager = new MovementManager(map, simulationProperties);
+        reproductionManager = new ReproductionManager(map, simulationProperties, simulation);
+        feedingManager = new FeedingManager(map, simulationProperties, this);
+        owlBearManager = new OwlBearManager(map, simulationProperties, simulation);
+
+        // Initialize day cycle strategy based on map type
+        dayCycleStrategy = createDayCycleStrategy(map.getMapType());
+
+        // Initialize positions - keep this in SimulationManager as it was in the original
         initializePositions(map);
+    }
+
+    private DayCycleStrategy createDayCycleStrategy(MapType mapType) {
+        switch (mapType) {
+            case OWLBEAR:
+                return new OwlBearDayCycleStrategy();
+            default:
+                return new StandardDayCycleStrategy();
+        }
     }
 
     public void Init() {
@@ -38,6 +65,49 @@ public class SimulationManager {
         map.mapChanged(statistics, "Dzien sie zakonczyl");
     }
 
+    public void Update() {
+        synchronized (updateLock) {
+            dayCycleStrategy.executeDayCycle();
+            map.setStatistics(statistics, simulation.getDays());
+            map.mapChanged(statistics, "Dzien sie zakonczyl");
+        }
+    }
+
+    // Day cycle strategy interface
+    private interface DayCycleStrategy {
+        void executeDayCycle();
+    }
+
+    // Standard day cycle implementation
+    private class StandardDayCycleStrategy implements DayCycleStrategy {
+        @Override
+        public void executeDayCycle() {
+            animalLifecycleManager.removeDeadAnimals();
+            movementManager.moveAllAnimals(simulation.getAnimals());
+            feedingManager.feedAnimals();
+            reproductionManager.reproduceAnimals();
+            growGrass();
+            animalLifecycleManager.incrementAge();
+        }
+    }
+
+    // OwlBear day cycle implementation
+    private class OwlBearDayCycleStrategy implements DayCycleStrategy {
+        @Override
+        public void executeDayCycle() {
+            animalLifecycleManager.removeDeadAnimals();
+            movementManager.moveAllAnimals(simulation.getAnimals());
+            owlBearManager.owlBearEat();
+            feedingManager.feedAnimals();
+            owlBearManager.moveOwlBear();
+            owlBearManager.owlBearEat();
+            reproductionManager.reproduceAnimals();
+            growGrass();
+            animalLifecycleManager.incrementAge();
+        }
+    }
+
+    // Keep this method in SimulationManager to maintain the original behavior
     public Set<Vector2d> getPreferredPositions() {
         int equatorHeight = simulationProperties.getEquatorHeight();
         int width = map.getWidth();
@@ -59,28 +129,8 @@ public class SimulationManager {
         return preferred;
     }
 
-    public void Update() {
-        synchronized (updateLock) {
-            deleteDeadAnimals();
-            moveALlAnimals();
-            if (map.getMapType() == MapType.OWLBEAR) {
-                owlBearEat();
-            }
-            eat();
-            if (map.getMapType() == MapType.OWLBEAR) {
-                moveOwlBear();
-                owlBearEat();
-            }
-            reproduceAnimals();
-            growGrass();
-            addAge();
-
-            map.setStatistics(statistics, simulation.getDays());
-            map.mapChanged(statistics, "Dzien sie zakonczyl");
-        }
-    }
-
-    protected void restoreEatenPlantPosition(Grass eatenGrass) {
+    // Keep this method in SimulationManager to maintain the original behavior
+    public void restoreEatenPlantPosition(Grass eatenGrass) {
         int equatorHeight = simulationProperties.getEquatorHeight();
         int width = map.getWidth();
         int height = map.getHeight();
@@ -97,94 +147,7 @@ public class SimulationManager {
         }
     }
 
-    private void deleteDeadAnimals() {
-        Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
-
-        for (Animal animal : animalsToRemove) {
-            if (animal.getEnergy() <= 0) {
-                animal.setDeathDate(simulationProperties.getDaysElapsed());
-                map.removeAnimal(animal);
-                simulation.getAnimals().remove(animal);
-            }
-        }
-    }
-
-    private void addAge() {
-        simulationProperties.incrementDaysElapsed();
-        for (Animal animal : simulation.getAnimals()) {
-            animal.addAge();
-        }
-    }
-
-    private void moveALlAnimals() {
-        for (Animal animal : simulation.getAnimals()) {
-            map.move(animal);
-            animal.removeEnergy(simulationProperties.getMoveEnergy());
-        }
-    }
-
-    private void moveOwlBear() {
-        ((OwlBearMap) map).moveOwlBear();
-    }
-
-    private void owlBearEat() {
-        Set<Animal> animalsToRemove = new HashSet<>(simulation.getAnimals());
-
-        for (Animal animal : animalsToRemove) {
-            if (animal.getPosition().equals(((OwlBearMap) map).getOwlBearPosition())) {
-                animal.setDeathDate(simulationProperties.getDaysElapsed());
-                map.removeAnimal(animal);
-                simulation.getAnimals().remove(animal);
-            }
-        }
-    }
-
-    public void reproduceAnimals() {
-        for (Vector2d position : map.getAnimals().keySet()) {
-            List<Animal> animalList = map.getAnimals().get(position);
-            if (animalList.size() > 1) {
-                Animal a1 = animalList.get(0);
-                Animal a2 = animalList.get(1);
-                if (a1.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce() &&
-                        a2.getEnergy() > simulationProperties.getEnergyLevelNeededToReproduce()) {
-                    int[] getGenome = Genes.mixGenesFromParents(a1, a2, simulationProperties);
-                    Animal child = new Animal(position, simulationProperties, getGenome);
-                    synchronized (this) {
-
-                        map.getAnimals().get(position).add(child);
-                        simulation.addAnimal(child);
-
-                        a1.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
-                        a1.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
-                        a1.increaseChildrenNumber();
-                        a2.removeEnergy(simulationProperties.getEnergyLevelToPassToChild());
-                        a2.addChildToList(simulation.getAnimals().get(simulation.getAnimals().indexOf(child)));
-                        a2.increaseChildrenNumber();
-                    }
-                }
-            }
-        }
-    }
-
-    public void eat() {
-        Set<Vector2d> keys = new HashSet<>(map.getPlants().keySet());
-        for (Vector2d position : keys) {
-            if (map.getAnimals().containsKey(position)) {
-                List<Animal> animalList = map.getAnimals().get(position);
-                if (!animalList.isEmpty()) {
-                    Animal animal = animalList.getFirst();
-                    synchronized (this) {
-                        animal.eat(simulationProperties.getGrassEnergy());
-                        Grass eatenGrass = map.getPlants().get(position);
-                        map.getPlants().remove(position);
-                        map.getFreePositionsForPlants().add(position);
-                        restoreEatenPlantPosition(eatenGrass);
-                    }
-                }
-            }
-        }
-    }
-
+    // Keep this method in SimulationManager to maintain the original behavior
     public void initializePositions(AbstractWorldMap map) {
         int equatorHeight = simulationProperties.getEquatorHeight(); // The height of the equator
         int width = map.getWidth();
@@ -215,6 +178,7 @@ public class SimulationManager {
         lessPreferredPositions.addAll(lessPreferred);
     }
 
+    // Keep this method in SimulationManager to maintain the original behavior
     public void generateGrass(int numberOfPlants) {
         for (int i = 0; i < numberOfPlants; i++) {
             double probability = random.nextDouble();
@@ -233,6 +197,7 @@ public class SimulationManager {
         }
     }
 
+    // Keep this method in SimulationManager to maintain the original behavior
     public void growGrass() {
         generateGrass(DAILY_GRASS_NUMBER);
     }

@@ -432,7 +432,7 @@ public class SimulationController implements MapChangeListener {
         }
 
         showGeneralStatistics();
-        prefPos = simulation.getPreferedPositions();
+        prefPos = simulation.getPreferredPositions();
 
         if (Objects.equals(simulationProperties.getCSV(), "Yes"))
         {
