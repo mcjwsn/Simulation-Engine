@@ -177,37 +177,22 @@ public class Animal implements WorldElement {
     }
 
     public void move(AbstractWorldMap map) {
-        if(map.getMapType() == MapType.OWLBEAR)
-        {
-            if (movinType == MovinType.DEFAULT) {
-                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-            }
-
-            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-            this.orientation = newOrientation;
-            if(newPosition.precedes(map.getCurrentBounds().upperRight()) && newPosition.follows(map.getCurrentBounds().lowerLeft()))
-            {
-                this.position = newPosition;
-            }
+        // Update gene index based on movement type
+        if (movinType == MovinType.DEFAULT) {
+            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
         }
-        else
-        {
-            if (movinType == MovinType.DEFAULT) { // if potrzebny w ramach przyszlego rozwoju aplikacji
-                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-            }
 
-            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-            this.orientation = newOrientation;
-            this.position = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-        }
-    }
+        // Update orientation based on genes
+        this.orientation = this.orientation.rotate(this.genome[this.geneIndex]);
 
-    private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {
-        int wrappedX = (position.getX() + mapWidth+1) % (1+mapWidth);
-        int wrappedY = (position.getY() + mapHeight+1) % (mapHeight+1);
-        return new Vector2d(wrappedX, wrappedY);
+        // Get the movement strategy from the map and use it to calculate new position
+        MovementStrategy movementStrategy = map.getMovementStrategy();
+        this.position = movementStrategy.getNewPosition(
+                this.position,
+                this.orientation,
+                map.getWidth(),
+                map.getHeight()
+        );
     }
 
     @Override

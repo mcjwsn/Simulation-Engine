@@ -20,4 +20,6 @@ public abstract class AbstractWorldElement implements WorldElement {
 
     @Override
     public abstract String getImageResource();
+
+
 }

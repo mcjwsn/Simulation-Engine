@@ -1,5 +1,6 @@
 package agh.ics.oop.model.maps;
 
+import agh.ics.oop.model.mapElements.MovementStrategy;
 import agh.ics.oop.simulation.Simulation;
 import agh.ics.oop.model.util.Statistics;
 import agh.ics.oop.model.enums.MapType;
@@ -252,4 +253,5 @@ public abstract class AbstractWorldMap implements WorldMap {
         return height;
     }
 
+    public abstract MovementStrategy getMovementStrategy();
 }
