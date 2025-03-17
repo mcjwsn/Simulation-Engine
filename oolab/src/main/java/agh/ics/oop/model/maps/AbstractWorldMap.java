@@ -16,9 +16,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.UUID;
 
 public abstract class AbstractWorldMap implements WorldMap {
-    protected Map<Vector2d, List<Animal>> animals = new ConcurrentHashMap<>();
-    protected List<Animal> deadAnimals = new CopyOnWriteArrayList<>();
-    protected List<MapChangeListener> observers = new CopyOnWriteArrayList<>();
+    protected Map<Vector2d, List<Animal>> animals = new HashMap<>();
+    protected final List<Animal> deadAnimals = new ArrayList<>();
+    protected List<MapChangeListener> observers = new ArrayList<>();
     protected String id;
     protected HashMap<Vector2d, Grass> grass;
     protected int width;
@@ -46,39 +46,35 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
-     public void place(Vector2d animalPosition,Animal animal) {
-        if (animals.containsKey(animalPosition)) {
-            synchronized (this) {
-                animals.get(animalPosition).add(animal);
-                animals.get(animalPosition).sort(
+    public void place(Vector2d animalPosition, Animal animal) {
+        animals.computeIfAbsent(animalPosition, k -> new ArrayList<>()).add(animal);
+    }
+
+    public void prepareForProcessing() {
+        animals.values().forEach(animalList ->
+                animalList.sort(
                         Comparator.comparing(Animal::getEnergy, Comparator.reverseOrder())
                                 .thenComparing(Animal::getAge, Comparator.reverseOrder())
                                 .thenComparing(Animal::getPlantsEaten, Comparator.reverseOrder())
-                );
-            }
-        }
-        else {
-            List<Animal> animalList = new ArrayList<>();
-            animalList.add(animal);
-            synchronized (this) {
-                animals.put(animalPosition, animalList);
-            }
-        }
+                )
+        );
     }
 
-    public synchronized void move(Animal animal)  {
+    public synchronized void move(Animal animal) {
         Vector2d oldPosition = animal.getPosition();
-        animals.get(oldPosition).remove(animal);
+        List<Animal> oldPositionAnimals = animals.get(oldPosition);
+        oldPositionAnimals.remove(animal);
+
+        // Clean up empty lists
+        if (oldPositionAnimals.isEmpty()) {
+            animals.remove(oldPosition);
+        }
+
+        // Move the animal
         animal.move(this);
         Vector2d newPosition = animal.getPosition();
-        List<Animal> oldPositionAnimals = animals.get(oldPosition);
-        if (oldPositionAnimals != null) {
-            oldPositionAnimals.remove(animal);
-            if (oldPositionAnimals.isEmpty()) {
-                animals.remove(oldPosition);
-            }
-        }
-        place(newPosition, animal);
+
+        animals.computeIfAbsent(newPosition, k -> new ArrayList<>()).add(animal);
     }
 
     @Override

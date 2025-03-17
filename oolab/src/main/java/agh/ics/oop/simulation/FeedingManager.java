@@ -21,6 +21,7 @@ public class FeedingManager {
     }
 
     public void feedAnimals() {
+        map.prepareForProcessing();
         Set<Vector2d> keys = new HashSet<>(map.getPlants().keySet());
 
         for (Vector2d position : keys) {
