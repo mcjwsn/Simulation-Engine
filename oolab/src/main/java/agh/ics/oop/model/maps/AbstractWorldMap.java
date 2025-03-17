@@ -114,6 +114,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public List<Animal> getDeadAnimals() {
+        return Collections.unmodifiableList(deadAnimals);
+    }
+
     public void setStatistics(Statistics stats, int newDay) {
         stats.setStatisticsParameters(this.getNumberOfAnimals(),
                 this.getNumberOfGrasses(),
