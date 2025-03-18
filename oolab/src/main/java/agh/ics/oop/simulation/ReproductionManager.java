@@ -19,6 +19,7 @@ public class ReproductionManager {
     }
 
     public void reproduceAnimals() {
+        map.prepareForProcessing();
         for (Vector2d position : map.getAnimals().keySet()) {
             List<Animal> animalList = map.getAnimals().get(position);
             if (animalList.size() > 1) {

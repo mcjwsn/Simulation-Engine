@@ -5,8 +5,11 @@ import agh.ics.oop.model.enums.MapType;
 import agh.ics.oop.model.enums.MovinType;
 import agh.ics.oop.model.enums.MutationType;
 import agh.ics.oop.simulation.SimulationProperties;
+import agh.ics.oop.presenter.CsvManager;
+import agh.ics.oop.presenter.SimulationConfig;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.FileChooser;
@@ -18,53 +21,47 @@ import java.io.*;
 public class SettingsScreenControler {
     private SimulationApp mainApp;
 
-    @FXML
-    private Spinner<Integer> widthSpinner;
-    @FXML
-    private Spinner<Integer> heightSpinner;
-    @FXML
-    private Spinner<Integer> equatorHeightSpinner;
-    @FXML
-    private Spinner<Integer> grassNumberSpinner;
-    @FXML
-    private Spinner<Integer> energyAdditionSpinner;
-    @FXML
-    private Spinner<Integer> plantRegenerationSpinner;
-    @FXML
-    private Spinner<Integer> numberOfAnimalsSpinner;
-    @FXML
-    private Spinner<Integer> startingAnimalEnergySpinner;
-    @FXML
-    private Spinner<Integer> energuNeededForReproductionSpinner;
-    @FXML
-    private Spinner<Integer> energyLosingWithReproductionSpinner;
-    @FXML
-    private Spinner<Integer> minGenMutationsSpinner;
-    @FXML
-    private Spinner<Integer> maxGenMutationsSpinner;
-    @FXML
-    private Spinner<Integer> genomLengthSpinner;
-    @FXML
-    private Spinner<MutationType> mutationTypeSpinner;
-    @FXML
-    private Spinner<Integer> maxEnergySpinner;
-    @FXML
-    private Spinner<MapType> mapTypeSpinner;
-    @FXML
-    private Spinner<Integer> moveEnergySpinner;
-    @FXML
-    private Spinner<String> CSVSpinner;
+    @FXML private Spinner<Integer> widthSpinner;
+    @FXML private Spinner<Integer> heightSpinner;
+    @FXML private Spinner<Integer> equatorHeightSpinner;
+    @FXML private Spinner<Integer> grassNumberSpinner;
+    @FXML private Spinner<Integer> energyAdditionSpinner;
+    @FXML private Spinner<Integer> plantRegenerationSpinner;
+    @FXML private Spinner<Integer> numberOfAnimalsSpinner;
+    @FXML private Spinner<Integer> startingAnimalEnergySpinner;
+    @FXML private Spinner<Integer> energuNeededForReproductionSpinner;
+    @FXML private Spinner<Integer> energyLosingWithReproductionSpinner;
+    @FXML private Spinner<Integer> minGenMutationsSpinner;
+    @FXML private Spinner<Integer> maxGenMutationsSpinner;
+    @FXML private Spinner<Integer> genomLengthSpinner;
+    @FXML private Spinner<MutationType> mutationTypeSpinner;
+    @FXML private Spinner<Integer> maxEnergySpinner;
+    @FXML private Spinner<MapType> mapTypeSpinner;
+    @FXML private Spinner<Integer> moveEnergySpinner;
+    @FXML private Spinner<String> CSVSpinner;
+
+    private final CsvManager csvManager = new CsvManager();
+    private static final String CSV_DIRECTORY = System.getProperty("user.dir") + "/CSV/Exports/";
 
     @FXML
-    public void onStartSimulationClicked() throws Exception {
+    public void onStartSimulationClicked() {
+        try {
+            SimulationProperties simulationProperties = createSimulationProperties();
+            Stage newStage = new Stage();
+            mainApp.showSimulationScreen(newStage, simulationProperties);
+        } catch (Exception e) {
+            showErrorAlert("Simulation Error", "Failed to start simulation", e.getMessage());
+        }
+    }
 
-        int mapWidth = widthSpinner.getValue()-1;
-        int mapHeight = heightSpinner.getValue()-1;
+    private SimulationProperties createSimulationProperties() {
+        int mapWidth = widthSpinner.getValue() - 1;
+        int mapHeight = heightSpinner.getValue() - 1;
         int equatorHeight = Math.min(equatorHeightSpinner.getValue(), mapWidth);
         int animalNumber = numberOfAnimalsSpinner.getValue();
-        int grassNumber = Math.min(grassNumberSpinner.getValue(),mapHeight*mapWidth);
+        int grassNumber = Math.min(grassNumberSpinner.getValue(), mapHeight * mapWidth);
         int grassEnergy = energyAdditionSpinner.getValue();
-        int dailySpawningGrass = Math.min(plantRegenerationSpinner.getValue(),mapHeight*mapWidth);
+        int dailySpawningGrass = Math.min(plantRegenerationSpinner.getValue(), mapHeight * mapWidth);
         int maxEnergy = maxEnergySpinner.getValue();
         int startEnergy = Math.min(startingAnimalEnergySpinner.getValue(), maxEnergy);
         MovinType movingType = MovinType.DEFAULT;
@@ -75,185 +72,146 @@ public class SettingsScreenControler {
         int energyLevelToPassToChild = energyLosingWithReproductionSpinner.getValue();
         int moveEnergy = moveEnergySpinner.getValue();
         int minMutation = minGenMutationsSpinner.getValue();
-        int maxMutation = Math.max(maxGenMutationsSpinner.getValue(),minMutation);
+        int maxMutation = Math.max(maxGenMutationsSpinner.getValue(), minMutation);
         String CSV = CSVSpinner.getValue();
-        initialize();
 
-        SimulationProperties simulationProperties = new SimulationProperties(mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
+        return new SimulationProperties(
+                mapWidth, mapHeight, equatorHeight, animalNumber, grassNumber,
                 dailySpawningGrass, startEnergy, grassEnergy, maxEnergy,
-                movingType,mutationType, mapType,  genesCount,
-                energyLevelNeededToReproduce, energyLevelToPassToChild,moveEnergy,
-                minMutation, maxMutation, CSV);
-        Stage newStage = new Stage();
-        mainApp.showSimulationScreen(newStage, simulationProperties);
+                movingType, mutationType, mapType, genesCount,
+                energyLevelNeededToReproduce, energyLevelToPassToChild, moveEnergy,
+                minMutation, maxMutation, CSV
+        );
     }
 
     @FXML
-    private void onExportCsvClicked() throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/CSV";
-        String defaultDirectory = projectPath + "/Exports/";
-
-        FileChooser fileChooser = new FileChooser();
-
-        File initialDirectory = new File(defaultDirectory);
-        if (!initialDirectory.exists()) {
-            initialDirectory.mkdirs();
-        }
-        fileChooser.setInitialDirectory(initialDirectory);
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        File selectedFile = fileChooser.showSaveDialog(null);
-
-        if (selectedFile == null) {
-            return;
-        }
-
-        String filePath = selectedFile.getAbsolutePath();
-
-        if (!filePath.endsWith(".csv")) {
-            filePath += ".csv";
-        }
-
-        File parentDirectory = selectedFile.getParentFile();
-        if (!parentDirectory.exists()) {
-            parentDirectory.mkdirs();
-        }
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
-            if (!selectedFile.exists()) {
-                writer.println("Parameter,Value");
+    private void onExportCsvClicked() {
+        try {
+            File selectedFile = showSaveFileDialog();
+            if (selectedFile == null) {
+                return;
             }
 
-            writer.println("MapWidth," + widthSpinner.getValue());
-            writer.println("MapHeight," + heightSpinner.getValue());
-            writer.println("EquatorHeight," + equatorHeightSpinner.getValue());
-            writer.println("GrassNumber," + grassNumberSpinner.getValue());
-            writer.println("EnergyAddition," + energyAdditionSpinner.getValue());
-            writer.println("PlantRegeneration," + plantRegenerationSpinner.getValue());
-            writer.println("NumberOfAnimals," + numberOfAnimalsSpinner.getValue());
-            writer.println("StartingAnimalEnergy," + startingAnimalEnergySpinner.getValue());
-            writer.println("EnergyNeededForReproduction," + energuNeededForReproductionSpinner.getValue());
-            writer.println("EnergyLosingWithReproduction," + energyLosingWithReproductionSpinner.getValue());
-            writer.println("MinGenMutations," + minGenMutationsSpinner.getValue());
-            writer.println("MaxGenMutations," + maxGenMutationsSpinner.getValue());
-            writer.println("GenomeLength," + genomLengthSpinner.getValue());
-            writer.println("MutationType," + mutationTypeSpinner.getValue());
-            writer.println("MaxEnergy," + maxEnergySpinner.getValue());
-            writer.println("MapType," + mapTypeSpinner.getValue());
-            writer.println("MoveEnergy," + moveEnergySpinner.getValue());
-            writer.println("CSVSaveStats," + CSVSpinner.getValue());
-        }
-    }
-
-    @FXML
-    private void onImportCsvClicked() throws Exception {
-        String projectPath = System.getProperty("user.dir");
-        String defaultDirectory = projectPath + "/CSV/Exports/";
-
-        FileChooser fileChooser = new FileChooser();
-        File initialDirectory = new File(defaultDirectory);
-        if (!initialDirectory.exists()) {
-            initialDirectory.mkdirs();
-        }
-        fileChooser.setInitialDirectory(initialDirectory);
-
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        File selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile == null) {
-            return;
-        }
-
-        String filePath = selectedFile.getAbsolutePath();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    String parameter = parts[0].trim();
-                    String value = parts[1].trim();
-
-                    try {
-                        switch (parameter) {
-                            case "MapWidth":
-                                widthSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "MapHeight":
-                                heightSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "EquatorHeight":
-                                equatorHeightSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "GrassNumber":
-                                grassNumberSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "EnergyAddition":
-                                energyAdditionSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "PlantRegeneration":
-                                plantRegenerationSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "NumberOfAnimals":
-                                numberOfAnimalsSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "StartingAnimalEnergy":
-                                startingAnimalEnergySpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "EnergyNeededForReproduction":
-                                energuNeededForReproductionSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "EnergyLosingWithReproduction":
-                                energyLosingWithReproductionSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "MinGenMutations":
-                                minGenMutationsSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "MaxGenMutations":
-                                maxGenMutationsSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "GenomLength":
-                                genomLengthSpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "MutationType":
-                                mutationTypeSpinner.getValueFactory().setValue(MutationType.valueOf(value));  // Parsing enum
-                                break;
-                            case "MaxEnergy":
-                                maxEnergySpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "MapType":
-                                mapTypeSpinner.getValueFactory().setValue(MapType.valueOf(value));  // Parsing enum
-                                break;
-                            case "MoveEnergy":
-                                moveEnergySpinner.getValueFactory().setValue(Integer.parseInt(value));
-                                break;
-                            case "CSVSaveStats":
-                                CSVSpinner.getValueFactory().setValue(String.valueOf(Integer.parseInt(value)));
-                                break;
-                            default:
-                                break;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid number format for parameter " + parameter + ": " + value);
-                    } catch (IllegalArgumentException e) {
-                        System.err.println("Invalid enum value for parameter " + parameter + ": " + value);
-                    }
-                }
-            }
+            SimulationConfig config = getCurrentConfig();
+            csvManager.exportConfig(selectedFile, config);
         } catch (IOException e) {
-            e.printStackTrace();
+            showErrorAlert("Export Error", "Failed to export configuration", e.getMessage());
         }
+    }
+
+    @FXML
+    private void onImportCsvClicked() {
+        try {
+            File selectedFile = showOpenFileDialog();
+            if (selectedFile == null) {
+                return;
+            }
+
+            SimulationConfig config = csvManager.importConfig(selectedFile);
+            applyConfigToUI(config);
+        } catch (IOException e) {
+            showErrorAlert("Import Error", "Failed to import configuration", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            showErrorAlert("Import Error", "Invalid value in configuration file", e.getMessage());
+        }
+    }
+
+    private File showSaveFileDialog() {
+        FileChooser fileChooser = createFileChooser();
+        return fileChooser.showSaveDialog(null);
+    }
+
+    private File showOpenFileDialog() {
+        FileChooser fileChooser = createFileChooser();
+        return fileChooser.showOpenDialog(null);
+    }
+
+    private FileChooser createFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+
+        File initialDirectory = new File(CSV_DIRECTORY);
+        if (!initialDirectory.exists()) {
+            initialDirectory.mkdirs();
+        }
+        fileChooser.setInitialDirectory(initialDirectory);
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        return fileChooser;
+    }
+
+    private SimulationConfig getCurrentConfig() {
+        return new SimulationConfig(
+                widthSpinner.getValue(),
+                heightSpinner.getValue(),
+                equatorHeightSpinner.getValue(),
+                grassNumberSpinner.getValue(),
+                energyAdditionSpinner.getValue(),
+                plantRegenerationSpinner.getValue(),
+                numberOfAnimalsSpinner.getValue(),
+                startingAnimalEnergySpinner.getValue(),
+                energuNeededForReproductionSpinner.getValue(),
+                energyLosingWithReproductionSpinner.getValue(),
+                minGenMutationsSpinner.getValue(),
+                maxGenMutationsSpinner.getValue(),
+                genomLengthSpinner.getValue(),
+                mutationTypeSpinner.getValue(),
+                maxEnergySpinner.getValue(),
+                mapTypeSpinner.getValue(),
+                moveEnergySpinner.getValue(),
+                CSVSpinner.getValue()
+        );
+    }
+
+    private void applyConfigToUI(SimulationConfig config) {
+        setSpinnerValue(widthSpinner, config.mapWidth());
+        setSpinnerValue(heightSpinner, config.mapHeight());
+        setSpinnerValue(equatorHeightSpinner, config.equatorHeight());
+        setSpinnerValue(grassNumberSpinner, config.grassNumber());
+        setSpinnerValue(energyAdditionSpinner, config.energyAddition());
+        setSpinnerValue(plantRegenerationSpinner, config.plantRegeneration());
+        setSpinnerValue(numberOfAnimalsSpinner, config.numberOfAnimals());
+        setSpinnerValue(startingAnimalEnergySpinner, config.startingAnimalEnergy());
+        setSpinnerValue(energuNeededForReproductionSpinner, config.energyNeededForReproduction());
+        setSpinnerValue(energyLosingWithReproductionSpinner, config.energyLosingWithReproduction());
+        setSpinnerValue(minGenMutationsSpinner, config.minGenMutations());
+        setSpinnerValue(maxGenMutationsSpinner, config.maxGenMutations());
+        setSpinnerValue(genomLengthSpinner, config.genomeLength());
+        setSpinnerValue(mutationTypeSpinner, config.mutationType());
+        setSpinnerValue(maxEnergySpinner, config.maxEnergy());
+        setSpinnerValue(mapTypeSpinner, config.mapType());
+        setSpinnerValue(moveEnergySpinner, config.moveEnergy());
+        setSpinnerValue(CSVSpinner, config.csvSaveStats());
+    }
+
+    private <T> void setSpinnerValue(Spinner<T> spinner, T value) {
+        SpinnerValueFactory<T> factory = spinner.getValueFactory();
+        if (factory != null) {
+            factory.setValue(value);
+        }
+    }
+
+    private void showErrorAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     public void setMainApp(SimulationApp mainApp) {
         this.mainApp = mainApp;
     }
+
     @FXML
     public void initialize() {
+        initializeMapTypeSpinner();
+        initializeMutationTypeSpinner();
+        initializeCsvSpinner();
+    }
+
+    private void initializeMapTypeSpinner() {
         StringConverter<MapType> mapTypeConverter = new StringConverter<>() {
             @Override
             public String toString(MapType mapType) {
@@ -268,6 +226,15 @@ public class SettingsScreenControler {
             }
         };
 
+        SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE));
+        mapTypeFactory.setConverter(mapTypeConverter);
+        mapTypeSpinner.setValueFactory(mapTypeFactory);
+        mapTypeFactory.setValue(MapType.OWLBEAR);
+        mapTypeSpinner.setEditable(false);
+    }
+
+    private void initializeMutationTypeSpinner() {
         StringConverter<MutationType> mutationTypeConverter = new StringConverter<>() {
             @Override
             public String toString(MutationType mutationType) {
@@ -282,24 +249,18 @@ public class SettingsScreenControler {
             }
         };
 
-        SpinnerValueFactory<String> optionsCSV = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                javafx.collections.FXCollections.observableArrayList("Yes", "No"));
-        CSVSpinner.setValueFactory(optionsCSV);
-        optionsCSV.setValue("No");
-
-        SpinnerValueFactory<MapType> mapTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
-                FXCollections.observableArrayList(MapType.OWLBEAR, MapType.GLOBE));
-        mapTypeFactory.setConverter(mapTypeConverter);
-        mapTypeSpinner.setValueFactory(mapTypeFactory);
-        mapTypeFactory.setValue(MapType.OWLBEAR);
-
         SpinnerValueFactory<MutationType> mutationTypeFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(
                 FXCollections.observableArrayList(MutationType.values()));
         mutationTypeFactory.setConverter(mutationTypeConverter);
         mutationTypeSpinner.setValueFactory(mutationTypeFactory);
         mutationTypeFactory.setValue(MutationType.LITLLECHANGE);
-
-        mapTypeSpinner.setEditable(false);
         mutationTypeSpinner.setEditable(false);
+    }
+
+    private void initializeCsvSpinner() {
+        SpinnerValueFactory<String> optionsCSV = new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                FXCollections.observableArrayList("Yes", "No"));
+        CSVSpinner.setValueFactory(optionsCSV);
+        optionsCSV.setValue("No");
     }
 }

@@ -2,6 +2,7 @@ package agh.ics.oop.model.mapElements;
 
 import agh.ics.oop.model.enums.ElementType;
 import agh.ics.oop.model.util.Vector2d;
+import agh.ics.oop.presenter.WorldElementVisitor;
 
 
 public class PrefferdCell extends AbstractWorldElement {
@@ -18,5 +19,9 @@ public class PrefferdCell extends AbstractWorldElement {
     }
     public ElementType getType() {
         return ElementType.PREFERRED_CELL;
+    }
+    @Override
+    public void accept(WorldElementVisitor visitor) {
+        visitor.visit(this);
     }
 }

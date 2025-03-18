@@ -1,9 +1,7 @@
 package agh.ics.oop.model.maps;
 
 import agh.ics.oop.model.enums.MapType;
-import agh.ics.oop.model.mapElements.Grass;
-import agh.ics.oop.model.mapElements.OwlBear;
-import agh.ics.oop.model.mapElements.WorldElement;
+import agh.ics.oop.model.mapElements.*;
 import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.simulation.SimulationProperties;
@@ -106,5 +104,10 @@ public class OwlBearMap extends AbstractWorldMap {
     @Override
     public MapType getMapType() {
         return MapType.OWLBEAR;
+    }
+
+    @Override
+    public MovementStrategy getMovementStrategy() {
+        return new ConstrainedMovementStrategy();
     }
 }

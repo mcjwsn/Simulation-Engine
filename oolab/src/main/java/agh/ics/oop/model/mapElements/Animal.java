@@ -1,5 +1,6 @@
 package agh.ics.oop.model.mapElements;
 
+import agh.ics.oop.presenter.WorldElementVisitor;
 import agh.ics.oop.simulation.SimulationProperties;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.model.enums.ElementType;
@@ -177,37 +178,31 @@ public class Animal implements WorldElement {
     }
 
     public void move(AbstractWorldMap map) {
-        if(map.getMapType() == MapType.OWLBEAR)
-        {
-            if (movinType == MovinType.DEFAULT) {
-                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-            }
-
-            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-            this.orientation = newOrientation;
-            if(newPosition.precedes(map.getCurrentBounds().upperRight()) && newPosition.follows(map.getCurrentBounds().lowerLeft()))
-            {
-                this.position = newPosition;
-            }
+        // Update gene index based on movement type
+        if (movinType == MovinType.DEFAULT) {
+            this.geneIndex = (this.geneIndex + 1) % this.genome.length;
         }
-        else
-        {
-            if (movinType == MovinType.DEFAULT) { // if potrzebny w ramach przyszlego rozwoju aplikacji
-                this.geneIndex = (this.geneIndex + 1) % this.genome.length;
-            }
 
-            MapDirection newOrientation = this.orientation.rotate(this.genome[this.geneIndex]);
-            Vector2d newPosition = this.position.add(newOrientation.toUnitVector());
-            this.orientation = newOrientation;
-            this.position = wrapPosition(newPosition, map.getWidth(), map.getHeight());
-        }
+        // Update orientation based on genes
+        this.orientation = this.orientation.rotate(this.genome[this.geneIndex]);
+
+        // Get the movement strategy from the map and use it to calculate new position
+        MovementStrategy movementStrategy = map.getMovementStrategy();
+        this.position = movementStrategy.getNewPosition(
+                this.position,
+                this.orientation,
+                map.getWidth(),
+                map.getHeight()
+        );
     }
 
-    private Vector2d wrapPosition(Vector2d position, int mapWidth, int mapHeight) {
-        int wrappedX = (position.getX() + mapWidth+1) % (1+mapWidth);
-        int wrappedY = (position.getY() + mapHeight+1) % (mapHeight+1);
-        return new Vector2d(wrappedX, wrappedY);
+    @Override
+    public void accept(WorldElementVisitor visitor) {
+        visitor.visit(this, false);
+    }
+
+    public void acceptAsTracked(WorldElementVisitor visitor) {
+        visitor.visit(this, true);
     }
 
     @Override

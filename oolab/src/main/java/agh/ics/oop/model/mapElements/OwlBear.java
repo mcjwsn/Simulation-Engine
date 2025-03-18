@@ -1,6 +1,7 @@
 package agh.ics.oop.model.mapElements;
 
 import agh.ics.oop.model.util.Genes;
+import agh.ics.oop.presenter.WorldElementVisitor;
 import agh.ics.oop.simulation.SimulationProperties;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.model.enums.ElementType;
@@ -23,6 +24,11 @@ public class OwlBear implements WorldElement {
     @Override
     public Vector2d getPosition() {
         return position;
+    }
+
+    @Override
+    public void accept(WorldElementVisitor visitor) {
+        visitor.visit(this);
     }
 
     public MapDirection getOrientation() {
