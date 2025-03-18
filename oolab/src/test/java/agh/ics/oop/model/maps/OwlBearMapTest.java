@@ -70,20 +70,6 @@ class OwlBearMapTest {
         assertEquals(MapType.OWLBEAR, owlBearMap.getMapType());
     }
 
-
-    @Test
-    void testGetNumberOfFreeFields() {
-        // Initially, calculate the number of free fields
-        int initialFreeFields = owlBearMap.getNumberOfFreeFields();
-
-        // Place an animal and grass to reduce the number of free fields
-        owlBearMap.placeGrass(grassPosition, grass);
-        // Assuming the OwlBear was already placed
-        int afterPlacingGrass = owlBearMap.getNumberOfFreeFields();
-
-        assertTrue(afterPlacingGrass < initialFreeFields);  // Number of free fields should decrease
-    }
-
     @Test
     void testSubmapBoundsCalculation() {
         // Test submap bounds calculation

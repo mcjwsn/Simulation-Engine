@@ -109,6 +109,13 @@ public class SimulationController implements MapChangeListener {
         this.worldMap = worldMap;
     }
 
+    private SimulationEngine simulationEngine;
+
+    // Getter do silnika symulacji
+    public SimulationEngine getSimulationEngine() {
+        return simulationEngine;
+    }
+
     private void drawMap() {
         updateBounds();
 

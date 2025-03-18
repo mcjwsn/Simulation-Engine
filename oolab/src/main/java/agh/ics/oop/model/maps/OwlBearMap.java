@@ -61,8 +61,7 @@ public class OwlBearMap extends AbstractWorldMap {
         return elements;
     }
 
-    public void moveOwlBear()
-    {
+    public void moveOwlBear() {
         owlBear.move(this);
     }
 
@@ -70,7 +69,9 @@ public class OwlBearMap extends AbstractWorldMap {
         return owlBear.getPosition();
     }
 
-    @Override
+    // This method should be moved to MapStatisticsCalculator and used only for OwlBearMap
+    // But we keep it for backward compatibility
+
     protected int getNumberOfFreeFields() {
         Set<Vector2d> usedPositions = new HashSet<>();
         usedPositions.addAll(animals.keySet());

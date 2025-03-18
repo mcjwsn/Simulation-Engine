@@ -14,7 +14,6 @@ public class SimulationProperties {
     private int maxEnergy;
     private int grassEnergy;
     private MapType mapType;
-    // zamiast equatora stale = 20%, w naszej impelementacji mozna go ustawiac
     private int equatorHeight;
     private MutationType mutationType;
     private int minMutation;
