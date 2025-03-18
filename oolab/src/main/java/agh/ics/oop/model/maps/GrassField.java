@@ -53,5 +53,4 @@ public class GrassField extends AbstractWorldMap {
     public MovementStrategy getMovementStrategy() {
         return new WrappedMovementStrategy();
     }
-
 }

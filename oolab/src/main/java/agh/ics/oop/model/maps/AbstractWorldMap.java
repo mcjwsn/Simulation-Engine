@@ -11,8 +11,6 @@ import agh.ics.oop.model.util.*;
 import agh.ics.oop.simulation.SimulationProperties;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.UUID;
 
 public abstract class AbstractWorldMap implements WorldMap {
@@ -24,7 +22,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected int width;
     protected int height;
     protected Simulation simulation;
-    SimulationProperties simulationProperties;
+    protected SimulationProperties simulationProperties;
+    protected MapStatisticsCalculator statisticsCalculator;
 
     protected List<Vector2d> freePositionsForPlants = new ArrayList<>();
 
@@ -46,6 +45,8 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
+
+    @Override
     public void place(Vector2d animalPosition, Animal animal) {
         animals.computeIfAbsent(animalPosition, k -> new ArrayList<>()).add(animal);
     }
@@ -60,6 +61,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         );
     }
 
+    @Override
     public synchronized void move(Animal animal) {
         Vector2d oldPosition = animal.getPosition();
         List<Animal> oldPositionAnimals = animals.get(oldPosition);
@@ -104,104 +106,35 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public abstract Boundary getCurrentBounds();
 
+    @Override
     public void addObserver(MapChangeListener observer) {
         observers.add(observer);
     }
 
+    @Override
     public void mapChanged(Statistics statistics, String msg) {
         for (MapChangeListener observer : observers) {
             observer.mapChanged(this, msg, statistics);
         }
     }
 
-    public List<Animal> getDeadAnimals() {
-        return Collections.unmodifiableList(deadAnimals);
-    }
-
-    public void setStatistics(Statistics stats, int newDay) {
-        stats.setStatisticsParameters(this.getNumberOfAnimals(),
-                this.getNumberOfGrasses(),
-                this.getNumberOfFreeFields(),
-                this.getMostPopularGenotype(),
-                this.getAverageAliveAnimalsEnergy(),
-                this.getAverageAnimalLifeSpan(),
-                this.getAverageChildrenAmount(),
-                newDay);
-    }
-
-    private int getNumberOfAnimals() {
-        return simulation.getAnimals().size();
-}
-
-    private int getNumberOfGrasses() {
-        return grass.size();}
-
-    protected int getNumberOfFreeFields() {
-        Set<Vector2d> usedPositions = new HashSet<>();
-        usedPositions.addAll(animals.keySet());
-        usedPositions.addAll(grass.keySet());
-        return (width+1) * (height+1) - usedPositions.size();
-    }
-
+    // For backward compatibility, delegate to statistics calculator
     @Override
     public List<Integer> getMostPopularGenotype() {
-        List<Animal> animalsList = simulation.getAnimals();
-        Map<List<Integer>, Integer> genotypePopularity = new HashMap<>();
-
-        for (Animal animal : animalsList) {
-            List<Integer> genotype = Arrays.stream(animal.getGenome())
-                    .boxed()
-                    .toList();
-
-            genotypePopularity.put(genotype, genotypePopularity.getOrDefault(genotype, 0) + 1);
-        }
-
-        return genotypePopularity.entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(Collections.emptyList());
+        ensureStatisticsCalculator();
+        return statisticsCalculator.getMostPopularGenotype();
     }
 
-    protected int getAverageAliveAnimalsEnergy()
-    {
-        List<Animal> animalsList = simulation.getAnimals();
-        if (animalsList == null || animalsList.isEmpty()) {
-            return 0;
-        }
-        int averageEnergy = 0;
-        for (Animal animal : animalsList) {
-            averageEnergy += animal.getEnergy();
-        }
-        return averageEnergy/animalsList.size();
+    // New method to set statistics using the calculator
+    public void setStatistics(Statistics stats, int newDay) {
+        ensureStatisticsCalculator();
+        statisticsCalculator.updateStatistics(stats, newDay);
     }
 
-    protected int getAverageAnimalLifeSpan()
-    {
-        if(deadAnimals.isEmpty())
-        {
-            return 0;
+    private void ensureStatisticsCalculator() {
+        if (statisticsCalculator == null) {
+            statisticsCalculator = new MapStatisticsCalculator(this);
         }
-        int meanAge = 0;
-        for(Animal animal : deadAnimals)
-        {
-            meanAge += animal.getAge();
-        }
-        return meanAge/deadAnimals.size();
-    }
-
-    protected double getAverageChildrenAmount()
-    {
-        List<Animal> animalsList = simulation.getAnimals();
-        int avgChildrenAmount = 0;
-        if (animalsList.isEmpty()) {
-            return 0;
-        }
-        for(Animal animal : animalsList)
-        {
-            avgChildrenAmount += animal.getChildren().size();
-        }
-        return (double)avgChildrenAmount/animalsList.size();
     }
 
     @Override
@@ -209,10 +142,17 @@ public abstract class AbstractWorldMap implements WorldMap {
         return id;
     }
 
+    @Override
     public abstract MapType getMapType();
 
+    @Override
     public Map<Vector2d, List<Animal>> getAnimals(){
         return animals;
+    }
+
+    @Override
+    public List<Animal> getDeadAnimals() {
+        return Collections.unmodifiableList(deadAnimals);
     }
 
     public synchronized void removeAnimal(Animal animal) {
@@ -228,8 +168,15 @@ public abstract class AbstractWorldMap implements WorldMap {
         grass.put(plantPosition, grassObject);
         freePositionsForPlants.remove(plantPosition);
     }
+
+
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
+    }
+
+    @Override
+    public Simulation getSimulation() {
+        return simulation;
     }
 
     public Integer getEmptyCount() {
@@ -241,17 +188,25 @@ public abstract class AbstractWorldMap implements WorldMap {
         return width*height - position.size();
     }
 
-    public HashMap<Vector2d, Grass> getPlants() { return grass; }
+    @Override
+    public HashMap<Vector2d, Grass> getPlants() {
+        return grass;
+    }
 
-    public List<Vector2d> getFreePositionsForPlants() { return freePositionsForPlants; }
+    public List<Vector2d> getFreePositionsForPlants() {
+        return freePositionsForPlants;
+    }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight(){
         return height;
     }
 
+    @Override
     public abstract MovementStrategy getMovementStrategy();
 }
