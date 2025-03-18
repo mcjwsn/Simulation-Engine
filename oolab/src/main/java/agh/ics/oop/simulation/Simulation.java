@@ -22,6 +22,7 @@ public class Simulation implements Runnable {
     // New field for GrassManager to initialize grass
     private final GrassManager grassManager;
 
+
     public List<Animal> getAnimals() {
         return animals;
     }
