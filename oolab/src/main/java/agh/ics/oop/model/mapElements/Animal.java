@@ -1,5 +1,6 @@
 package agh.ics.oop.model.mapElements;
 
+import agh.ics.oop.presenter.WorldElementVisitor;
 import agh.ics.oop.simulation.SimulationProperties;
 import agh.ics.oop.model.util.Vector2d;
 import agh.ics.oop.model.enums.ElementType;
@@ -193,6 +194,15 @@ public class Animal implements WorldElement {
                 map.getWidth(),
                 map.getHeight()
         );
+    }
+
+    @Override
+    public void accept(WorldElementVisitor visitor) {
+        visitor.visit(this, false);
+    }
+
+    public void acceptAsTracked(WorldElementVisitor visitor) {
+        visitor.visit(this, true);
     }
 
     @Override

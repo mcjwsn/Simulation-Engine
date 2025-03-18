@@ -1,7 +1,8 @@
+// Now, let's reimplement the WorldElementBox
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.model.mapElements.*;
-import javafx.geometry.Pos;
+        import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -10,12 +11,13 @@ import javafx.scene.layout.VBox;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldElementBox extends VBox {
+public class WorldElementBox extends VBox implements WorldElementVisitor {
     private final int cellSize;
     private static final Map<String, Image> imageCache = new HashMap<>();
     private static final double MAIN_IMAGE_SCALE = 0.8;
     private static final double ENERGY_BAR_SCALE = 0.3;
     private static final double PREFERRED_FIELD_OPACITY = 0.1;
+    private boolean isPreferred = false;
 
     private static Image getImage(String imagePath) {
         return imageCache.computeIfAbsent(imagePath, Image::new);
@@ -25,13 +27,12 @@ public class WorldElementBox extends VBox {
         this.cellSize = size;
         initializeBox();
 
-        switch (element) {
-            case GenotypeCell genotypeCell -> updateGenotypeCell(genotypeCell);
-            case PrefferdCell prefferdCell -> updatePreferredCell(prefferdCell);
-            case EmptyCell emptyCell -> updateEmptyCell(emptyCell);
-            case Animal animal -> updateAnimal(animal, false);
-            case WorldElement worldElement -> updateImage(worldElement);
-            case null, default -> throw new IllegalArgumentException("Unsupported element type: " + element.getClass());
+        if (element instanceof WorldElement worldElement) {
+            worldElement.accept(this);
+        } else if (element instanceof GenotypeCell genotypeCell) {
+            visit(genotypeCell);
+        } else {
+            throw new IllegalArgumentException("Unsupported element type: " + element.getClass());
         }
     }
 
@@ -45,17 +46,16 @@ public class WorldElementBox extends VBox {
 
     public void updateImage(WorldElement element) {
         this.getChildren().clear();
-        switch (element) {
-            case Animal animal -> updateAnimal(animal, false);
-            case Grass grass -> updateGrass(grass);
-            case OwlBear owlBear -> updateOwlBear(owlBear);
-            case EmptyCell emptyCell -> updateEmptyCell(emptyCell);
-            case PrefferdCell prefferdCell -> updatePreferredCell(prefferdCell);
-            default -> throw new IllegalArgumentException("Unsupported element type: " + element.getClass());
-        }
+        element.accept(this);
     }
 
-    public void updateAnimal(Animal animal, boolean isTracked) {
+    public void updateImageTrackedDown(Animal animal) {
+        this.getChildren().clear();
+        animal.acceptAsTracked(this);
+    }
+
+    @Override
+    public void visit(Animal animal, boolean isTracked) {
         this.getChildren().clear();
 
         VBox container = new VBox(2);
@@ -65,21 +65,17 @@ public class WorldElementBox extends VBox {
         ImageView mainImage = createImageView(imageResource, cellSize * MAIN_IMAGE_SCALE);
         container.getChildren().add(mainImage);
 
-            ImageView energyBar = createImageView(animal.getEnergyLevelResource(), cellSize * ENERGY_BAR_SCALE);
-            energyBar.setPreserveRatio(false);
-            energyBar.setFitHeight(cellSize * ENERGY_BAR_SCALE * 0.3);
-            container.getChildren().add(energyBar);
+        ImageView energyBar = createImageView(animal.getEnergyLevelResource(), cellSize * ENERGY_BAR_SCALE);
+        energyBar.setPreserveRatio(false);
+        energyBar.setFitHeight(cellSize * ENERGY_BAR_SCALE * 0.3);
+        container.getChildren().add(energyBar);
+
         container.setAlignment(Pos.CENTER);
         this.getChildren().add(container);
     }
 
-    private void updateOwlBear(OwlBear owlBear) {
-        this.getChildren().clear();
-        ImageView imageView = createImageView(owlBear.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
-        this.getChildren().add(imageView);
-    }
-
-    private void updateGrass(Grass grass) {
+    @Override
+    public void visit(Grass grass) {
         this.getChildren().clear();
         ImageView imageView = createImageView(grass.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
         GridPane.setHalignment(imageView, javafx.geometry.HPos.CENTER);
@@ -87,26 +83,32 @@ public class WorldElementBox extends VBox {
         this.getChildren().add(imageView);
     }
 
-    public void updateImageTrackedDown(Animal animal) {
-        updateAnimal(animal, true);
-    }
-
-    private void updateEmptyCell(EmptyCell element) {
+    @Override
+    public void visit(OwlBear owlBear) {
         this.getChildren().clear();
-        ImageView imageView = createImageView(element.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
+        ImageView imageView = createImageView(owlBear.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
         this.getChildren().add(imageView);
     }
 
-    private void updatePreferredCell(PrefferdCell element) {
+    @Override
+    public void visit(EmptyCell emptyCell) {
         this.getChildren().clear();
-        ImageView imageView = createImageView(element.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
+        ImageView imageView = createImageView(emptyCell.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
+        this.getChildren().add(imageView);
+    }
+
+    @Override
+    public void visit(PrefferdCell prefferdCell) {
+        this.getChildren().clear();
+        ImageView imageView = createImageView(prefferdCell.getImageResource(), cellSize * MAIN_IMAGE_SCALE);
         imageView.setOpacity(PREFERRED_FIELD_OPACITY);
         this.getChildren().add(imageView);
     }
 
-    private void updateGenotypeCell(GenotypeCell element) {
+    @Override
+    public void visit(GenotypeCell genotypeCell) {
         this.getChildren().clear();
-        ImageView imageView = createImageView(element.getImageResource(), cellSize);
+        ImageView imageView = createImageView(genotypeCell.getImageResource(), cellSize);
         this.getChildren().add(imageView);
     }
 
@@ -118,8 +120,6 @@ public class WorldElementBox extends VBox {
         imageView.setPreserveRatio(true);
         return imageView;
     }
-
-    private boolean isPreferred = false;
 
     public void setPreferred(boolean preferred) {
         this.isPreferred = preferred;
