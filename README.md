@@ -17,7 +17,7 @@
 
 ### 🧠 **AI & Behavior**  
 - **Basic Neural Network**: Each creature has a simple AI controlling movement and decision-making.  
-- **Pathfinding**: Creatures can navigate toward food sources while avoiding obstacles.  
+- **Pathfinding**: Creatures move according to genotypes given by the parents. 
 - **Learning & Adaptation**: Over time, populations develop more efficient survival strategies.  
 
 ### 🔄 **Simulation & Visualization**  
